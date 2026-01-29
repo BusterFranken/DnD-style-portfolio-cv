@@ -1,0 +1,219 @@
+/* ============================================
+   NOTABLE PAGE STYLES
+   ============================================ */
+
+.notable-page {
+  min-height: 100vh;
+  background: var(--light-bg);
+}
+
+.notable-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* Notable Section */
+.notable-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.section-header {
+  font-size: 24px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.section-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Notable Grid */
+.notable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Notable Card */
+.notable-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  border: 2px solid var(--border-color);
+}
+
+.notable-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.notable-card.legendary {
+  border-color: #FFD700;
+  background: linear-gradient(135deg, #FFFDE7 0%, #FFF8E1 100%);
+}
+
+.notable-card.legendary .card-badge {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+}
+
+.notable-card.epic {
+  border-color: #9C27B0;
+  background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+}
+
+.notable-card.epic .card-badge {
+  background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
+}
+
+.notable-card.rare {
+  border-color: #2196F3;
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+}
+
+.notable-card.rare .card-badge {
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+}
+
+.card-badge {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-icon {
+  font-size: 40px;
+  margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.card-desc {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+
+.card-stats {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Timeline */
+.encounters-timeline {
+  position: relative;
+  padding-left: var(--spacing-xl);
+}
+
+.encounters-timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-color);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.timeline-item.legendary .timeline-marker {
+  border-color: #FFD700;
+  background: #FFFDE7;
+}
+
+.timeline-item.epic .timeline-marker {
+  border-color: #9C27B0;
+  background: #F3E5F5;
+}
+
+.timeline-item.rare .timeline-marker {
+  border-color: #2196F3;
+  background: #E3F2FD;
+}
+
+.timeline-content {
+  background: var(--white);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.timeline-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.timeline-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.timeline-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notable-container {
+    padding: var(--spacing-md);
+  }
+  
+  .notable-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .encounters-timeline {
+    padding-left: var(--spacing-lg);
+  }
+  
+  .timeline-marker {
+    left: -32px;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+}

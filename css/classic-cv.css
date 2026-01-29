@@ -1,0 +1,282 @@
+/* ============================================
+   CLASSIC CV VIEW STYLES
+   ============================================ */
+
+.classic-view {
+  min-height: 100vh;
+  background: var(--white);
+}
+
+.classic-cv-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* Classic Header */
+.classic-header {
+  text-align: center;
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--text-primary);
+  margin-bottom: var(--spacing-xl);
+}
+
+.classic-name {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.classic-title {
+  font-size: 20px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.classic-contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  font-size: 14px;
+}
+
+.classic-contact a {
+  color: var(--text-primary);
+}
+
+.classic-contact a:hover {
+  color: var(--primary-red);
+}
+
+.classic-contact span {
+  color: var(--text-light);
+}
+
+/* Classic Sections */
+.classic-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.classic-section-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-red);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Summary */
+.classic-summary {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+/* Experience Items */
+.classic-experience-item {
+  margin-bottom: var(--spacing-lg);
+}
+
+.classic-exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xs);
+}
+
+.classic-exp-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.classic-exp-company {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.classic-exp-dates {
+  font-size: 14px;
+  color: var(--text-light);
+  text-align: right;
+}
+
+.classic-exp-location {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.classic-exp-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-top: var(--spacing-sm);
+}
+
+.classic-exp-achievements {
+  list-style: none;
+  margin-top: var(--spacing-sm);
+}
+
+.classic-exp-achievements li {
+  position: relative;
+  padding-left: var(--spacing-md);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xs);
+}
+
+.classic-exp-achievements li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-red);
+}
+
+/* Skills Grid */
+.classic-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.classic-skill-category {
+  margin-bottom: var(--spacing-md);
+}
+
+.classic-skill-category-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-xs);
+}
+
+.classic-skill-list {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Education */
+.classic-education-item {
+  margin-bottom: var(--spacing-md);
+}
+
+.classic-edu-degree {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.classic-edu-school {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.classic-edu-dates {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.classic-edu-notes {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xs);
+}
+
+/* Testimonials */
+.classic-testimonial {
+  background: var(--light-bg);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--primary-red);
+  margin-bottom: var(--spacing-md);
+}
+
+.classic-testimonial-text {
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-sm);
+}
+
+.classic-testimonial-author {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Languages */
+.classic-languages {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.classic-language {
+  font-size: 14px;
+}
+
+.classic-language-name {
+  font-weight: 600;
+}
+
+.classic-language-level {
+  color: var(--text-secondary);
+}
+
+/* Print Styles */
+@media print {
+  .classic-cv-container {
+    padding: 0;
+    max-width: 100%;
+  }
+  
+  .classic-section {
+    break-inside: avoid;
+  }
+  
+  .classic-experience-item {
+    break-inside: avoid;
+  }
+  
+  .view-toggle,
+  .admin-login-btn {
+    display: none !important;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .classic-cv-container {
+    padding: var(--spacing-md);
+  }
+  
+  .classic-name {
+    font-size: 28px;
+  }
+  
+  .classic-contact {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .classic-exp-header {
+    flex-direction: column;
+  }
+  
+  .classic-exp-dates {
+    text-align: left;
+    margin-top: var(--spacing-xs);
+  }
+  
+  .classic-skills-grid {
+    grid-template-columns: 1fr;
+  }
+}

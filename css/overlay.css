@@ -1,0 +1,298 @@
+/* ============================================
+   OVERLAY STYLES - Skill/Element Descriptions
+   ============================================ */
+
+.overlay-modal {
+  backdrop-filter: blur(4px);
+}
+
+.overlay-content {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  animation: overlaySlideIn 0.3s ease-out;
+}
+
+@keyframes overlaySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.overlay-body {
+  padding: var(--spacing-xl);
+}
+
+/* Overlay Header */
+.overlay-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  margin-right: 50px; /* Space for close button */
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--primary-red);
+}
+
+.overlay-icon {
+  font-size: 32px;
+}
+
+.overlay-title-block {
+  flex: 1;
+}
+
+.overlay-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.overlay-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.overlay-modifier {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-red);
+  background: var(--light-bg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-left: auto; /* Push to the right but within header margin */
+}
+
+/* Overlay Sections */
+.overlay-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.overlay-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.overlay-section-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* D&D Definition Box */
+.dnd-definition {
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--text-secondary);
+}
+
+.dnd-definition p {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* CV Meaning Box */
+.cv-meaning {
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+}
+
+.cv-meaning-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.cv-meaning-desc {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Evidence List */
+.evidence-list {
+  list-style: none;
+}
+
+.evidence-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.evidence-item:last-child {
+  border-bottom: none;
+}
+
+.evidence-bullet {
+  color: var(--primary-red);
+  font-weight: bold;
+}
+
+.evidence-text {
+  flex: 1;
+  font-size: 14px;
+}
+
+/* Vouch in Overlay */
+.overlay-vouch {
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--accent-gold);
+}
+
+.overlay-vouch-text {
+  font-style: italic;
+  font-size: 14px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.overlay-vouch-author {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Calculation Breakdown */
+.calculation {
+  background: var(--dark-bg);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  font-family: monospace;
+}
+
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-xs) 0;
+}
+
+.calc-row.total {
+  border-top: 1px solid var(--text-light);
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.calc-label {
+  color: var(--text-light);
+}
+
+.calc-value {
+  color: var(--white);
+}
+
+/* Class Overlay Specific */
+.class-overlay-header {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+  color: var(--white);
+  padding: var(--spacing-lg);
+  margin: calc(-1 * var(--spacing-xl));
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.class-level-badge {
+  display: inline-block;
+  background: var(--primary-red);
+  color: var(--white);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: var(--spacing-sm);
+}
+
+.class-features-list {
+  list-style: none;
+}
+
+.class-feature-item {
+  padding: var(--spacing-sm);
+  background: var(--light-bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.class-feature-level {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--primary-red);
+  text-transform: uppercase;
+}
+
+.class-feature-name {
+  font-weight: 600;
+  margin: var(--spacing-xs) 0;
+}
+
+.class-feature-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Unleveled Class Overlay */
+.unleveled-class .overlay-header {
+  opacity: 0.6;
+}
+
+.unleveled-message {
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Roll Button in Overlay */
+.overlay-roll-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md);
+  background: var(--primary-red);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-top: var(--spacing-md);
+}
+
+.overlay-roll-btn:hover {
+  background: var(--primary-red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.overlay-roll-btn .dice-emoji {
+  font-size: 20px;
+}

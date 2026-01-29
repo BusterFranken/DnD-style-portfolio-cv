@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Buster Franken</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/campaigns.css">
+  <link rel="stylesheet" href="css/projects.css">
+  <link rel="stylesheet" href="css/classic-cv.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+  <!-- Admin Login Button -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+
+  <!-- Navigation Bar (shared across both views) -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="index.html" class="nav-link">Character Sheet</a>
+      <a href="campaigns.html" class="nav-link">Campaigns</a>
+      <a href="notable.html" class="nav-link">Notable</a>
+      <a href="projects.html" class="nav-link active">Projects</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="media.html" class="nav-link">Media</a>
+    </div>
+    <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">PROJECTS:</span>
+          <span class="campaign-name">AI for Good</span>
+        </div>
+      <!-- View Toggle -->
+      <div class="view-toggle">
+        <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
+        <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="projects-page">
+
+    <header class="page-header">
+      <h1 class="page-title">🎯 Quest Board</h1>
+      <p class="page-subtitle">AI for Good projects and impact initiatives completed through FruitPunch AI.</p>
+    </header>
+
+    <main class="projects-container">
+      
+      <!-- Category Filter -->
+      <div class="category-filter">
+        <button class="filter-btn active" data-filter="all">All Quests</button>
+        <button class="filter-btn" data-filter="wildlife">🦁 Wildlife</button>
+        <button class="filter-btn" data-filter="earth">🌍 Earth</button>
+        <button class="filter-btn" data-filter="health">❤️ Health</button>
+        <button class="filter-btn" data-filter="autonomous">🚁 Autonomous</button>
+        <button class="filter-btn" data-filter="mlops">⚙️ MLOps</button>
+        <button class="filter-btn" data-filter="safety">🛡️ Safety</button>
+        <button class="filter-btn" data-filter="community">👥 Community</button>
+      </div>
+      
+      <!-- Partner Marquee -->
+      <div class="partners-marquee">
+        <div class="marquee-label">Impact Partners:</div>
+        <div class="marquee-track">
+          <div class="marquee-content">
+            <span class="partner-logo">🏛️ Stanford</span>
+            <span class="partner-logo">🛸 ESA</span>
+            <span class="partner-logo">🌿 Greenpeace</span>
+            <span class="partner-logo">🐼 WWF</span>
+            <span class="partner-logo">☁️ AWS</span>
+            <span class="partner-logo">📱 Huawei</span>
+            <span class="partner-logo">💡 NXP</span>
+            <span class="partner-logo">💉 Philips</span>
+            <span class="partner-logo">🇳🇱 TU/e</span>
+            <span class="partner-logo">🇺🇳 United Nations</span>
+            <!-- Duplicate for seamless scroll -->
+            <span class="partner-logo">🏛️ Stanford</span>
+            <span class="partner-logo">🛸 ESA</span>
+            <span class="partner-logo">🌿 Greenpeace</span>
+            <span class="partner-logo">🐼 WWF</span>
+            <span class="partner-logo">☁️ AWS</span>
+            <span class="partner-logo">📱 Huawei</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Projects will be rendered dynamically -->
+      </div>
+      
+      <!-- Stats Summary -->
+      <div class="impact-stats">
+        <div class="stat-item">
+          <span class="stat-number">€45M</span>
+          <span class="stat-label">Impact Value</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">4500+</span>
+          <span class="stat-label">Engineers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">80+</span>
+          <span class="stat-label">Partners</span>
+        </div>
+      </div>
+      
+    </main>
+
+    <footer class="contact-bar">
+      <a href="mailto:busterfranken@gmail.com" class="contact-item">
+        <span class="contact-icon">📧</span>
+        <span class="contact-text">busterfranken@gmail.com</span>
+      </a>
+      <a href="tel:+31624877967" class="contact-item">
+        <span class="contact-icon">📱</span>
+        <span class="contact-text">+31 6 2487 7967</span>
+      </a>
+      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
+        <span class="contact-icon">💼</span>
+        <span class="contact-text">LinkedIn</span>
+      </a>
+      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
+        <span class="contact-icon">💻</span>
+        <span class="contact-text">GitHub</span>
+      </a>
+      <span class="contact-item location">
+        <span class="contact-icon">📍</span>
+        <span class="contact-text">Amsterdam, Netherlands</span>
+      </span>
+    </footer>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/overlay.js"></script>
+  <script>
+    // Render projects on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof renderProjects === 'function') {
+        renderProjects();
+      } else {
+        console.error('renderProjects function not found');
+      }
+      
+      // Filter functionality - use event delegation since cards are dynamically created
+      document.querySelector('.category-filter').addEventListener('click', (e) => {
+        if (e.target.classList.contains('filter-btn')) {
+          const filter = e.target.dataset.filter;
+          
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          
+          document.querySelectorAll('.project-card').forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      });
+    });
+    
+    // Campaign Status click handler
+    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof getCampaignStatusOverlayContent === 'function') {
+          openOverlay(getCampaignStatusOverlayContent());
+        }
+      });
+    });
+    
+    // View toggle - redirect to character sheet for classic CV
+    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view === 'classic') {
+          localStorage.setItem('preferredView', 'classic');
+          window.location.href = 'index.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

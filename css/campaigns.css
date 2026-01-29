@@ -1,0 +1,395 @@
+/* ============================================
+   CAMPAIGNS PAGE STYLES
+   ============================================ */
+
+.campaigns-page {
+  min-height: 100vh;
+  background: var(--light-bg);
+}
+
+/* Page Header */
+.page-header {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+  padding: var(--spacing-xl) var(--spacing-xl);
+  text-align: center;
+  color: var(--white);
+}
+
+.page-title {
+  font-size: 32px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--text-light);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Campaigns Container */
+.campaigns-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* Campaign Card */
+.campaign-card {
+  background: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.campaign-card.expanded {
+  border-color: var(--primary-red);
+}
+
+.campaign-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.campaign-header:hover {
+  background: var(--light-bg);
+}
+
+.campaign-icon {
+  font-size: 32px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+}
+
+.campaign-info {
+  flex: 1;
+}
+
+.campaign-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.campaign-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.campaign-outcome {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.campaign-outcome.success {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.campaign-toggle {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  color: var(--text-secondary);
+}
+
+/* Campaign Body */
+.campaign-body {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.campaign-summary {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: var(--spacing-md) 0;
+}
+
+/* Partner Logos */
+.partner-logos {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  overflow-x: auto;
+}
+
+.partners-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.logo-scroll {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.partner-badge {
+  padding: 4px 12px;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Adventures List */
+.adventures-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.adventure-card {
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--primary-red);
+}
+
+.adventure-card.compact {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.adventure-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.adventure-icon {
+  font-size: 20px;
+}
+
+.adventure-info {
+  flex: 1;
+}
+
+.adventure-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.adventure-dates {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.adventure-summary {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Encounters List */
+.encounters-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.encounter-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--white);
+  border-radius: var(--radius-sm);
+}
+
+.encounter-item.notable {
+  border-left: 3px solid var(--accent-gold);
+  background: #FFFDE7;
+}
+
+.encounter-icon {
+  font-size: 14px;
+}
+
+.encounter-content {
+  flex: 1;
+}
+
+.encounter-content strong {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.encounter-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Featured Projects */
+.featured-projects {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px dashed var(--border-color);
+}
+
+.projects-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.project-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-sm);
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.project-card:hover {
+  border-color: var(--primary-red);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-category {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--primary-red);
+}
+
+.project-name {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+/* Side Quests Section */
+.side-quests-section {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 2px solid var(--border-color);
+}
+
+.side-quests-title {
+  font-size: 24px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.side-quests-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.side-quests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.side-quest-card {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.sq-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--light-bg);
+  border-radius: var(--radius-sm);
+}
+
+.sq-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.sq-role {
+  font-size: 12px;
+  color: var(--primary-red);
+  font-weight: 500;
+}
+
+.sq-dates {
+  font-size: 11px;
+  color: var(--text-light);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.sq-info p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .campaigns-container {
+    padding: var(--spacing-md);
+  }
+  
+  .campaign-header {
+    flex-wrap: wrap;
+  }
+  
+  .campaign-meta {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .project-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .side-quests-grid {
+    grid-template-columns: 1fr;
+  }
+}

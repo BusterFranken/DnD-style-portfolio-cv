@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" data-view="dnd">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaigns | Buster Franken</title>
+  <meta name="description" content="Work history presented as D&D Campaigns - Adventures and Encounters from Buster Franken's career.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/campaigns.css">
+  <link rel="stylesheet" href="css/classic-cv.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+  <!-- Admin Login Button -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+
+  <!-- Navigation Bar (shared across both views) -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="index.html" class="nav-link">Character Sheet</a>
+      <a href="campaigns.html" class="nav-link active">Campaigns</a>
+      <a href="notable.html" class="nav-link">Notable</a>
+      <a href="projects.html" class="nav-link">Projects</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="media.html" class="nav-link">Media</a>
+    </div>
+    <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">TOTAL LEVEL:</span>
+          <span class="campaign-name">7</span>
+        </div>
+      <!-- View Toggle -->
+      <div class="view-toggle">
+        <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
+        <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="campaigns-page">
+
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1 class="page-title">📜 Campaign Journal</h1>
+      <p class="page-subtitle">The chronicles of my professional adventures, from early quests to epic boss battles.</p>
+    </header>
+
+    <!-- Campaigns Container -->
+    <main class="campaigns-container">
+      
+      <!-- Campaign 1: FruitPunch Saga -->
+      <section class="campaign-card expanded" data-campaign="fruitpunch-saga">
+        <div class="campaign-header">
+          <div class="campaign-icon">🍊</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The FruitPunch Saga</h2>
+            <div class="campaign-meta">
+              <span class="campaign-dates">Sep 2018 - May 2025</span>
+              <span class="campaign-duration">7 years</span>
+              <span class="campaign-outcome success">✓ Acquired by Zindi</span>
+            </div>
+          </div>
+          <button class="campaign-toggle">▼</button>
+        </div>
+        
+        <div class="campaign-body">
+          <p class="campaign-summary">A platform for AI engineers to train their skills by crowdsourcing solutions for impact organizations. From humble NGO beginnings to a global community of 4500+ engineers.</p>
+          
+          <!-- Partner Logos -->
+          <div class="partner-logos">
+            <span class="partners-label">Party Members:</span>
+            <div class="logo-scroll">
+              <span class="partner-badge">Stanford</span>
+              <span class="partner-badge">ESA</span>
+              <span class="partner-badge">Greenpeace</span>
+              <span class="partner-badge">WWF</span>
+              <span class="partner-badge">NXP</span>
+              <span class="partner-badge">Huawei</span>
+              <span class="partner-badge">Philips</span>
+            </div>
+          </div>
+          
+          <!-- Adventures -->
+          <div class="adventures-list">
+            
+            <!-- Adventure: The Founding -->
+            <div class="adventure-card" data-adventure="the-founding">
+              <div class="adventure-header">
+                <span class="adventure-icon">🌱</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">Adventure: The Founding</h3>
+                  <span class="adventure-dates">2018-2020</span>
+                </div>
+              </div>
+              <p class="adventure-summary">Started as NGO, bootstrapped through passion and determination. First AI for Wildlife challenge in South Africa.</p>
+              <div class="encounters-list">
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>AI for Wildlife Launch</strong>
+                    <p>First challenge - autonomous drone with thermal cameras to detect poachers in South Africa's Pilanesberg reserve</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>First 100 Engineers</strong>
+                    <p>Recruited the first 100 AI engineers to the platform</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>Platform Design</strong>
+                    <p>Built matching platform through 500+ user and customer interviews conducted and experiments</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Adventure: The Fundraise -->
+            <div class="adventure-card" data-adventure="the-fundraise">
+              <div class="adventure-header">
+                <span class="adventure-icon">💰</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">Adventure: The Fundraise</h3>
+                  <span class="adventure-dates">2020</span>
+                </div>
+              </div>
+              <p class="adventure-summary">Raised €1M VC funding to scale the platform.</p>
+              <div class="encounters-list">
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>Thomas Wolf Investment</strong>
+                    <p>Hugging Face founder believed in the vision</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>LUMO Labs Partnership</strong>
+                    <p>Accelerator partnership secured</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>The 50+ Pitches</strong>
+                    <p>Pitched to over 50 VCs - resilience tested</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Adventure: The Giants -->
+            <div class="adventure-card" data-adventure="the-giants">
+              <div class="adventure-header">
+                <span class="adventure-icon">🏔️</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">Adventure: The Giants</h3>
+                  <span class="adventure-dates">2021-2023</span>
+                </div>
+              </div>
+              <p class="adventure-summary">Partnerships with major organizations and massive impact.</p>
+              <div class="encounters-list">
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>Tata Steel Victory</strong>
+                    <p>AI against Toxic Clouds with Greenpeace caused €4.1M in fines. Dutch ministry started external monitoring.</p>
+                  </div>
+                </div>
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>Stanford Collaboration</strong>
+                    <p>World's top research university joins forces</p>
+                  </div>
+                </div>
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>ESA Project Launch</strong>
+                    <p>European Space Agency partnership for AI for Earth</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>Greenpeace Alliance</strong>
+                    <p>Environmental giant joins the mission</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>Corporate Deals</strong>
+                    <p>NXP, Huawei, Philips partnerships closed</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Featured Projects -->
+              <div class="featured-projects">
+                <h4 class="projects-title">🎯 Featured AI for Good Projects</h4>
+                <div class="project-cards">
+                  <a href="fruitpunch/blog/ai-powered-wildlife-conservation-in-africa/index.html" class="project-card">
+                    <span class="project-category">Wildlife</span>
+                    <span class="project-name">AI-powered Wildlife Conservation in Africa</span>
+                  </a>
+                  <a href="fruitpunch/challenges/ai-for-coral-reefs/index.html" class="project-card">
+                    <span class="project-category">Earth</span>
+                    <span class="project-name">AI for Coral Reefs</span>
+                  </a>
+                  <a href="fruitpunch/blog/how-we-detect-oil-spills/index.html" class="project-card">
+                    <span class="project-category">Earth</span>
+                    <span class="project-name">AI against Oil Spills</span>
+                  </a>
+                  <a href="fruitpunch/blog/can-ai-detect-heart-failure-from-electrocardiograms/index.html" class="project-card">
+                    <span class="project-category">Health</span>
+                    <span class="project-name">Heart Failure Detection</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Adventure: The Growth -->
+            <div class="adventure-card" data-adventure="the-growth">
+              <div class="adventure-header">
+                <span class="adventure-icon">📈</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">Adventure: The Growth</h3>
+                  <span class="adventure-dates">2023-2024</span>
+                </div>
+              </div>
+              <p class="adventure-summary">Scaling to 4500+ engineers and €45M crowdsourced impact.</p>
+              <div class="encounters-list">
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>4000th Engineer</strong>
+                    <p>Major community milestone reached</p>
+                  </div>
+                </div>
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>€45M Milestone</strong>
+                    <p>Crowdsourced value reaches €45M</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Adventure: The Exit -->
+            <div class="adventure-card" data-adventure="the-exit">
+              <div class="adventure-header">
+                <span class="adventure-icon">🏆</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">Adventure: The Exit</h3>
+                  <span class="adventure-dates">2025</span>
+                </div>
+              </div>
+              <p class="adventure-summary">Acquisition by Zindi - successful exit.</p>
+              <div class="encounters-list">
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>Acquisition Signing</strong>
+                    <p>Deal with Zindi closed - campaign complete!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Campaign 2: Academic Archives -->
+      <section class="campaign-card" data-campaign="academic-archives">
+        <div class="campaign-header">
+          <div class="campaign-icon">🎓</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The Academic Archives</h2>
+            <div class="campaign-meta">
+              <span class="campaign-dates">2014 - 2022</span>
+              <span class="campaign-duration">8 years</span>
+            </div>
+          </div>
+          <button class="campaign-toggle">▶</button>
+        </div>
+        
+        <div class="campaign-body" style="display: none;">
+          <p class="campaign-summary">Building AI research infrastructure and pioneering brain-computer interfaces.</p>
+          
+          <div class="adventures-list">
+            <div class="adventure-card">
+              <div class="adventure-header">
+                <span class="adventure-icon">🧠</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">The Engineering Foundation</h3>
+                  <span class="adventure-dates">2014-2018 • TU/e</span>
+                </div>
+              </div>
+              <p class="adventure-summary">BSc Mechanical Engineering & Neuroscience with Data Science extension.</p>
+              <div class="encounters-list">
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>10/10 BCI Research</strong>
+                    <p>Perfect score on Brain Computer Interfacing thesis</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>Brain Organoid Discovery</strong>
+                    <p>Showed functional brain organoids can be grown on a chip</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="adventure-card">
+              <div class="adventure-header">
+                <span class="adventure-icon">🏛️</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">The Institute Builders</h3>
+                  <span class="adventure-dates">2019-2022 • EAISI @ TU/e</span>
+                </div>
+              </div>
+              <p class="adventure-summary">Founding team of the AI institute.</p>
+              <div class="encounters-list">
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>AI Experience Room</strong>
+                    <p>Built room with 6 physical AI demos for visitors</p>
+                  </div>
+                </div>
+                <div class="encounter-item notable">
+                  <span class="encounter-icon">⭐</span>
+                  <div class="encounter-content">
+                    <strong>Professor Recruitment</strong>
+                    <p>Helped recruit AI professors to build the institute</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>TU/e AI Course</strong>
+                    <p>Launched accredited AI for Coral Reefs course for 135 CS students with Prof. Dirk Fahland</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Campaign 3: Zindi Transition -->
+      <section class="campaign-card" data-campaign="zindi-transition">
+        <div class="campaign-header">
+          <div class="campaign-icon">🔄</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The Zindi Transition</h2>
+            <div class="campaign-meta">
+              <span class="campaign-dates">May 2025 - Oct 2025</span>
+              <span class="campaign-duration">6 months</span>
+              <span class="campaign-outcome">VP of Partnerships</span>
+            </div>
+          </div>
+          <button class="campaign-toggle">▶</button>
+        </div>
+        
+        <div class="campaign-body" style="display: none;">
+          <p class="campaign-summary">Ensuring smooth transition post-acquisition. Delaware, United States.</p>
+          
+          <div class="adventures-list">
+            <div class="adventure-card">
+              <div class="adventure-header">
+                <span class="adventure-icon">🤝</span>
+                <div class="adventure-info">
+                  <h3 class="adventure-title">The Handover</h3>
+                </div>
+              </div>
+              <div class="encounters-list">
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>Partnership Transfers</strong>
+                    <p>Successfully transferred all partnerships</p>
+                  </div>
+                </div>
+                <div class="encounter-item">
+                  <span class="encounter-icon">⚔️</span>
+                  <div class="encounter-content">
+                    <strong>Community Migration</strong>
+                    <p>Migrated 4500+ community members to new home</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Campaign 4: Early Years -->
+      <section class="campaign-card" data-campaign="early-years">
+        <div class="campaign-header">
+          <div class="campaign-icon">🌅</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The Early Years</h2>
+            <div class="campaign-meta">
+              <span class="campaign-dates">2010 - 2018</span>
+              <span class="campaign-duration">8 years</span>
+              <span class="campaign-outcome">Origin Story</span>
+            </div>
+          </div>
+          <button class="campaign-toggle">▶</button>
+        </div>
+        
+        <div class="campaign-body" style="display: none;">
+          <p class="campaign-summary">Building diverse experience across acting, security, teaching, and coding.</p>
+          
+          <div class="adventures-list">
+            <div class="adventure-card compact">
+              <span class="adventure-icon">🎭</span>
+              <div class="adventure-info">
+                <h3 class="adventure-title">The Stage</h3>
+                <span class="adventure-dates">2010-2015 • Groen Casting</span>
+                <p>Professional teen actor in Amsterdam</p>
+              </div>
+            </div>
+            <div class="adventure-card compact">
+              <span class="adventure-icon">🛡️</span>
+              <div class="adventure-info">
+                <h3 class="adventure-title">The Watch</h3>
+                <span class="adventure-dates">2014-2016 • Crowd Support</span>
+                <p>Event Security at hardstyle festivals</p>
+              </div>
+            </div>
+            <div class="adventure-card compact">
+              <span class="adventure-icon">📚</span>
+              <div class="adventure-info">
+                <h3 class="adventure-title">The Classroom</h3>
+                <span class="adventure-dates">2016-2018 • Lyceo</span>
+                <p>Teaching physics and chemistry</p>
+              </div>
+            </div>
+            <div class="adventure-card compact">
+              <span class="adventure-icon">💻</span>
+              <div class="adventure-info">
+                <h3 class="adventure-title">The Code</h3>
+                <span class="adventure-dates">2018-2019 • Webholders</span>
+                <p>Co-founded web development agency</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Side Quests Section -->
+      <section class="side-quests-section">
+        <h2 class="side-quests-title">🗡️ Side Quests</h2>
+        <p class="side-quests-subtitle">Volunteer & Board Positions</p>
+        
+        <div class="side-quests-grid">
+          <div class="side-quest-card">
+            <span class="sq-icon">🖥️</span>
+            <div class="sq-info">
+              <h4>Open Edge HPC Initiative</h4>
+              <span class="sq-role">Board Member</span>
+              <span class="sq-dates">Jun 2023 - Oct 2025</span>
+              <p>Built consortia with Arm, Huawei, Fraunhofer for open HPC ecosystem</p>
+            </div>
+          </div>
+          
+          <div class="side-quest-card">
+            <span class="sq-icon">🏢</span>
+            <div class="sq-info">
+              <h4>Founder Space Utrecht</h4>
+              <span class="sq-role">Co-Founder</span>
+              <span class="sq-dates">Apr 2024 - Oct 2025</span>
+              <p>10 startups hosted, sold for profit</p>
+            </div>
+          </div>
+          
+          <div class="side-quest-card">
+            <span class="sq-icon">🌱</span>
+            <div class="sq-info">
+              <h4>Nationale Coalitie Duurzame Digitalisering</h4>
+              <span class="sq-role">Strategic Board Member</span>
+              <span class="sq-dates">Jul 2024 - May 2025</span>
+              <p>Shaped Dutch Coalition for Sustainable Digitization</p>
+            </div>
+          </div>
+          
+          <div class="side-quest-card">
+            <span class="sq-icon">🌍</span>
+            <div class="sq-info">
+              <h4>Sigma Squared Society</h4>
+              <span class="sq-role">Executive, Dutch Chapter</span>
+              <span class="sq-dates">Oct 2022 - Mar 2024</span>
+              <p>14 events, 50% female founders</p>
+            </div>
+          </div>
+          
+          <div class="side-quest-card">
+            <span class="sq-icon">🏛️</span>
+            <div class="sq-info">
+              <h4>Provincie Noord-Brabant</h4>
+              <span class="sq-role">AI Advisory Board</span>
+              <span class="sq-dates">Sep 2022 - Apr 2024</span>
+              <p>Advised Dutch government on AI policy</p>
+            </div>
+          </div>
+          
+          <div class="side-quest-card">
+            <span class="sq-icon">🚀</span>
+            <div class="sq-info">
+              <h4>KICKOFF EHV</h4>
+              <span class="sq-role">External Affairs</span>
+              <span class="sq-dates">Sep 2018 - Jul 2019</span>
+              <p>Revived student entrepreneur community at TU/e</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+
+    <!-- Footer -->
+    <footer class="contact-bar">
+      <a href="mailto:busterfranken@gmail.com" class="contact-item">
+        <span class="contact-icon">📧</span>
+        <span class="contact-text">busterfranken@gmail.com</span>
+      </a>
+      <a href="tel:+31624877967" class="contact-item">
+        <span class="contact-icon">📱</span>
+        <span class="contact-text">+31 6 2487 7967</span>
+      </a>
+      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
+        <span class="contact-icon">💼</span>
+        <span class="contact-text">LinkedIn</span>
+      </a>
+      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
+        <span class="contact-icon">💻</span>
+        <span class="contact-text">GitHub</span>
+      </a>
+      <span class="contact-item location">
+        <span class="contact-icon">📍</span>
+        <span class="contact-text">Amsterdam, Netherlands</span>
+      </span>
+    </footer>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/overlay.js"></script>
+  <script>
+    // Campaign toggle functionality
+    document.querySelectorAll('.campaign-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.campaign-card');
+        const body = card.querySelector('.campaign-body');
+        const isExpanded = body.style.display !== 'none';
+        
+        body.style.display = isExpanded ? 'none' : 'block';
+        btn.textContent = isExpanded ? '▶' : '▼';
+        card.classList.toggle('expanded', !isExpanded);
+      });
+    });
+    
+    // Make entire campaign header clickable
+    document.querySelectorAll('.campaign-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('campaign-toggle')) {
+          header.querySelector('.campaign-toggle').click();
+        }
+      });
+      header.style.cursor = 'pointer';
+    });
+    
+    // Campaign Status click handler
+    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof getCampaignStatusOverlayContent === 'function') {
+          openOverlay(getCampaignStatusOverlayContent());
+        }
+      });
+    });
+    
+    // View toggle - redirect to character sheet for classic CV
+    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view === 'classic') {
+          localStorage.setItem('preferredView', 'classic');
+          window.location.href = 'index.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
