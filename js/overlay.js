@@ -381,6 +381,8 @@ function getCombatStatOverlayContent(statKey) {
       title = 'Hit Points';
       subtitle = stats.hitPoints.meaning;
       break;
+    case 'heroic-inspiration':
+      return getHeroicInspirationOverlayContent();
     default:
       return '<p>Stat not found</p>';
   }
@@ -671,6 +673,41 @@ function getDefensesOverlayContent() {
   `;
 }
 
+// Generate Heroic Inspiration overlay content
+function getHeroicInspirationOverlayContent() {
+  return `
+    <div class="overlay-header">
+      <span class="overlay-icon">✦</span>
+      <div class="overlay-title-block">
+        <h2 class="overlay-title">Heroic Inspiration</h2>
+        <div class="overlay-subtitle">What kind of events inspire you</div>
+      </div>
+    </div>
+    
+    <div class="overlay-section">
+      <div class="overlay-section-title">D&D Definition</div>
+      <div class="dnd-definition">
+        <p>Your DM can reward you with Inspiration when you do something especially clever, creative, or in character—like solving a puzzle in an unexpected way, or staying true to your ideals in a tough spot. When you have Inspiration, you can spend it to give yourself advantage on one attack roll, saving throw, or ability check.</p>
+      </div>
+    </div>
+    
+    <div class="overlay-section">
+      <div class="overlay-section-title">Background</div>
+      <p class="heroic-inspiration-background">Entertainer turned Folk Hero — from stage and performance into building communities, platforms, and ventures for a better world.</p>
+    </div>
+    
+    <div class="overlay-section overlay-section-inspiration">
+      <div class="cv-meaning cv-meaning-inspiration">
+        <h3 class="cv-meaning-title">What inspires me</h3>
+        <div class="cv-meaning-desc">
+          <p>I get that same “advantage” when I’m around the cutting edge of any field—tech, art, philosophy, or economic theory—or when I’m in conversation with people who want to change the world for the better and we’re actually vibing. Good craftsmanship does it too, whether it’s great food or anything someone makes with care. So does someone rebelling with a cause, or discussing and realizing visions of a better world. I’m inspired when humans organize and come together in a beautiful way: in culture, in a city building something, or in rebellion. And simply when something good is being done.</p>
+          <p>When I have inspiration from any of that, I bring it into the next pitch, the next conversation, or the next build.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // Generate Conditions overlay content
 function getConditionsOverlayContent() {
   const conditions = characterData.conditions;
@@ -806,6 +843,7 @@ if (typeof module !== 'undefined' && module.exports) {
     getActionOverlayContent,
     getDefensesOverlayContent,
     getConditionsOverlayContent,
-    getCampaignStatusOverlayContent
+    getCampaignStatusOverlayContent,
+    getHeroicInspirationOverlayContent
   };
 }

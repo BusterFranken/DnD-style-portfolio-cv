@@ -126,6 +126,50 @@
   opacity: 0.9;
 }
 
+/* Heroic Inspiration: "What inspires me" block (red-maroon box) */
+.overlay-section-inspiration {
+  margin-bottom: 0;
+}
+
+.cv-meaning-inspiration {
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+.cv-meaning-inspiration .cv-meaning-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: 0.02em;
+}
+
+.cv-meaning-inspiration .cv-meaning-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--white);
+  opacity: 1;
+}
+
+.cv-meaning-inspiration .cv-meaning-desc p {
+  margin-bottom: var(--spacing-md);
+}
+
+.cv-meaning-inspiration .cv-meaning-desc p:last-child {
+  margin-bottom: 0;
+}
+
+.heroic-inspiration-background {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  font-style: italic;
+  margin: 0;
+  padding: var(--spacing-sm) 0;
+}
+
 /* Evidence List */
 .evidence-list {
   list-style: none;

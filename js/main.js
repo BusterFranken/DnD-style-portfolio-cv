@@ -219,7 +219,9 @@ function setupClickableElements() {
       e.stopImmediatePropagation();
       
       const element = el.dataset.element;
-      if (typeof getCombatStatOverlayContent === 'function') {
+      if (element === 'heroic-inspiration' && typeof getHeroicInspirationOverlayContent === 'function') {
+        openOverlay(getHeroicInspirationOverlayContent());
+      } else if (typeof getCombatStatOverlayContent === 'function') {
         openOverlay(getCombatStatOverlayContent(element));
       } else {
         openOverlay(getElementOverlayContent(element));
