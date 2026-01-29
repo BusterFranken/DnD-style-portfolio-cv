@@ -817,58 +817,58 @@ const notableEncounters = [
 // Partner Logos (for social proof)
 const partnerLogos = {
   tier1: [
-    { name: "European Space Agency", abbr: "ESA", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d588623620967a2c9f9090.png" },
-    { name: "United Nations", abbr: "UN", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d58862c1e4ef1e342061ca.png" },
-    { name: "World Wide Fund for Nature", abbr: "WWF", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d5886247b9d4827a2d45ae.png" },
-    { name: "Amazon Web Services", abbr: "AWS", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d58861355bb2094fd82b9f.png" }
+    { name: "European Space Agency", abbr: "ESA", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d588623620967a2c9f9090.png" },
+    { name: "United Nations", abbr: "UN", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d58862c1e4ef1e342061ca.png" },
+    { name: "World Wide Fund for Nature", abbr: "WWF", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d5886247b9d4827a2d45ae.png" },
+    { name: "Amazon Web Services", abbr: "AWS", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d58861355bb2094fd82b9f.png" }
   ],
   tier2: [
-    { name: "Eindhoven University of Technology", abbr: "TU/e", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d58a4c5bef065a48fd11c7.png" },
-    { name: "Vrije Universiteit Amsterdam", abbr: "VU", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d5886202d4413d7f55b70a.png" },
-    { name: "NL AI Coalitie", abbr: "NLAIC", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d58862355bb22facd82ba0.png" }
+    { name: "Eindhoven University of Technology", abbr: "TU/e", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d58a4c5bef065a48fd11c7.png" },
+    { name: "Vrije Universiteit Amsterdam", abbr: "VU", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d5886202d4413d7f55b70a.png" },
+    { name: "NL AI Coalitie", abbr: "NLAIC", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d58862355bb22facd82ba0.png" }
   ],
   tier3: [
-    { name: "Axelera AI", abbr: "Axelera", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d58862074baa3ed7280fc8.png" },
-    { name: "Roboflow", abbr: "Roboflow", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d588628cb7f98cb1d3390e.png" },
-    { name: "Cape AI", abbr: "Cape AI", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d588623749cc424d804519.png" },
-    { name: "ML6", abbr: "ML6", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d58861c1e4ef5bc02061b7.png" },
-    { name: "Space 4 Good", abbr: "S4G", logo: "fruitpunch/_assets/asset__623d7d246e8213dbe6aace84_62d588625bef0615f0fcfef1.png" }
+    { name: "Axelera AI", abbr: "Axelera", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d58862074baa3ed7280fc8.png" },
+    { name: "Roboflow", abbr: "Roboflow", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d588628cb7f98cb1d3390e.png" },
+    { name: "Cape AI", abbr: "Cape AI", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d588623749cc424d804519.png" },
+    { name: "ML6", abbr: "ML6", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d58861c1e4ef5bc02061b7.png" },
+    { name: "Space 4 Good", abbr: "S4G", logo: "fruitpunch/assets/asset__623d7d246e8213dbe6aace84_62d588625bef0615f0fcfef1.png" }
   ]
 };
 
 // AI for Good Projects - All 24 blog posts
 const aiForGoodProjects = [
   // Wildlife
-  { category: "Wildlife", name: "AI-powered Wildlife Conservation in Africa", link: "/fruitpunch/blog/ai-powered-wildlife-conservation-in-africa/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641cd12fd14fd9cef2776fa_header.jpeg.jpeg" },
-  { category: "Wildlife", name: "Listening to the Giants: Forest Elephants", link: "/fruitpunch/blog/listening-to-the-giants-protecting-forest-elephants-through-audio-monitoring/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_66333fa3e30d0d2a2b8e5eac_header.jpeg.jpeg" },
-  { category: "Wildlife", name: "Tracking Turtles with AI", link: "/fruitpunch/blog/tracking-turtles-how-ai-helps-conservationists-to-re-identify-sea-turtles/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_663361075d73d9047e74b26b_header.jpeg.jpeg" },
-  { category: "Wildlife", name: "The Bear Necessity of AI in Conservation", link: "/fruitpunch/blog/the-bear-necessity-of-ai-in-conservation/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6643611db64f259e60a5aaca_header.jpeg.jpeg" },
-  { category: "Wildlife", name: "Counting Pelicans in the Danube Delta", link: "/fruitpunch/blog/flying-high-with-ai-counting-pelican-breeding-pairs-in-the-danube-delta/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641d88f832415aafea0c3e2_header.png.png" },
-  { category: "Wildlife", name: "Birdwatching Revolution with AI", link: "/fruitpunch/blog/from-pixels-to-preservation-how-ai-gives-rise-to-a-birdwatching-revolution/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_66335b008479305b73129072_header.jpeg.jpeg" },
-  { category: "Wildlife", name: "Understanding Seals with AI", link: "/fruitpunch/blog/understanding-seals-with-ai/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6633589d9e444f3244d43236_header.jpeg.jpeg" },
-  { category: "Wildlife", name: "Automated Wildlife Taxonomy", link: "/fruitpunch/blog/solving-automated-wildlife-taxonomy-with-ai/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_66335bfe1a999152a6dbfe26_header.png.png" },
-  { category: "Wildlife", name: "Model Optimization for Poacher Detection", link: "/fruitpunch/blog/model-optimization-and-pruning-of-poacher-detecting-yolov5/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_66335cc02d12933658564da2_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "AI-powered Wildlife Conservation in Africa", link: "/fruitpunch/blog/ai-powered-wildlife-conservation-in-africa/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641cd12fd14fd9cef2776fa_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "Listening to the Giants: Forest Elephants", link: "/fruitpunch/blog/listening-to-the-giants-protecting-forest-elephants-through-audio-monitoring/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_66333fa3e30d0d2a2b8e5eac_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "Tracking Turtles with AI", link: "/fruitpunch/blog/tracking-turtles-how-ai-helps-conservationists-to-re-identify-sea-turtles/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_663361075d73d9047e74b26b_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "The Bear Necessity of AI in Conservation", link: "/fruitpunch/blog/the-bear-necessity-of-ai-in-conservation/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6643611db64f259e60a5aaca_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "Counting Pelicans in the Danube Delta", link: "/fruitpunch/blog/flying-high-with-ai-counting-pelican-breeding-pairs-in-the-danube-delta/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641d88f832415aafea0c3e2_header.png.png" },
+  { category: "Wildlife", name: "Birdwatching Revolution with AI", link: "/fruitpunch/blog/from-pixels-to-preservation-how-ai-gives-rise-to-a-birdwatching-revolution/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_66335b008479305b73129072_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "Understanding Seals with AI", link: "/fruitpunch/blog/understanding-seals-with-ai/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6633589d9e444f3244d43236_header.jpeg.jpeg" },
+  { category: "Wildlife", name: "Automated Wildlife Taxonomy", link: "/fruitpunch/blog/solving-automated-wildlife-taxonomy-with-ai/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_66335bfe1a999152a6dbfe26_header.png.png" },
+  { category: "Wildlife", name: "Model Optimization for Poacher Detection", link: "/fruitpunch/blog/model-optimization-and-pruning-of-poacher-detecting-yolov5/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_66335cc02d12933658564da2_header.jpeg.jpeg" },
   
   // Earth
-  { category: "Earth", name: "AI for Coral Reefs", link: "/fruitpunch/challenges/ai-for-coral-reefs/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6633521ff6c8da6a897ef8ab_header.jpeg.jpeg" },
-  { category: "Earth", name: "Detecting Oil Spills on Open Sea", link: "/fruitpunch/blog/how-we-detect-oil-spills/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_667bd8983a99eb471f03d3cd_header.jpeg.jpeg" },
-  { category: "Earth", name: "Going Inland to Clean Oil Spills", link: "/fruitpunch/blog/ai-against-oil-spills-going-inland-to-clean-oil-spills-with-ai/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641dde23e855f21eac89f80_header.jpeg.jpeg" },
-  { category: "Earth", name: "AI for Flood Prediction", link: "/fruitpunch/blog/ai-based-early-warning-system-for-river-floods/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_663359f42272f941bac71e40_header.jpeg.jpeg" },
-  { category: "Earth", name: "Classifying Flooded Forests in Satellite Data", link: "/fruitpunch/blog/the-pains-of-classifying-flooded-forests-in-satellite-data/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641d523ea67321016aa9c82_header.jpeg.jpeg" },
-  { category: "Earth", name: "Tracking Reforestation with AI", link: "/fruitpunch/blog/can-ai-track-reforestation-projects-using-drone-and-satellite-data/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641c8823a2d1861f07fbe62_header.png.png" },
-  { category: "Earth", name: "Vehicle Sensors for Sustainable Cities", link: "/fruitpunch/blog/how-to-use-vehicle-sensors-to-make-cities-more-sustainable/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641d69dbe76045b970e6caa_header.png.png" },
-  { category: "Earth", name: "LLMs for Business Sustainability", link: "/fruitpunch/blog/leveraging-large-language-models-to-make-businesses-around-the-world-more-sustainable/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641daa41279c3ca329791a6_header.jpeg.jpeg" },
+  { category: "Earth", name: "AI for Coral Reefs", link: "/fruitpunch/challenges/ai-for-coral-reefs/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6633521ff6c8da6a897ef8ab_header.jpeg.jpeg" },
+  { category: "Earth", name: "Detecting Oil Spills on Open Sea", link: "/fruitpunch/blog/how-we-detect-oil-spills/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_667bd8983a99eb471f03d3cd_header.jpeg.jpeg" },
+  { category: "Earth", name: "Going Inland to Clean Oil Spills", link: "/fruitpunch/blog/ai-against-oil-spills-going-inland-to-clean-oil-spills-with-ai/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641dde23e855f21eac89f80_header.jpeg.jpeg" },
+  { category: "Earth", name: "AI for Flood Prediction", link: "/fruitpunch/blog/ai-based-early-warning-system-for-river-floods/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_663359f42272f941bac71e40_header.jpeg.jpeg" },
+  { category: "Earth", name: "Classifying Flooded Forests in Satellite Data", link: "/fruitpunch/blog/the-pains-of-classifying-flooded-forests-in-satellite-data/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641d523ea67321016aa9c82_header.jpeg.jpeg" },
+  { category: "Earth", name: "Tracking Reforestation with AI", link: "/fruitpunch/blog/can-ai-track-reforestation-projects-using-drone-and-satellite-data/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641c8823a2d1861f07fbe62_header.png.png" },
+  { category: "Earth", name: "Vehicle Sensors for Sustainable Cities", link: "/fruitpunch/blog/how-to-use-vehicle-sensors-to-make-cities-more-sustainable/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641d69dbe76045b970e6caa_header.png.png" },
+  { category: "Earth", name: "LLMs for Business Sustainability", link: "/fruitpunch/blog/leveraging-large-language-models-to-make-businesses-around-the-world-more-sustainable/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641daa41279c3ca329791a6_header.jpeg.jpeg" },
   
   // Health
-  { category: "Health", name: "Heart Failure Detection from ECGs", link: "/fruitpunch/blog/can-ai-detect-heart-failure-from-electrocardiograms/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641d5f44ba58d59226b5e47_header.png.png" },
-  { category: "Health", name: "Preventing Sepsis in Preterm Babies", link: "/fruitpunch/blog/how-we-applied-ai-to-prevent-sepsis-in-preterm-babies/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641cf46dd58a961950cb268_header.png.png" },
-  { category: "Health", name: "Prioritizing Essential Care with AI", link: "/fruitpunch/blog/prioritizing-essential-care-with-ai/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6798efc44097af4454e6f6f8_header.jpeg.jpeg" },
+  { category: "Health", name: "Heart Failure Detection from ECGs", link: "/fruitpunch/blog/can-ai-detect-heart-failure-from-electrocardiograms/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641d5f44ba58d59226b5e47_header.png.png" },
+  { category: "Health", name: "Preventing Sepsis in Preterm Babies", link: "/fruitpunch/blog/how-we-applied-ai-to-prevent-sepsis-in-preterm-babies/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641cf46dd58a961950cb268_header.png.png" },
+  { category: "Health", name: "Prioritizing Essential Care with AI", link: "/fruitpunch/blog/prioritizing-essential-care-with-ai/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6798efc44097af4454e6f6f8_header.jpeg.jpeg" },
   
   // Other
-  { category: "Autonomous", name: "Autonomous Fixed-Wing UAV Landing", link: "/fruitpunch/blog/autonomous-flight-and-the-landing-of-a-fixed-wing-uav/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641c9dc690de4376b9fb022_header.jpeg.jpeg" },
-  { category: "MLOps", name: "User-friendly Wilderness-proof MLOps", link: "/fruitpunch/blog/user-friendly-wilderness-proof-mlops/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641ce707ba5c7a65616cbaa_header.jpeg.jpeg" },
-  { category: "Safety", name: "AI for Road Safety", link: "/fruitpunch/blog/ai-and-visualisations-a-data-driven-all-rounded-approach-for-road-safety/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_6641dcd23e855f21eac7935a_header.jpeg.jpeg" },
-  { category: "Community", name: "FruitPunch AI 2.0: Community Driven", link: "/fruitpunch/blog/fruitpunch-ai-2-0-community-driven/", image: "fruitpunch/_assets/62604c2173fafef5f182b55a_669537b602b727a016d8e1ba_Screenshot_202021-09-01_20at_2019.21.05_20_2_.png.png" }
+  { category: "Autonomous", name: "Autonomous Fixed-Wing UAV Landing", link: "/fruitpunch/blog/autonomous-flight-and-the-landing-of-a-fixed-wing-uav/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641c9dc690de4376b9fb022_header.jpeg.jpeg" },
+  { category: "MLOps", name: "User-friendly Wilderness-proof MLOps", link: "/fruitpunch/blog/user-friendly-wilderness-proof-mlops/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641ce707ba5c7a65616cbaa_header.jpeg.jpeg" },
+  { category: "Safety", name: "AI for Road Safety", link: "/fruitpunch/blog/ai-and-visualisations-a-data-driven-all-rounded-approach-for-road-safety/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_6641dcd23e855f21eac7935a_header.jpeg.jpeg" },
+  { category: "Community", name: "FruitPunch AI 2.0: Community Driven", link: "/fruitpunch/blog/fruitpunch-ai-2-0-community-driven/", image: "fruitpunch/assets/62604c2173fafef5f182b55a_669537b602b727a016d8e1ba_Screenshot_202021-09-01_20at_2019.21.05_20_2_.png.png" }
 ];
 
 // Media mentions
