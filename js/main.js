@@ -9,10 +9,13 @@ function init() {
   // Load any saved data
   loadSavedData();
   
-  // Render all dynamic content
-  initRender();
+  // Render all dynamic content (only on pages that load render.js: index, projects)
+  if (typeof initRender === 'function') {
+    initRender();
+  }
   
   // Setup event handlers
+  setupNavbarMobile();
   setupViewToggle();
   setupTabNavigation();
   setupClickableElements();
@@ -50,6 +53,54 @@ function init() {
   }, 100);
   
   console.log('🎲 Character sheet initialized!');
+}
+
+// ============================================
+// NAVBAR MOBILE (hamburger menu)
+// ============================================
+function setupNavbarMobile() {
+  const navbar = document.getElementById('mainNavbar');
+  const toggle = document.getElementById('navbarToggle');
+  const menu = document.getElementById('navbarMenu');
+
+  if (!navbar || !toggle || !menu) return;
+
+  function closeMenu() {
+    navbar.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  function openMenu() {
+    navbar.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+
+  toggle.addEventListener('click', () => {
+    if (navbar.classList.contains('is-open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close menu when clicking a nav link (e.g. navigating away or same-page)
+  menu.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (navbar.classList.contains('is-open') && !navbar.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
 }
 
 // ============================================

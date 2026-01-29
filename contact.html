@@ -25,24 +25,29 @@
   <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
 
   <!-- Navigation Bar (shared across both views) -->
-  <nav class="navbar">
-    <div class="navbar-left">
-      <a href="index.html" class="nav-link">Character Sheet</a>
-      <a href="campaigns.html" class="nav-link">Campaigns</a>
-      <a href="notable.html" class="nav-link">Notable</a>
-      <a href="projects.html" class="nav-link">Projects</a>
-      <a href="contact.html" class="nav-link active">Contact</a>
-      <a href="media.html" class="nav-link">Media</a>
-    </div>
-    <div class="navbar-right">
-          <div class="campaign-status dnd-only clickable" data-element="campaign-status">
-            <span class="campaign-label">STATUS:</span>
-            <span class="campaign-name">Open to Adventures</span>
-          </div>
-      <!-- View Toggle -->
-      <div class="view-toggle">
-        <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
-        <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+  <nav class="navbar" id="mainNavbar">
+    <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-left">
+        <a href="index.html" class="nav-link">Character Sheet</a>
+        <a href="campaigns.html" class="nav-link">Campaigns</a>
+        <a href="notable.html" class="nav-link">Notable</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="contact.html" class="nav-link active">Contact</a>
+        <a href="media.html" class="nav-link">Media</a>
+      </div>
+      <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">STATUS:</span>
+          <span class="campaign-name">Open to Adventures</span>
+        </div>
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+        </div>
       </div>
     </div>
   </nav>
@@ -285,6 +290,7 @@
   <script src="js/data.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/overlay.js"></script>
+  <script src="js/main.js"></script>
   <script>
     // Campaign Status click handler
     document.querySelectorAll('.campaign-status.clickable').forEach(el => {
