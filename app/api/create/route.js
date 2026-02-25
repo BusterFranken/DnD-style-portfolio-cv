@@ -1,17 +1,39 @@
 // POST /api/create — Upload CV + docs, generate D&D character sheet
 import { NextResponse } from 'next/server';
-import { extractText, extractImageFromPDF } from '@/lib/parse-pdf';
-import { generateFullSheet } from '@/lib/openai-chunks';
 
 export const maxDuration = 120; // Allow up to 2 min for OpenAI calls
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
-
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
         { error: 'OpenAI API key not configured on server' },
+        { status: 500 }
+      );
+    }
+
+    // Dynamic imports to help with Lambda cold starts
+    let extractText, extractImageFromPDF, generateFullSheet;
+    try {
+      const pdfModule = await import('@/lib/parse-pdf');
+      extractText = pdfModule.extractText;
+      extractImageFromPDF = pdfModule.extractImageFromPDF;
+    } catch (pdfErr) {
+      console.error('Failed to load parse-pdf module:', pdfErr);
+      return NextResponse.json(
+        { error: 'Server module loading error (pdf): ' + pdfErr.message },
+        { status: 500 }
+      );
+    }
+
+    try {
+      const openaiModule = await import('@/lib/openai-chunks');
+      generateFullSheet = openaiModule.generateFullSheet;
+    } catch (openaiErr) {
+      console.error('Failed to load openai-chunks module:', openaiErr);
+      return NextResponse.json(
+        { error: 'Server module loading error (openai): ' + openaiErr.message },
         { status: 500 }
       );
     }
