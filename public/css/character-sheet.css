@@ -134,6 +134,19 @@
   background: var(--primary-red);
 }
 
+.nav-link.back-to-owner {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  margin-right: 4px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.nav-link.back-to-owner:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .navbar-right {
   display: flex;
   align-items: center;

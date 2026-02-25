@@ -3,16 +3,28 @@
    ============================================ */
 
 // Wait for DOM
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', async function() {
+  // Load app data from URL slug, localStorage, or defaults
+  if (typeof loadAppData === 'function') {
+    await loadAppData();
+  }
+  // Legacy: also load any admin-saved data (merges on top)
+  if (typeof loadSavedData === 'function') {
+    loadSavedData();
+  }
+  init();
+});
 
 function init() {
-  // Load any saved data
-  loadSavedData();
-  
-  // Render all dynamic content (only on pages that load render.js: index, projects)
-  if (typeof initRender === 'function') {
+  // Render all dynamic content using the unified render function
+  if (typeof initPageRenders === 'function') {
+    initPageRenders();
+  } else if (typeof initRender === 'function') {
     initRender();
   }
+
+  // Update dynamic header elements from characterData
+  updateHeaderFromData();
   
   // Setup event handlers
   setupNavbarMobile();
@@ -336,45 +348,30 @@ function setupClickableElements() {
         const content = getCampaignStatusOverlayContent();
         openOverlay(content);
       } else {
-        // Fallback: show custom content directly
+        // Dynamic fallback using characterData
+        const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+        const contactLinks = [];
+        if (p.email) contactLinks.push(`<a href="mailto:${p.email}" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>`);
+        if (p.linkedin) contactLinks.push(`<a href="${p.linkedin}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>`);
+
         openOverlay(`
           <div class="overlay-header">
-            <h2>🎯 Current Campaign: Energy Hardtech Exploration</h2>
+            <h2>🎯 ${p.currentCampaign ? `Current Campaign: ${p.currentCampaign}` : 'Current Status'}</h2>
           </div>
           <div class="overlay-body">
             <div class="overlay-section">
-              <h3>What I'm Looking For</h3>
-              <p>I'm currently exploring new startup opportunities and open to exciting ventures in:</p>
-              <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
-                <li><strong>Energy & Hardtech:</strong> Particularly interested in energy solutions, hardtech innovations, and deep tech applications</li>
-                <li><strong>Product & Growth Roles:</strong> Open to joining as a Product Owner or in a Growth role at an exciting startup</li>
-                <li><strong>Deep/Hardtech Ideas:</strong> Open to any compelling deep tech or hardtech concepts that solve real problems</li>
-              </ul>
+              <h3>About ${p.name || 'This Character'}</h3>
+              <p>${p.summary || ''}</p>
+              ${p.currentStatus ? `<p><strong>Status:</strong> ${p.currentStatus}</p>` : ''}
             </div>
-            
-            <div class="overlay-section">
-              <h3>My Background</h3>
-              <p>With my experience building FruitPunch AI from scratch to €45M in AI engineering work crowdsourced for impact organizations, raising €1M, and growing a community of 4500+ engineers, I bring:</p>
-              <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
-                <li>Product management expertise (500+ user and customer interviews conducted, experience design, A/B experiments)</li>
-                <li>Growth and community building (4500+ members, 80+ partners)</li>
-                <li>Fundraising and partnerships (€1M raised, Stanford, ESA, Greenpeace partnerships)</li>
-                <li>Platform building and decision-making experience</li>
-              </ul>
-            </div>
-            
-            <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-              <h3 style="margin-top: 0;">Get In Touch</h3>
-              <p>Interested in discussing opportunities? Let's connect!</p>
-              <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-                <a href="mailto:busterfranken@gmail.com?subject=Energy Hardtech Opportunity" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-                  📧 Email Me
-                </a>
-                <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-                  💼 LinkedIn
-                </a>
+            ${contactLinks.length ? `
+              <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+                <h3 style="margin-top: 0;">Get In Touch</h3>
+                <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
+                  ${contactLinks.join('')}
+                </div>
               </div>
-            </div>
+            ` : ''}
           </div>
         `);
       }
@@ -430,41 +427,45 @@ function setupActionClickables() {
   });
 }
 
-// Generic element overlay content
+// Generic element overlay content — dynamically built from characterData
 function getElementOverlayContent(element) {
+  const cs = (typeof characterData !== 'undefined' && characterData.coreStats) ? characterData.coreStats : {};
+  const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+  const bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
+  const defs = (typeof characterData !== 'undefined' && characterData.defenses) ? characterData.defenses : [];
+  const conds = (typeof characterData !== 'undefined' && characterData.conditions) ? characterData.conditions : [];
+
   const elementInfo = {
     'hp': {
       title: 'Hit Points',
       icon: '❤️',
       description: 'Your life force in D&D represents your ability to withstand damage.',
-      cvMeaning: '€45M Crowdsourced Impact',
+      cvMeaning: cs.hitPoints ? cs.hitPoints.meaning : 'Resilience',
       evidence: [
-        'Represents the €45M in AI engineering value crowdsourced',
-        'Your capacity to absorb challenges and keep going',
-        'Current: 45 / Max: 45 (fully healthy and ready for adventure)'
-      ]
+        cs.hitPoints ? `Current: ${cs.hitPoints.current} / Max: ${cs.hitPoints.max}` : '',
+        'Capacity to absorb challenges and keep going',
+        cs.hitDice ? `Hit Dice: ${cs.hitDice}` : ''
+      ].filter(Boolean)
     },
     'ac': {
       title: 'Armor Class',
       icon: '🛡️',
       description: 'How hard you are to hit in combat. Represents your defenses.',
-      cvMeaning: 'Network Protection',
+      cvMeaning: 'Professional Defense',
       evidence: [
-        'Your professional network provides protection',
-        'Strong relationships deflect problems',
-        'AC 14 represents solid but not impenetrable defenses'
-      ]
+        cs.armorClass ? `AC ${cs.armorClass}` : '',
+        'Professional network and experience provide protection',
+      ].filter(Boolean)
     },
     'initiative': {
       title: 'Initiative',
       icon: '⚡',
       description: 'How quickly you can react and act in combat situations.',
-      cvMeaning: 'First Mover Advantage',
+      cvMeaning: 'Responsiveness',
       evidence: [
-        'DEX (+4) + Alertness Feat (+4) = +8',
-        'How quickly you can pivot and respond to opportunities',
-        '+8 modifier means you almost always act first'
-      ]
+        cs.initiative !== undefined ? `+${cs.initiative} initiative modifier` : '',
+        cs.initiativeBreakdown || 'How quickly you respond to opportunities',
+      ].filter(Boolean)
     },
     'speed': {
       title: 'Speed',
@@ -472,10 +473,9 @@ function getElementOverlayContent(element) {
       description: 'How far you can move in a single turn.',
       cvMeaning: 'Execution Velocity',
       evidence: [
-        '60 ft is double normal human speed',
-        'Cunning Action: Dash as bonus action',
-        'Represents willingness to move anywhere for the right opportunity'
-      ]
+        cs.speed ? `Speed: ${cs.speed}` : '',
+        cs.speedExplanation || 'Pace of career movement and adaptability',
+      ].filter(Boolean)
     },
     'proficiency': {
       title: 'Proficiency Bonus',
@@ -483,43 +483,35 @@ function getElementOverlayContent(element) {
       description: 'Reflects your overall experience and training level.',
       cvMeaning: 'Experience Level',
       evidence: [
-        '+3 bonus at Level 7',
+        cs.proficiencyBonus ? `+${cs.proficiencyBonus} proficiency bonus` : '',
+        p.level ? `Character Level ${p.level}` : '',
         'Added to skills, saves, and attacks where proficient',
-        '7 years of startup experience'
-      ]
+      ].filter(Boolean)
     },
     'background': {
-      title: 'Background: Entrepreneur',
+      title: `Background: ${bg.name || p.background || 'Unknown'}`,
       icon: '🎭',
-      description: 'Based on the Criminal background template - because entrepreneurs break into markets.',
+      description: bg.template ? `Based on the ${bg.template} template.` : 'Your origin story and formative experiences.',
       cvMeaning: 'Origin Story',
       evidence: [
-        'Grew up in parents\' pawn shop',
-        'Professional teen actor (first IKEA gig at 14)',
-        'Made art until switching to engineering'
-      ]
+        bg.characteristics && bg.characteristics.backgroundStory ? bg.characteristics.backgroundStory : '',
+        bg.characteristics && bg.characteristics.origin ? `Origin: ${bg.characteristics.origin}` : '',
+        bg.characteristics && bg.characteristics.firstGig ? `First Gig: ${bg.characteristics.firstGig}` : '',
+      ].filter(Boolean)
     },
     'defenses': {
       title: 'Defenses',
       icon: '🛡️',
       description: 'Protective traits that provide advantages in difficult situations.',
-      cvMeaning: 'Market Protection',
-      evidence: [
-        'Resilient Network - 4500+ engineers, 80+ partners',
-        'Pivot Ready - Multiple successful pivots',
-        'Community Shield - Strong relationships protect against uncertainty'
-      ]
+      cvMeaning: 'Professional Protections',
+      evidence: defs.length ? defs.map(d => `${d.name} — ${d.description}`) : ['No specific defenses listed']
     },
     'conditions': {
       title: 'Conditions',
       icon: '✨',
       description: 'Active effects that influence your capabilities.',
       cvMeaning: 'Active Buffs',
-      evidence: [
-        'Inspired - Advantage on impact-driven goals',
-        'Alert - +4 initiative, can\'t be surprised',
-        'Mission-Driven - Resistant to distractions'
-      ]
+      evidence: conds.length ? conds.map(c => `${c.name}${c.active ? ' (Active)' : ''} — ${c.description}`) : ['No active conditions']
     }
   };
   
@@ -576,10 +568,15 @@ function setupRollableElements() {
 }
 
 // ============================================
-// REST BUTTONS
+// REST BUTTONS — Dynamic content from characterData
 // ============================================
 function setupRestButtons() {
-  // Short Rest = Daily/Weekly Activities
+  const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+  const extras = (typeof characterData !== 'undefined' && characterData.extras) ? characterData.extras : {};
+  const funFacts = extras.funFacts || [];
+  const interests = extras.interests || [];
+
+  // Short Rest = Interests & Fun Facts
   const shortRestBtn = document.getElementById('shortRestBtn') || document.querySelector('.short-rest');
   shortRestBtn?.addEventListener('click', () => {
     openOverlay(`
@@ -587,7 +584,7 @@ function setupRestButtons() {
         <span class="overlay-icon">⚡</span>
         <div class="overlay-title-block">
           <h2 class="overlay-title">Short Rest</h2>
-          <div class="overlay-subtitle">Daily & Weekly Activities</div>
+          <div class="overlay-subtitle">Interests & Fun Facts</div>
         </div>
       </div>
       
@@ -598,53 +595,50 @@ function setupRestButtons() {
         </div>
       </div>
       
-      <div class="overlay-section">
-        <div class="overlay-section-title">What I Do Daily & Weekly</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">💪</span>
-            <span class="evidence-text"><strong>Fitness & Training:</strong> I love to work out and have done many sports. I go to the gym every day and am big into scientific lifting. I've been training since I was 17, and in the last 2 years I gained 12kg in muscle with this approach.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🍳</span>
-            <span class="evidence-text"><strong>Cooking:</strong> I love cooking—Arabic, Mediterranean, and modern fusion mostly. Think Ottolenghi style.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">☕</span>
-            <span class="evidence-text"><strong>Foodie & Coffee Nerd:</strong> I'm a big foodie and coffee nerd. Ask me for my top recommendations in any city I've visited—I keep an extensive record in Google Maps.</span>
-          </li>
-        </ul>
-      </div>
+      ${interests.length ? `
+        <div class="overlay-section">
+          <div class="overlay-section-title">Interests</div>
+          <ul class="evidence-list">
+            ${interests.map(i => `
+              <li class="evidence-item">
+                <span class="evidence-bullet">•</span>
+                <span class="evidence-text">${i}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : ''}
       
-      <div class="overlay-section">
-        <div class="overlay-section-title">General Interests</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎨</span>
-            <span class="evidence-text"><strong>Art:</strong> I'm into art—anything that is cutting edge really, culturally or technologically.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">📚</span>
-            <span class="evidence-text"><strong>Political Economy, Philosophy & Sociology:</strong> I'm a nerd in these fields, always reading and refining my understanding. My Goodreads account is my trophy wall.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">👥</span>
-            <span class="evidence-text"><strong>Meeting New People:</strong> I love meeting new people, am very social, and like to hear from very different backgrounds—that is what makes life rich.</span>
-          </li>
-        </ul>
-      </div>
+      ${funFacts.length ? `
+        <div class="overlay-section">
+          <div class="overlay-section-title">Fun Facts</div>
+          <ul class="evidence-list">
+            ${funFacts.map(f => `
+              <li class="evidence-item">
+                <span class="evidence-bullet">🎲</span>
+                <span class="evidence-text">${f}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : ''}
     `);
   });
   
-  // Long Rest = Day Off Activities
+  // Long Rest = Contact & Connect
   const longRestBtn = document.getElementById('longRestBtn') || document.querySelector('.long-rest');
   longRestBtn?.addEventListener('click', () => {
+    const contactLinks = [];
+    if (p.email) contactLinks.push(`<a href="mailto:${p.email}?subject=Let's Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>`);
+    if (p.linkedin) contactLinks.push(`<a href="${p.linkedin}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>`);
+    if (p.github) contactLinks.push(`<a href="${p.github}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>`);
+
     openOverlay(`
       <div class="overlay-header">
         <span class="overlay-icon">🌙</span>
         <div class="overlay-title-block">
           <h2 class="overlay-title">Long Rest</h2>
-          <div class="overlay-subtitle">Day Off Activities</div>
+          <div class="overlay-subtitle">Connect & Collaborate</div>
         </div>
       </div>
       
@@ -656,49 +650,20 @@ function setupRestButtons() {
       </div>
       
       <div class="overlay-section">
-        <div class="overlay-section-title">What I Do With a Day Off</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎉</span>
-            <span class="evidence-text"><strong>Community Building:</strong> Organizing events for startup founders and friends, designing unique experiences they won't forget—from whisky tastings with food pairing to big parties, to D&D-themed NY parties where everyone competes in D&D skill-related party games to determine their skillset for the final quest, to boat trips with unique storytelling formats to get deep.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🧖</span>
-            <span class="evidence-text"><strong>Sauna & Spa:</strong> I love the sauna and going to the nude spa with friends.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🏔️</span>
-            <span class="evidence-text"><strong>Nature:</strong> Going into nature—hiking, swimming, climbing.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎵</span>
-            <span class="evidence-text"><strong>Culture & Nightlife:</strong> Going raving, or to a museum exhibition.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎨</span>
-            <span class="evidence-text"><strong>Passion Projects:</strong> Working on passion projects—art or tech.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🧘</span>
-            <span class="evidence-text"><strong>Psychedelics:</strong> Once in a while, doing a psychedelics trip.</span>
-          </li>
-        </ul>
+        <div class="overlay-section-title">About ${p.name || 'This Character'}</div>
+        <p>${p.summary || 'No summary available.'}</p>
+        ${p.currentStatus ? `<div style="margin-top: var(--spacing-md);"><strong>Status:</strong> ${p.currentStatus}</div>` : ''}
+        ${p.currentCampaign ? `<div><strong>Current Focus:</strong> ${p.currentCampaign}</div>` : ''}
       </div>
       
-      <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-        <div class="overlay-section-title">Want to Connect?</div>
-        <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-          <a href="mailto:${characterData.personal.email}?subject=Let's Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-            📧 Email Me
-          </a>
-          <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-            💼 LinkedIn
-          </a>
-          <a href="Resume-Buster-short.pdf" download class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-            📄 Download CV
-          </a>
+      ${contactLinks.length ? `
+        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+          <div class="overlay-section-title">Get In Touch</div>
+          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
+            ${contactLinks.join('')}
+          </div>
         </div>
-      </div>
+      ` : ''}
     `);
   });
 }
@@ -740,7 +705,231 @@ function formatDate(dateString) {
 
 // Removed dynamic height matching - now using fixed CSS height set once on init
 
+// ============================================
+// UPDATE HEADER FROM DATA (for share-link / creator views)
+// ============================================
+function updateHeaderFromData() {
+  if (typeof characterData === 'undefined') return;
+  const p = characterData.personal;
+  if (!p) return;
+
+  // Update character name
+  const nameEl = document.querySelector('.character-name');
+  if (nameEl && p.name) nameEl.textContent = p.name;
+
+  // Update title tag
+  if (p.name) document.title = document.title.replace(/^[^|]+/, p.name + ' ');
+
+  // Update avatar — use extracted image, or show initials placeholder for generated pages
+  const avatarImg = document.querySelector('.character-avatar img');
+  const avatarPlaceholder = document.querySelector('.character-avatar .avatar-placeholder');
+  if (characterData.avatarImage) {
+    // Extracted image from PDF or uploaded image
+    if (avatarImg) {
+      avatarImg.src = characterData.avatarImage;
+      avatarImg.alt = p.name || '';
+      avatarImg.style.display = '';
+    }
+    if (avatarPlaceholder) avatarPlaceholder.style.display = 'none';
+  } else if (window.__appDataSource && window.__appDataSource !== 'default') {
+    // Generated/shared page with no image — show initials
+    if (avatarImg) avatarImg.style.display = 'none';
+    if (avatarPlaceholder && p.name) {
+      const initials = p.name.split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
+      avatarPlaceholder.textContent = initials;
+      avatarPlaceholder.style.display = 'flex';
+    }
+  } else if (avatarImg && p.avatar) {
+    avatarImg.src = p.avatar;
+    avatarImg.alt = p.name || '';
+  }
+
+  // ── Nav updates for generated pages ──
+  const slug = window.__appDataSlug;
+  const isGenerated = slug && window.__appDataSource && window.__appDataSource !== 'default';
+
+  if (isGenerated) {
+    const navLeft = document.querySelector('.navbar-left');
+
+    // Propagate ?slug= to all nav links so navigation stays within this person's sheet
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const text = link.textContent.trim();
+
+      // Hide "Projects" (only relevant for the site owner)
+      if (text === 'Projects') {
+        link.style.display = 'none';
+        return;
+      }
+
+      // Don't modify "Create Yours" — it should always go to the clean creator page
+      if (text === 'Create Yours') return;
+
+      // Append slug to the href
+      const href = link.getAttribute('href');
+      if (href && !href.includes('slug=')) {
+        const separator = href.includes('?') ? '&' : '?';
+        link.setAttribute('href', href + separator + 'slug=' + encodeURIComponent(slug));
+      }
+    });
+
+    // Prepend a "← Back to Buster" link as the first nav item
+    if (navLeft && !document.getElementById('backToBusterLink')) {
+      const backLink = document.createElement('a');
+      backLink.id = 'backToBusterLink';
+      backLink.href = 'index.html';
+      backLink.className = 'nav-link back-to-owner';
+      backLink.textContent = '\u2190 Back to Buster';
+      navLeft.insertBefore(backLink, navLeft.firstChild);
+    }
+  }
+
+  // Update class display
+  const classDisplay = document.getElementById('classDisplay');
+  if (classDisplay && characterData.classes && characterData.classes.length) {
+    classDisplay.innerHTML = characterData.classes
+      .map(c => `<span class="class-item" data-class="${c.id}">${c.name} ${c.level}</span>`)
+      .join(' / ');
+  }
+
+  // Update character details
+  const speciesEl = document.querySelector('.species');
+  if (speciesEl && p.species) speciesEl.textContent = p.species;
+  const bgEl = document.querySelector('.background');
+  if (bgEl && p.background) bgEl.textContent = p.background;
+  const alignEl = document.querySelector('.alignment');
+  if (alignEl && p.alignment) alignEl.textContent = p.alignment;
+
+  // Update ability scores
+  if (characterData.abilities) {
+    Object.entries(characterData.abilities).forEach(([key, ab]) => {
+      const el = document.querySelector(`.ability-score[data-ability="${key}"]`);
+      if (!el) return;
+      const modEl = el.querySelector('.ability-modifier');
+      const valEl = el.querySelector('.ability-value');
+      if (modEl) {
+        const sign = ab.modifier >= 0 ? '+' : '';
+        modEl.textContent = `${sign}${ab.modifier}`;
+        modEl.dataset.mod = ab.modifier;
+      }
+      if (valEl) valEl.textContent = ab.score;
+    });
+  }
+
+  // Update core stats
+  if (characterData.coreStats) {
+    const cs = characterData.coreStats;
+    const profEl = document.querySelector('.stat-box.proficiency .stat-value');
+    if (profEl) { profEl.textContent = `+${cs.proficiencyBonus}`; profEl.dataset.mod = cs.proficiencyBonus; }
+    const initEl = document.querySelector('.stat-box.initiative .stat-value');
+    if (initEl) { initEl.textContent = `+${cs.initiative}`; initEl.dataset.mod = cs.initiative; }
+    const acEl = document.querySelector('.stat-box.armor-class .stat-value');
+    if (acEl) acEl.textContent = cs.armorClass;
+    const spdEl = document.querySelector('.stat-box.speed .stat-value');
+    if (spdEl) spdEl.innerHTML = `${cs.speed.replace(/\s*ft\.?/, '')}<span class="unit">ft.</span>`;
+    const hpCur = document.querySelector('.hp-current');
+    const hpMax = document.querySelector('.hp-max');
+    const hpMeaning = document.querySelector('.hp-meaning');
+    if (hpCur && cs.hitPoints) hpCur.textContent = cs.hitPoints.current;
+    if (hpMax && cs.hitPoints) hpMax.textContent = cs.hitPoints.max;
+    if (hpMeaning && cs.hitPoints) hpMeaning.textContent = cs.hitPoints.meaning;
+  }
+
+  // Update defenses
+  const defList = document.querySelector('.defenses-box .dc-list');
+  if (defList && characterData.defenses) {
+    defList.innerHTML = characterData.defenses.map(d => `<span class="dc-item">${d.name}</span>`).join('');
+  }
+  // Update conditions
+  const condList = document.querySelector('.conditions-box .dc-list');
+  if (condList && characterData.conditions) {
+    condList.innerHTML = characterData.conditions.map(c => `<span class="dc-item ${c.active ? 'active' : ''}">${c.name}</span>`).join('');
+  }
+
+  // Update saving throws
+  if (characterData.abilities) {
+    document.querySelectorAll('.save-item').forEach(el => {
+      const key = el.dataset.save;
+      const ab = characterData.abilities[key];
+      if (!ab) return;
+      const profBonus = characterData.coreStats ? characterData.coreStats.proficiencyBonus : 0;
+      const mod = ab.saveProficient ? ab.modifier + profBonus : ab.modifier;
+      const sign = mod >= 0 ? '+' : '';
+      const modEl = el.querySelector('.save-mod');
+      if (modEl) { modEl.textContent = `${sign}${mod}`; modEl.dataset.mod = mod; }
+      if (ab.saveProficient) {
+        el.classList.add('proficient');
+        const marker = el.querySelector('.proficiency-marker');
+        if (marker) marker.classList.add('filled');
+      }
+    });
+  }
+
+  // Update passive skills
+  if (characterData.coreStats) {
+    const ppEl = document.querySelector('.passive-skill[data-skill="perception"] .passive-value');
+    if (ppEl) ppEl.textContent = characterData.coreStats.passivePerception;
+    const piEl = document.querySelector('.passive-skill[data-skill="investigation"] .passive-value');
+    if (piEl) piEl.textContent = characterData.coreStats.passiveInvestigation;
+    const pisEl = document.querySelector('.passive-skill[data-skill="insight"] .passive-value');
+    if (pisEl) pisEl.textContent = characterData.coreStats.passiveInsight;
+  }
+
+  // Update senses
+  const sensesEl = document.querySelector('.senses-value');
+  if (sensesEl && characterData.senses) {
+    sensesEl.textContent = characterData.senses;
+  }
+
+  // Update proficiencies text using label-based selectors (more robust)
+  if (characterData.proficiencies) {
+    const profs = characterData.proficiencies;
+    document.querySelectorAll('.prof-category').forEach(cat => {
+      const label = cat.querySelector('.prof-label');
+      const value = cat.querySelector('.prof-value');
+      if (!label || !value) return;
+      const labelText = label.textContent.trim().toUpperCase();
+      if (labelText === 'ARMOR' && profs.armor) {
+        value.textContent = profs.armor.length ? profs.armor.join(', ') : 'None';
+      } else if (labelText === 'WEAPONS' && profs.weapons) {
+        value.textContent = profs.weapons.length ? profs.weapons.join(', ') : 'None';
+      } else if (labelText === 'TOOLS' && profs.tools) {
+        value.textContent = profs.tools.length ? profs.tools.join(', ') : 'None';
+      } else if (labelText === 'LANGUAGES' && profs.languages) {
+        value.textContent = profs.languages.map(l => {
+          // Handle both formats: {name: "Common", native: "English"} and {name: "English", native: "yes"}
+          const displayName = l.native && l.native.length > 3 ? l.native : l.name;
+          return `${displayName} (${l.proficiency})`;
+        }).join(', ');
+      }
+    });
+  }
+
+  // Update contact bar
+  const contactBar = document.querySelector('.contact-bar');
+  if (contactBar && p) {
+    const items = [];
+    if (p.email) items.push(`<a href="mailto:${p.email}" class="contact-item"><span class="contact-icon">&#128231;</span><span class="contact-text">${p.email}</span></a>`);
+    if (p.phone) items.push(`<a href="tel:${p.phone}" class="contact-item"><span class="contact-icon">&#128241;</span><span class="contact-text">${p.phone}</span></a>`);
+    if (p.linkedin) items.push(`<a href="${p.linkedin}" target="_blank" class="contact-item"><span class="contact-icon">&#128188;</span><span class="contact-text">LinkedIn</span></a>`);
+    if (p.github) items.push(`<a href="${p.github}" target="_blank" class="contact-item"><span class="contact-icon">&#128187;</span><span class="contact-text">GitHub</span></a>`);
+    if (p.location) items.push(`<span class="contact-item location"><span class="contact-icon">&#128205;</span><span class="contact-text">${p.location}</span></span>`);
+    if (items.length) contactBar.innerHTML = items.join('');
+  }
+
+  // Update navbar campaign status text
+  const campaignNameEl = document.querySelector('.campaign-status .campaign-name');
+  const campaignLabelEl = document.querySelector('.campaign-status .campaign-label');
+  if (campaignNameEl) {
+    // On index.html, show campaign name; on other pages, show level
+    if (p.currentCampaign && campaignLabelEl && campaignLabelEl.textContent.includes('CAMPAIGN')) {
+      campaignNameEl.textContent = p.currentCampaign;
+    } else if (p.level && campaignLabelEl && campaignLabelEl.textContent.includes('LEVEL')) {
+      campaignNameEl.textContent = p.level;
+    }
+  }
+}
+
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { init, setupViewToggle, setupTabNavigation };
+  module.exports = { init, setupViewToggle, setupTabNavigation, updateHeaderFromData };
 }

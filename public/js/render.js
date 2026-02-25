@@ -130,7 +130,8 @@ function renderActions() {
 }
 
 function renderActionItem(action) {
-  const hasAttack = action.attackBonus !== undefined;
+  const hasAttack = action.attackBonus != null && action.attackBonus !== undefined;
+  const hasDamage = action.damage != null && action.damageType != null;
   const icon = action.type === 'Attack' ? '⚔️' : 
                action.type === 'Bonus Action' ? '⚡' : 
                action.type === 'Reaction' ? '🔄' : '🎬';
@@ -142,10 +143,10 @@ function renderActionItem(action) {
         <div class="action-name">${action.name}</div>
         <div class="action-type">${action.type}${action.uses ? ` • ${action.uses}` : ''}</div>
       </div>
-      ${hasAttack ? `
+      ${hasAttack || hasDamage ? `
         <div class="action-stats">
-          <div class="action-attack rollable" data-mod="${action.attackBonus}">+${action.attackBonus} to hit</div>
-          <div class="action-damage">${action.damage} ${action.damageType}</div>
+          ${hasAttack ? `<div class="action-attack rollable" data-mod="${action.attackBonus}">+${action.attackBonus} to hit</div>` : ''}
+          ${hasDamage ? `<div class="action-damage">${action.damage} ${action.damageType}</div>` : ''}
         </div>
       ` : ''}
     </div>
@@ -399,27 +400,32 @@ function renderExtras() {
   `;
 }
 
-// Render Classic CV View
+// Render Classic CV View — fully dynamic from characterData + campaignsData
 function renderClassicCV() {
   const container = document.getElementById('classicCvContainer');
   if (!container) return;
   
   const data = characterData;
-  
+  if (!data || !data.personal) return;
+
+  // Build contact links dynamically
+  const contactParts = [];
+  if (data.personal.email) contactParts.push(`<a href="mailto:${data.personal.email}">${data.personal.email}</a>`);
+  if (data.personal.phone) contactParts.push(`<a href="tel:${data.personal.phone}">${data.personal.phone}</a>`);
+  if (data.personal.linkedin) contactParts.push(`<a href="${data.personal.linkedin}" target="_blank">LinkedIn</a>`);
+  if (data.personal.github) contactParts.push(`<a href="${data.personal.github}" target="_blank">GitHub</a>`);
+  if (data.personal.location) contactParts.push(`<span>${data.personal.location}</span>`);
+
+  // Build skills section from characterData.skills
+  const proficientSkills = (data.skills || []).filter(s => s.proficient || s.expertise);
+  const toolsAndLangs = (data.proficiencies && data.proficiencies.tools) || [];
+
   container.innerHTML = `
     <header class="classic-header">
       <h1 class="classic-name">${data.personal.name}</h1>
       <div class="classic-title">${data.personal.title}</div>
       <div class="classic-contact">
-        <a href="mailto:${data.personal.email}">${data.personal.email}</a>
-        <span>•</span>
-        <a href="tel:${data.personal.phone}">${data.personal.phone}</a>
-        <span>•</span>
-        <a href="${data.personal.linkedin}" target="_blank">LinkedIn</a>
-        <span>•</span>
-        <a href="${data.personal.github}" target="_blank">GitHub</a>
-        <span>•</span>
-        <span>${data.personal.location}</span>
+        ${contactParts.join('<span>•</span>')}
       </div>
     </header>
     
@@ -434,116 +440,101 @@ function renderClassicCV() {
     </section>
     
     <section class="classic-section">
-      <h2 class="classic-section-title">Education</h2>
-      ${renderClassicEducation()}
-    </section>
-    
-    <section class="classic-section">
       <h2 class="classic-section-title">Skills</h2>
       <div class="classic-skills-grid">
-        <div class="classic-skill-category">
-          <div class="classic-skill-category-title">Core Competencies</div>
-          <div class="classic-skill-list">Sales & Partnership Building, Community Building, Fundraising, Operations, Presenting/Marketing, Product Management</div>
-        </div>
-        <div class="classic-skill-category">
-          <div class="classic-skill-category-title">Technical</div>
-          <div class="classic-skill-list">AI/ML, Data Science, Python, Web Development, User Research, A/B Testing</div>
-        </div>
+        ${proficientSkills.length ? `
+          <div class="classic-skill-category">
+            <div class="classic-skill-category-title">Key Proficiencies</div>
+            <div class="classic-skill-list">${proficientSkills.map(s => s.cvMeaning || s.name).join(', ')}</div>
+          </div>
+        ` : ''}
+        ${toolsAndLangs.length ? `
+          <div class="classic-skill-category">
+            <div class="classic-skill-category-title">Tools & Technologies</div>
+            <div class="classic-skill-list">${toolsAndLangs.join(', ')}</div>
+          </div>
+        ` : ''}
       </div>
     </section>
     
-    <section class="classic-section">
-      <h2 class="classic-section-title">Testimonials</h2>
-      ${data.vouches.map(v => `
-        <div class="classic-testimonial">
-          <div class="classic-testimonial-text">"${v.text}"</div>
-          <div class="classic-testimonial-author">– ${v.author}, ${v.role}</div>
-        </div>
-      `).join('')}
-    </section>
-    
-    <section class="classic-section">
-      <h2 class="classic-section-title">Languages</h2>
-      <div class="classic-languages">
-        ${data.proficiencies.languages.map(l => `
-          <div class="classic-language">
-            <span class="classic-language-name">${l.native}</span>
-            <span class="classic-language-level">(${l.proficiency})</span>
+    ${(data.vouches && data.vouches.length) ? `
+      <section class="classic-section">
+        <h2 class="classic-section-title">Testimonials</h2>
+        ${data.vouches.map(v => `
+          <div class="classic-testimonial">
+            <div class="classic-testimonial-text">"${v.text}"</div>
+            <div class="classic-testimonial-author">– ${v.author}, ${v.role}</div>
           </div>
         `).join('')}
-      </div>
-    </section>
+      </section>
+    ` : ''}
+    
+    ${(data.proficiencies && data.proficiencies.languages && data.proficiencies.languages.length) ? `
+      <section class="classic-section">
+        <h2 class="classic-section-title">Languages</h2>
+        <div class="classic-languages">
+          ${data.proficiencies.languages.map(l => `
+            <div class="classic-language">
+              <span class="classic-language-name">${(l.native && l.native.length > 3) ? l.native : l.name}</span>
+              <span class="classic-language-level">(${l.proficiency})</span>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+    ` : ''}
   `;
 }
 
+// Render work experience from campaignsData (dynamic)
 function renderClassicExperience() {
-  const experiences = [
-    {
-      title: 'VP of Partnerships',
-      company: 'Zindi',
-      dates: 'May 2025 - Oct 2025',
-      location: 'Delaware, United States',
-      description: 'Post-acquisition role ensuring smooth transition of FruitPunch AI.',
-      achievements: ['Transferred all 80+ partnerships', 'Migrated 4500+ community members']
-    },
-    {
-      title: 'Founder & CEO',
-      company: 'FruitPunch AI',
-      dates: 'Sep 2018 - May 2025',
-      location: 'The Netherlands',
-      description: 'Built a platform for AI engineers to train their skills by crowdsourcing solutions for impact organizations. Made all key product decisions: user interviews, experience design, and experiments.',
-      achievements: [
-        '€45M in AI engineering crowdsourced for impact organizations',
-        '€1M in VC funding raised from Thomas Wolf (Hugging Face) and LUMO Labs',
-        '4500+ AI engineers on platform, 80+ partner organizations',
-        'AI against Toxic Clouds caused €4.1M in fines for Tata Steel',
-        'Partnerships with Stanford, ESA, Greenpeace, WWF, NXP, Huawei',
-        'Acquired by Zindi (2025)'
-      ]
-    },
-    {
-      title: 'AI Program Manager',
-      company: 'Eindhoven University of Technology (EAISI)',
-      dates: 'May 2019 - Dec 2022',
-      location: 'Eindhoven, The Netherlands',
-      description: 'Founding team member of the Eindhoven AI Systems Institute.',
-      achievements: [
-        'Built experience room with 6 physical AI demos',
-        'Helped recruit AI professors to build the institute',
-        'Launched accredited AI course for 135 CS students'
-      ]
-    }
-  ];
-  
-  return experiences.map(exp => `
-    <div class="classic-experience-item">
-      <div class="classic-exp-header">
-        <div>
-          <div class="classic-exp-title">${exp.title}</div>
-          <div class="classic-exp-company">${exp.company}</div>
-        </div>
-        <div>
-          <div class="classic-exp-dates">${exp.dates}</div>
-          <div class="classic-exp-location">${exp.location}</div>
-        </div>
-      </div>
-      <div class="classic-exp-description">${exp.description}</div>
-      <ul class="classic-exp-achievements">
-        ${exp.achievements.map(a => `<li>${a}</li>`).join('')}
-      </ul>
-    </div>
-  `).join('');
-}
+  const campaigns = typeof campaignsData !== 'undefined' ? campaignsData : [];
+  if (!campaigns.length) return '<p>No work experience data available.</p>';
 
-function renderClassicEducation() {
-  return `
-    <div class="classic-education-item">
-      <div class="classic-edu-degree">Bachelor of Science: Mechanical Engineering & Neuroscience</div>
-      <div class="classic-edu-school">Eindhoven University of Technology</div>
-      <div class="classic-edu-dates">2014 - 2018</div>
-      <div class="classic-edu-notes">10/10 for Brain Computer Interfacing research: showed functional brain organoids can be grown on a chip. Extended studies with 60 ECTS in Data Science courses.</div>
-    </div>
-  `;
+  let html = '';
+  campaigns.forEach(campaign => {
+    // Each adventure within a campaign is a specific role/job
+    if (campaign.adventures && campaign.adventures.length) {
+      campaign.adventures.forEach(adv => {
+        const achievements = (adv.encounters || []).map(enc => enc.description);
+        html += `
+          <div class="classic-experience-item">
+            <div class="classic-exp-header">
+              <div>
+                <div class="classic-exp-title">${adv.role || adv.name}</div>
+                <div class="classic-exp-company">${adv.organization || campaign.name}</div>
+              </div>
+              <div>
+                <div class="classic-exp-dates">${adv.dates}</div>
+              </div>
+            </div>
+            <div class="classic-exp-description">${adv.summary}</div>
+            ${achievements.length ? `
+              <ul class="classic-exp-achievements">
+                ${achievements.map(a => `<li>${a}</li>`).join('')}
+              </ul>
+            ` : ''}
+          </div>
+        `;
+      });
+    } else {
+      // Campaign without adventures — show the campaign itself
+      html += `
+        <div class="classic-experience-item">
+          <div class="classic-exp-header">
+            <div>
+              <div class="classic-exp-title">${campaign.name}</div>
+            </div>
+            <div>
+              <div class="classic-exp-dates">${campaign.dates}</div>
+              <div class="classic-exp-location">${campaign.duration}</div>
+            </div>
+          </div>
+          <div class="classic-exp-description">${campaign.summary}</div>
+        </div>
+      `;
+    }
+  });
+  return html;
 }
 
 // Initialize all renders
@@ -559,7 +550,371 @@ function initRender() {
   renderClassicCV();
 }
 
+// ============================================
+// CAMPAIGNS PAGE — Render from campaignsData + sideQuests
+// ============================================
+function renderCampaignsPage() {
+  const container = document.getElementById('campaignsContainer');
+  if (!container) return;
+  if (typeof campaignsData === 'undefined' || !campaignsData.length) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">No campaigns data available.</p>';
+    return;
+  }
+
+  const sq = typeof sideQuests !== 'undefined' ? sideQuests : [];
+
+  let html = '';
+
+  // Main campaigns
+  campaignsData.forEach((campaign, idx) => {
+    const outcomeHtml = campaign.outcome
+      ? `<span class="campaign-outcome success">&check; ${campaign.outcome}</span>`
+      : '';
+    const partnersHtml = campaign.partners && campaign.partners.length
+      ? `<div class="partner-logos"><span class="partners-label">Party Members:</span><div class="logo-scroll">${campaign.partners.map(p => `<span class="partner-badge">${p}</span>`).join('')}</div></div>`
+      : '';
+
+    let adventuresHtml = '';
+    if (campaign.adventures && campaign.adventures.length) {
+      adventuresHtml = '<div class="adventures-list">' + campaign.adventures.map(adv => {
+        let encountersHtml = '';
+        if (adv.encounters && adv.encounters.length) {
+          encountersHtml = '<div class="encounters-list">' + adv.encounters.map(enc => {
+            const iconClass = enc.notable ? 'notable' : '';
+            const icon = enc.notable ? '&#11088;' : '&#9876;&#65039;';
+            const linkHtml = enc.link ? ` <a href="${enc.link}" target="_blank" class="encounter-link">Read more &rarr;</a>` : '';
+            return `<div class="encounter-item ${iconClass}"><span class="encounter-icon">${icon}</span><div class="encounter-content"><strong>${enc.name}</strong><p>${enc.description}${linkHtml}</p></div></div>`;
+          }).join('') + '</div>';
+        }
+
+        const roleOrg = [adv.role, adv.organization].filter(Boolean).join(' at ');
+        const roleHtml = roleOrg ? `<div class="adventure-role">${roleOrg}</div>` : '';
+
+        return `
+          <div class="adventure-card" data-adventure="${adv.id}">
+            <div class="adventure-header">
+              <span class="adventure-icon">&#9876;&#65039;</span>
+              <div class="adventure-info">
+                <h3 class="adventure-title">Adventure: ${adv.name}</h3>
+                <span class="adventure-dates">${adv.dates}</span>
+                ${roleHtml}
+              </div>
+            </div>
+            <p class="adventure-summary">${adv.summary}</p>
+            ${encountersHtml}
+          </div>`;
+      }).join('') + '</div>';
+    }
+
+    html += `
+      <section class="campaign-card ${idx === 0 ? 'expanded' : ''}" data-campaign="${campaign.id}">
+        <div class="campaign-header">
+          <div class="campaign-icon">&#128220;</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">${campaign.name}</h2>
+            <div class="campaign-meta">
+              <span class="campaign-dates">${campaign.dates}</span>
+              <span class="campaign-duration">${campaign.duration}</span>
+              ${outcomeHtml}
+            </div>
+          </div>
+          <button class="campaign-toggle">&#9660;</button>
+        </div>
+        <div class="campaign-body">
+          <p class="campaign-summary">${campaign.summary}</p>
+          ${partnersHtml}
+          ${adventuresHtml}
+        </div>
+      </section>`;
+  });
+
+  // Side Quests
+  if (sq.length) {
+    html += `
+      <section class="campaign-card" data-campaign="side-quests">
+        <div class="campaign-header">
+          <div class="campaign-icon">&#127942;</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">Side Quests</h2>
+            <div class="campaign-meta">
+              <span class="campaign-dates">Various</span>
+            </div>
+          </div>
+          <button class="campaign-toggle">&#9660;</button>
+        </div>
+        <div class="campaign-body">
+          <div class="adventures-list">
+            ${sq.map(s => `
+              <div class="adventure-card">
+                <div class="adventure-header">
+                  <span class="adventure-icon">&#127775;</span>
+                  <div class="adventure-info">
+                    <h3 class="adventure-title">${s.name}</h3>
+                    <span class="adventure-dates">${s.dates}</span>
+                    <div class="adventure-role">${s.role}</div>
+                  </div>
+                </div>
+                <p class="adventure-summary">${s.description}</p>
+                ${s.url && /^https?:\/\/.{4}/.test(s.url) ? `<a href="${s.url}" target="_blank" class="encounter-link">Visit &rarr;</a>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>`;
+  }
+
+  container.innerHTML = html;
+
+  // Re-attach campaign toggle listeners
+  container.querySelectorAll('.campaign-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.campaign-card');
+      card.classList.toggle('expanded');
+    });
+  });
+  container.querySelectorAll('.campaign-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.campaign-toggle')) return;
+      const card = header.closest('.campaign-card');
+      card.classList.toggle('expanded');
+    });
+  });
+}
+
+// ============================================
+// NOTABLE PAGE — Render from notableAdventures + notableEncounters
+// ============================================
+function renderNotablePage() {
+  const container = document.getElementById('notableContainer');
+  if (!container) return;
+
+  const adventures = typeof notableAdventures !== 'undefined' ? notableAdventures : [];
+  const encounters = typeof notableEncounters !== 'undefined' ? notableEncounters : [];
+
+  if (!adventures.length && !encounters.length) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">No notable achievements data available.</p>';
+    return;
+  }
+
+  function rarityClass(idx) {
+    if (idx < 2) return 'legendary';
+    if (idx < 5) return 'epic';
+    return 'rare';
+  }
+
+  function rarityLabel(idx) {
+    if (idx < 2) return 'LEGENDARY';
+    if (idx < 5) return 'EPIC';
+    return 'RARE';
+  }
+
+  let html = '';
+
+  // Notable Adventures
+  if (adventures.length) {
+    html += `
+      <section class="notable-section">
+        <h2 class="section-header">&#127942; Notable Adventures</h2>
+        <p class="section-desc">Major campaigns and story arcs that defined career progression.</p>
+        <div class="notable-grid">
+          ${adventures.map((a, i) => `
+            <div class="notable-card ${rarityClass(i)}">
+              <div class="card-badge">${rarityLabel(i)}</div>
+              <div class="card-icon">&#128142;</div>
+              <h3 class="card-title">${a.name}</h3>
+              <p class="card-desc">${a.description}</p>
+              <div class="card-stats">
+                <span>${a.date}</span>
+                <span>${a.category}</span>
+              </div>
+              ${a.link ? `<a href="${a.link}" target="_blank" class="card-link">Read coverage &rarr;</a>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </section>`;
+  }
+
+  // Notable Encounters
+  if (encounters.length) {
+    html += `
+      <section class="notable-section">
+        <h2 class="section-header">&#9876;&#65039; Key Encounters</h2>
+        <p class="section-desc">Pivotal moments and decisive encounters along the journey.</p>
+        <div class="encounters-timeline">
+          ${encounters.map(e => `
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">${e.date}</div>
+                <h3 class="timeline-title">${e.name}</h3>
+                <p class="timeline-desc">${e.description}</p>
+                <span class="timeline-category">${e.category}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </section>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// ============================================
+// CONTACT PAGE — Render from characterData.personal + organizations
+// ============================================
+function renderContactPage() {
+  const container = document.getElementById('contactContainer');
+  if (!container || typeof characterData === 'undefined') return;
+
+  const p = characterData.personal || {};
+  const orgs = characterData.organizations || [];
+
+  let contactCards = '';
+  if (p.email) contactCards += `<a href="mailto:${p.email}" class="contact-card primary"><span class="contact-icon">&#128231;</span><div class="contact-info"><h3>Email</h3><p>${p.email}</p><span class="contact-note">Best for detailed inquiries</span></div></a>`;
+  if (p.phone) contactCards += `<a href="tel:${p.phone}" class="contact-card"><span class="contact-icon">&#128241;</span><div class="contact-info"><h3>Phone</h3><p>${p.phone}</p><span class="contact-note">Available during business hours</span></div></a>`;
+  if (p.linkedin) contactCards += `<a href="${p.linkedin}" target="_blank" class="contact-card"><span class="contact-icon">&#128188;</span><div class="contact-info"><h3>LinkedIn</h3><p>LinkedIn Profile</p><span class="contact-note">Professional network</span></div></a>`;
+  if (p.github) contactCards += `<a href="${p.github}" target="_blank" class="contact-card"><span class="contact-icon">&#128187;</span><div class="contact-info"><h3>GitHub</h3><p>GitHub Profile</p><span class="contact-note">Code &amp; projects</span></div></a>`;
+  if (p.location) contactCards += `<div class="contact-card"><span class="contact-icon">&#128205;</span><div class="contact-info"><h3>Location</h3><p>${p.location}</p>${p.address ? `<span class="contact-note">${p.address}</span>` : ''}</div></div>`;
+
+  let orgsHtml = '';
+  if (orgs.length) {
+    orgsHtml = `
+      <section class="contact-section">
+        <h2 class="section-title">&#127760; Guild Memberships</h2>
+        <p class="section-desc">Organizations and communities.</p>
+        <div class="org-grid">
+          ${orgs.map(o => `
+            <div class="org-card">
+              <div class="org-header-card">
+                <h3>${o.name}</h3>
+                <span class="org-role-badge">${o.role}</span>
+              </div>
+              <div class="org-dates">${o.dates}</div>
+              <p class="org-desc">${o.description}</p>
+              ${o.url ? `<a href="${o.url}" target="_blank" class="org-link">Visit &rarr;</a>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </section>`;
+  }
+
+  let statusHtml = '';
+  if (p.currentStatus || p.currentCampaign) {
+    statusHtml = `
+      <section class="contact-section">
+        <h2 class="section-title">&#9889; Current Status</h2>
+        <div class="status-card">
+          ${p.currentStatus ? `<div class="status-badge">${p.currentStatus}</div>` : ''}
+          ${p.currentCampaign ? `<p class="status-desc">${p.currentCampaign}</p>` : ''}
+        </div>
+      </section>`;
+  }
+
+  container.innerHTML = `
+    <section class="contact-section">
+      <h2 class="section-title">&#128236; Contact Scrolls</h2>
+      <p class="section-desc">Ways to reach me for new quests and collaborations.</p>
+      <div class="contact-grid">${contactCards}</div>
+    </section>
+    ${statusHtml}
+    ${orgsHtml}
+  `;
+}
+
+// ============================================
+// MEDIA PAGE — Render from mediaMentions
+// ============================================
+function renderMediaPage() {
+  const container = document.getElementById('mediaContainer');
+  if (!container) return;
+
+  const media = typeof mediaMentions !== 'undefined' ? mediaMentions : {};
+  const podcasts = media.podcasts || [];
+  const press = media.press || [];
+  const profiles = media.profiles || [];
+
+  if (!podcasts.length && !press.length && !profiles.length) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">No media mentions data available.</p>';
+    return;
+  }
+
+  function mediaCard(item, icon) {
+    return `
+      <a href="${item.url || '#'}" target="_blank" class="media-card">
+        <div class="media-header">
+          <span class="media-icon">${icon}</span>
+          <div class="media-info">
+            <div class="media-source">${item.name || ''}</div>
+            <h3 class="media-title">${item.title || item.name || ''}</h3>
+          </div>
+        </div>
+        <p class="media-desc">${item.description || ''}</p>
+        <div class="media-footer">
+          ${item.date ? `<span class="media-date">${item.date}</span>` : ''}
+          ${item.platform ? `<span class="media-platform">${item.platform}</span>` : ''}
+        </div>
+      </a>`;
+  }
+
+  let html = '';
+
+  if (podcasts.length) {
+    html += `
+      <section class="media-section">
+        <h2 class="section-header">&#127897;&#65039; Podcasts</h2>
+        <div class="media-grid">${podcasts.map(p => mediaCard(p, '&#127897;&#65039;')).join('')}</div>
+      </section>`;
+  }
+
+  if (press.length) {
+    html += `
+      <section class="media-section">
+        <h2 class="section-header">&#128240; Press Coverage</h2>
+        <div class="media-grid">${press.map(p => mediaCard(p, '&#128240;')).join('')}</div>
+      </section>`;
+  }
+
+  if (profiles.length) {
+    html += `
+      <section class="media-section">
+        <h2 class="section-header">&#128100; Profiles</h2>
+        <div class="media-grid">${profiles.map(p => mediaCard(p, '&#128100;')).join('')}</div>
+      </section>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// Initialize all renders
+function initRender() {
+  renderSkills();
+  renderActions();
+  renderSpells();
+  renderInventory();
+  renderFeatures();
+  renderBackground();
+  renderNotes();
+  renderExtras();
+  renderClassicCV();
+}
+
+// Initialize page-specific renders (called after data is loaded)
+function initPageRenders() {
+  // Character sheet page
+  if (document.getElementById('skillsList')) initRender();
+  // Projects page
+  if (document.getElementById('projectsGrid')) renderProjects();
+  // Campaigns page
+  if (document.getElementById('campaignsContainer')) renderCampaignsPage();
+  // Notable page
+  if (document.getElementById('notableContainer')) renderNotablePage();
+  // Contact page
+  if (document.getElementById('contactContainer')) renderContactPage();
+  // Media page
+  if (document.getElementById('mediaContainer')) renderMediaPage();
+}
+
 // Export
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { initRender, renderProjects };
+  module.exports = { initRender, initPageRenders, renderProjects, renderCampaignsPage, renderNotablePage, renderContactPage, renderMediaPage };
 }

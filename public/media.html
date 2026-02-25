@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Media | Buster Franken</title>
-  <meta name="description" content="Media mentions, podcasts, and press coverage featuring Buster Franken and FruitPunch AI.">
+  <title>Media | D&D CV</title>
+  <meta name="description" content="Media mentions, podcasts, and press coverage.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,150 +17,28 @@
   <link rel="stylesheet" href="css/classic-cv.css">
   <link rel="stylesheet" href="css/overlay.css">
   
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+
   <style>
-    .media-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: var(--spacing-lg);
-    }
-    
-    .media-section {
-      margin-bottom: var(--spacing-xl);
-    }
-    
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: var(--spacing-lg);
-    }
-    
-    .media-card {
-      background: var(--white);
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: var(--spacing-lg);
-      transition: all var(--transition-fast);
-      display: block;
-      text-decoration: none;
-      color: inherit;
-    }
-    
-    .media-card:hover {
-      border-color: var(--primary-red);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    
-    .media-header {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-md);
-    }
-    
-    .media-icon {
-      font-size: 32px;
-      flex-shrink: 0;
-    }
-    
-    .media-info {
-      flex: 1;
-    }
-    
-    .media-source {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--primary-red);
-      text-transform: uppercase;
-      margin-bottom: var(--spacing-xs);
-    }
-    
-    .media-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: var(--spacing-xs);
-      line-height: 1.3;
-    }
-    
-    .media-date {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-    
-    .media-description {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    
-    .media-platform {
-      display: inline-block;
-      font-size: 11px;
-      background: var(--light-bg);
-      padding: 2px 8px;
-      border-radius: var(--radius-sm);
-      margin-top: var(--spacing-sm);
-    }
-    
-    .featured-card {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
-      color: var(--white);
-    }
-    
-    .featured-card .media-source,
-    .featured-card .media-title {
-      color: var(--white);
-    }
-    
-    .featured-card .media-date,
-    .featured-card .media-description {
-      color: var(--text-light);
-    }
-    
-    .featured-card:hover {
-      border-color: var(--primary-red);
-    }
-    
-    .profiles-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-md);
-    }
-    
-    .profile-badge {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-sm) var(--spacing-md);
-      background: var(--white);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: all var(--transition-fast);
-    }
-    
-    .profile-badge:hover {
-      border-color: var(--primary-red);
-      background: var(--light-bg);
-    }
-    
-    .profile-badge span {
-      font-size: 18px;
-    }
+    .media-container { max-width: 1200px; margin: 0 auto; padding: var(--spacing-lg); }
+    .media-section { margin-bottom: var(--spacing-xl); }
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: var(--spacing-lg); }
+    .media-card { background: var(--white); border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: var(--spacing-lg); transition: all var(--transition-fast); display: block; text-decoration: none; color: inherit; }
+    .media-card:hover { border-color: var(--primary-red); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .media-header { display: flex; align-items: flex-start; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+    .media-icon { font-size: 32px; flex-shrink: 0; }
+    .media-info { flex: 1; }
+    .media-source { font-size: 12px; font-weight: 600; color: var(--primary-red); text-transform: uppercase; margin-bottom: var(--spacing-xs); }
+    .media-title { font-family: var(--font-display); font-size: 0.95rem; margin: 0; color: var(--text-primary); }
+    .media-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin: 0 0 var(--spacing-sm); }
+    .media-footer { display: flex; gap: var(--spacing-sm); font-size: 0.72rem; color: var(--text-tertiary); }
+    .media-date, .media-platform { background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px; }
+    @media (max-width: 600px) { .media-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <!-- Admin Login Button -->
   <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
 
-  <!-- Navigation Bar (shared across both views) -->
   <nav class="navbar" id="mainNavbar">
     <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
       <span class="navbar-toggle-icon"></span>
@@ -173,13 +51,13 @@
         <a href="projects.html" class="nav-link">Projects</a>
         <a href="contact.html" class="nav-link">Contact</a>
         <a href="media.html" class="nav-link active">Media</a>
+        <a href="creator.html" class="nav-link">Create Yours</a>
       </div>
       <div class="navbar-right">
         <div class="campaign-status dnd-only clickable" data-element="campaign-status">
-          <span class="campaign-label">COVERAGE:</span>
-          <span class="campaign-name">Podcasts, Press, Profiles</span>
+          <span class="campaign-label">MEDIA:</span>
+          <span class="campaign-name">Press &amp; Podcasts</span>
         </div>
-        <!-- View Toggle -->
         <div class="view-toggle">
           <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
           <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
@@ -188,327 +66,25 @@
     </div>
   </nav>
 
-  <div class="network-page">
+  <div class="media-page">
+    <header class="page-header">
+      <h1 class="page-title">📰 Bardic Chronicles</h1>
+      <p class="page-subtitle">Media mentions, podcast appearances, and press coverage from the journey.</p>
+    </header>
 
-      <header class="page-header">
-        <h1 class="page-title">📰 Tavern Tales & Chronicles</h1>
-        <p class="page-subtitle">Media mentions, podcasts, and press coverage from the adventurer's journeys.</p>
-      </header>
-
-      <main class="media-container">
-        
-        <!-- Featured: Podcasts -->
-        <section class="media-section">
-          <h2 class="section-title">🎙️ Podcast Appearances</h2>
-          <p class="section-desc">Long-form conversations about AI, startups, and building for impact.</p>
-          
-          <div class="media-grid">
-            <a href="https://www.cahn.com/p/teaching-ai-to-save-humanity-with-9b1" target="_blank" class="media-card featured-card">
-              <div class="media-header">
-                <span class="media-icon">🔥</span>
-                <div class="media-info">
-                  <div class="media-source">Impact Innovators at the Fireside</div>
-                  <h3 class="media-title">Teaching AI to Save Humanity</h3>
-                  <div class="media-date">January 2025</div>
-                </div>
-              </div>
-              <p class="media-description">Intimate fireside conversation with Arjé Cahn (Shamrock Ventures) recorded in a forest cabin. Discussing how FruitPunch AI harnesses AI to solve humanity's greatest challenges, challenge-based learning, and the vision for 1 million AI engineers by 2030.</p>
-              <span class="media-platform">Substack / Impact Innovators</span>
-            </a>
-            
-            <a href="https://podcasts.apple.com/us/podcast/how-buster-transformed-his-diverse-experiences-into/id1567328445?i=1000623992011" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🎧</span>
-                <div class="media-info">
-                  <div class="media-source">Innovators Can Laugh</div>
-                  <h3 class="media-title">Transforming Diverse Experiences into FruitPunch AI</h3>
-                  <div class="media-date">August 2023</div>
-                </div>
-              </div>
-              <p class="media-description">Dutch Startups series - how a diverse background (acting, security, teaching) led to creating a 2,500+ engineer community.</p>
-              <span class="media-platform">Apple Podcasts</span>
-            </a>
-            
-            <a href="https://podcasts.apple.com/us/podcast/building-ai-projects-for-social-impact/id1573599014?i=1000594240922" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🤖</span>
-                <div class="media-info">
-                  <div class="media-source">The Automagic Podcast</div>
-                  <h3 class="media-title">Building AI Projects for Social Impact</h3>
-                  <div class="media-date">January 2023</div>
-                </div>
-              </div>
-              <p class="media-description">With Jasper Wognum about how FruitPunch AI builds AI projects for social impact and the challenge-based learning model.</p>
-              <span class="media-platform">Apple Podcasts</span>
-            </a>
-            
-            <a href="https://creators.spotify.com/pod/profile/aigamechangers/episodes/AI-Game-Changers-with-Buster-Franken---FruitPunch-e1ruv3r" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🎮</span>
-                <div class="media-info">
-                  <div class="media-source">AI Game Changers</div>
-                  <h3 class="media-title">AI Game Changers with Buster Franken</h3>
-                  <div class="media-date">December 2022</div>
-                </div>
-              </div>
-              <p class="media-description">Discussion about FruitPunch AI's mission to develop challenge-based AI education and create real-world impact.</p>
-              <span class="media-platform">Spotify</span>
-            </a>
-          </div>
-        </section>
-        
-        <!-- YouTube Videos -->
-        <section class="media-section">
-          <h2 class="section-title">📺 YouTube Videos</h2>
-          <p class="section-desc">Video interviews and appearances on YouTube channels.</p>
-          
-          <div class="media-grid">
-            <a href="https://www.youtube.com/watch?v=dvxic39Ure8" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🎥</span>
-                <div class="media-info">
-                  <div class="media-source">Innovators Can Laugh</div>
-                  <h3 class="media-title">How Buster Transformed Diverse Experiences into FruitPunch AI</h3>
-                  <div class="media-date">August 2023</div>
-                </div>
-              </div>
-              <p class="media-description">YouTube version of the podcast episode discussing how diverse experiences led to creating a thriving AI community of 2,500+ engineers.</p>
-              <span class="media-platform">YouTube</span>
-            </a>
-            
-            <a href="https://www.youtube.com/channel/UCQamYlJKDaAAliiDUpn8s6g" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🎬</span>
-                <div class="media-info">
-                  <div class="media-source">FruitPunch AI Channel</div>
-                  <h3 class="media-title">FruitPunch AI Official YouTube Channel</h3>
-                  <div class="media-date">Ongoing</div>
-                </div>
-              </div>
-              <p class="media-description">Official FruitPunch AI YouTube channel featuring project showcases, challenge highlights, and community content.</p>
-              <span class="media-platform">YouTube</span>
-            </a>
-          </div>
-        </section>
-        
-        <!-- Press Coverage -->
-        <section class="media-section">
-          <h2 class="section-title">📝 Press Coverage</h2>
-          <p class="section-desc">News articles and features about FruitPunch AI and our impact work.</p>
-          
-          <div class="media-grid">
-            <a href="https://siliconcanals.com/fruitpunch-ai-to-monitor-illegal-air-pollution/" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🏭</span>
-                <div class="media-info">
-                  <div class="media-source">Silicon Canals</div>
-                  <h3 class="media-title">Greenpeace, FrisseWind and FruitPunch AI Team Up to Monitor Illegal Air Pollution</h3>
-                  <div class="media-date">2022</div>
-                </div>
-              </div>
-              <p class="media-description">Coverage of the AI against Toxic Clouds challenge - automated detection of illegal emissions from Tata Steel that led to €4.1M in fines.</p>
-            </a>
-            
-            <a href="https://eu-startups.com/2021/01/dutch-startup-fruitpunch-ai-lands-six-figure-investment-to-create-future-ai-and-data-talent-for-good" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">💰</span>
-                <div class="media-info">
-                  <div class="media-source">EU-Startups</div>
-                  <h3 class="media-title">Dutch Startup FruitPunch AI Lands Six-Figure Investment</h3>
-                  <div class="media-date">January 2021</div>
-                </div>
-              </div>
-              <p class="media-description">Coverage of our seed funding round to create future AI and data talent for good, with investment from Thomas Wolf (Hugging Face).</p>
-            </a>
-            
-            <a href="https://lumolabs.io/lumo-labs-invests-in-fruitpunch-ais-approach-to-creating-future-ai-and-data-talent/" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🚀</span>
-                <div class="media-info">
-                  <div class="media-source">LUMO Labs</div>
-                  <h3 class="media-title">LUMO Labs Invests in FruitPunch AI's Approach</h3>
-                  <div class="media-date">2021</div>
-                </div>
-              </div>
-              <p class="media-description">Investment announcement and detailed overview of FruitPunch AI's approach to creating future AI talent through challenge-based learning.</p>
-            </a>
-            
-            <a href="https://brainporteindhoven.com/en/news/founder-fruitpunch-ai-about-leveraging-ai-for-social-impact" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🌍</span>
-                <div class="media-info">
-                  <div class="media-source">Brainport Eindhoven</div>
-                  <h3 class="media-title">Founder FruitPunch AI About Leveraging AI for Social Impact</h3>
-                  <div class="media-date">2022</div>
-                </div>
-              </div>
-              <p class="media-description">Interview about the AI for Good mission and how FruitPunch connects AI engineers with impactful challenges.</p>
-            </a>
-            
-            <a href="https://siliconcanals.com/eindhoven-fruitpunch-ai-bags-500k/" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">💰</span>
-                <div class="media-info">
-                  <div class="media-source">Silicon Canals</div>
-                  <h3 class="media-title">Eindhoven-based FruitPunch AI Secures €500K from Shamrock Ventures</h3>
-                  <div class="media-date">June 2023</div>
-                </div>
-              </div>
-              <p class="media-description">Coverage of the €500K funding round led by Shamrock Ventures to drive global 'AI for Good' missions and expand platform features.</p>
-            </a>
-            
-            <a href="https://siliconcanals.com/eindhoven-fruitpunch-ai-funding/" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🚀</span>
-                <div class="media-info">
-                  <div class="media-source">Silicon Canals</div>
-                  <h3 class="media-title">Dutch Startup FruitPunch AI Bags Six-Figure Investment</h3>
-                  <div class="media-date">2021</div>
-                </div>
-              </div>
-              <p class="media-description">Coverage of the initial six-figure investment from LUMO Labs Fund II to solve humanity's greatest challenges through AI.</p>
-            </a>
-            
-            <a href="https://blog.hightechcampus.com/htce/lumo-labs-invests-in-fruitpunch-ais-approach-to-creating-future-ai-and-data-talent" target="_blank" class="media-card">
-              <div class="media-header">
-                <span class="media-icon">🏢</span>
-                <div class="media-info">
-                  <div class="media-source">High Tech Campus Eindhoven</div>
-                  <h3 class="media-title">LUMO Labs Invests in FruitPunch AI's Approach</h3>
-                  <div class="media-date">2021</div>
-                </div>
-              </div>
-              <p class="media-description">Investment announcement recognizing FruitPunch AI's approach to creating future AI and Data talent aligned with Conscious Tech and UN Sustainable Development Goals.</p>
-            </a>
-          </div>
-        </section>
-        
-        <!-- Company Profiles -->
-        <section class="media-section">
-          <h2 class="section-title">📊 Company Profiles</h2>
-          <p class="section-desc">Business intelligence and company data.</p>
-          
-          <div class="profiles-grid">
-            <a href="https://www.crunchbase.com/organization/fruitpunch-ai" target="_blank" class="profile-badge">
-              <span>📈</span>
-              Crunchbase
-            </a>
-            <a href="https://tracxn.com/d/companies/fruitpunch-ai" target="_blank" class="profile-badge">
-              <span>📊</span>
-              Tracxn
-            </a>
-            <a href="https://authory.com/Buster" target="_blank" class="profile-badge">
-              <span>✍️</span>
-              Authory (Sigma Squared)
-            </a>
-            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="profile-badge">
-              <span>💼</span>
-              LinkedIn
-            </a>
-            <a href="https://github.com/BusterFranken" target="_blank" class="profile-badge">
-              <span>💻</span>
-              GitHub
-            </a>
-          </div>
-        </section>
-        
-        <!-- Key Metrics -->
-        <section class="media-section">
-          <h2 class="section-title">📈 Key Numbers</h2>
-          <div class="stats-highlight" style="display: flex; gap: var(--spacing-lg); flex-wrap: wrap; margin-top: var(--spacing-md);">
-            <div style="background: var(--white); border: 2px solid var(--primary-red); border-radius: var(--radius-md); padding: var(--spacing-lg); text-align: center; min-width: 150px;">
-              <div style="font-size: 32px; font-weight: 700; color: var(--primary-red);">€45M</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">AI Engineering Crowdsourced</div>
-            </div>
-            <div style="background: var(--white); border: 2px solid var(--primary-red); border-radius: var(--radius-md); padding: var(--spacing-lg); text-align: center; min-width: 150px;">
-              <div style="font-size: 32px; font-weight: 700; color: var(--primary-red);">4,500+</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">AI Engineers</div>
-            </div>
-            <div style="background: var(--white); border: 2px solid var(--primary-red); border-radius: var(--radius-md); padding: var(--spacing-lg); text-align: center; min-width: 150px;">
-              <div style="font-size: 32px; font-weight: 700; color: var(--primary-red);">80+</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">Partner Organizations</div>
-            </div>
-            <div style="background: var(--white); border: 2px solid var(--primary-red); border-radius: var(--radius-md); padding: var(--spacing-lg); text-align: center; min-width: 150px;">
-              <div style="font-size: 32px; font-weight: 700; color: var(--primary-red);">€1M</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">VC Funding Raised</div>
-            </div>
-          </div>
-        </section>
-        
-      </main>
-
-    <!-- Footer -->
-    <footer class="contact-bar">
-      <a href="mailto:busterfranken@gmail.com" class="contact-item">
-        <span class="contact-icon">📧</span>
-        <span class="contact-text">busterfranken@gmail.com</span>
-      </a>
-      <a href="tel:+31624877967" class="contact-item">
-        <span class="contact-icon">📱</span>
-        <span class="contact-text">+31 6 2487 7967</span>
-      </a>
-      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
-        <span class="contact-icon">💼</span>
-        <span class="contact-text">LinkedIn</span>
-      </a>
-      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
-        <span class="contact-icon">💻</span>
-        <span class="contact-text">GitHub</span>
-      </a>
-      <span class="contact-item location">
-        <span class="contact-icon">📍</span>
-        <span class="contact-text">Amsterdam, Netherlands</span>
-      </span>
-    </footer>
+    <!-- Data-driven container: populated by renderMediaPage() -->
+    <main class="media-container" id="mediaContainer">
+      <p style="text-align:center;color:var(--text-secondary);padding:40px;">Loading media...</p>
+    </main>
   </div>
 
-  <!-- Overlay Modal -->
-  <div class="overlay-modal" id="overlayModal">
-    <div class="overlay-content">
-      <button class="overlay-close" id="overlayClose">&times;</button>
-      <div class="overlay-body" id="overlayBody">
-        <!-- Dynamic content -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin Modal -->
-  <div class="admin-modal" id="adminModal">
-    <div class="admin-content">
-      <button class="admin-close" id="adminClose">&times;</button>
-      <h2>Admin Login</h2>
-      <form id="adminForm">
-        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  </div>
-
+  <!-- Scripts -->
   <script src="js/data.js"></script>
-  <script src="js/admin.js"></script>
+  <script src="js/descriptions.js"></script>
+  <script src="js/load-app-data.js"></script>
+  <script src="js/render.js"></script>
   <script src="js/overlay.js"></script>
+  <script src="js/admin.js"></script>
   <script src="js/main.js"></script>
-  <script>
-    // Campaign Status click handler
-    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
-      el.addEventListener('click', () => {
-        if (typeof getCampaignStatusOverlayContent === 'function') {
-          openOverlay(getCampaignStatusOverlayContent());
-        }
-      });
-    });
-    
-    // View toggle - redirect to character sheet for classic CV
-    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
-    toggleBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const view = btn.dataset.view;
-        if (view === 'classic') {
-          localStorage.setItem('preferredView', 'classic');
-          window.location.href = 'index.html';
-        }
-      });
-    });
-  </script>
 </body>
 </html>

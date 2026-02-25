@@ -246,6 +246,7 @@ const characterData = {
   coreStats: {
     proficiencyBonus: 3,
     armorClass: 14,
+    armorClassExplanation: "Strong positioning through community (4500+ engineers), partnerships (80+ organizations), and a proven track record.",
     initiative: 8, // DEX(+4) + Alertness(+4)
     initiativeBreakdown: "DEX (+4) + Alertness Feat (+4)",
     speed: "60 ft",
@@ -274,6 +275,7 @@ const characterData = {
     { name: "Alert", active: true, description: "Cannot be surprised while conscious, +4 to initiative (Alertness feat)" },
     { name: "Mission-Driven", active: true, description: "Resistance to distractions that don't align with core values" }
   ],
+  senses: "Market Awareness 60 ft.",
 
   // ==========================================
   // SKILLS

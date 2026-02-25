@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Character Sheet | D&D CV Creator</title>
+  <meta name="description" content="Upload your CV and get a D&D-style character sheet. Transform your resume into an epic adventure.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/creator.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="mainNavbar">
+    <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-left">
+        <a href="index.html" class="nav-link">Character Sheet</a>
+        <a href="campaigns.html" class="nav-link">Campaigns</a>
+        <a href="notable.html" class="nav-link">Notable</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="media.html" class="nav-link">Media</a>
+        <a href="creator.html" class="nav-link active">Create Yours</a>
+      </div>
+      <div class="navbar-right">
+        <div class="campaign-status">
+          <span class="campaign-label">MODE:</span>
+          <span class="campaign-name">Character Creator</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="creator-page">
+
+    <header class="page-header">
+      <h1 class="page-title">Create Your Character Sheet</h1>
+      <p class="page-subtitle">Upload your CV and other professional documents. Our AI Dungeon Master will transform your career into an epic D&D character sheet.</p>
+    </header>
+
+    <!-- Upload Card -->
+    <div class="upload-card" id="uploadCard">
+      <h2>Upload Your Documents</h2>
+      <p>Start with your CV/resume (PDF or text). You can also add cover letters, LinkedIn exports, or any other professional documents for a richer character sheet.</p>
+
+      <div class="dropzone" id="dropzone">
+        <span class="dropzone-icon">📜</span>
+        <div class="dropzone-text">Drop your CV here or click to browse</div>
+        <div class="dropzone-hint">Supports PDF, TXT, MD files (max 20MB total)</div>
+        <input type="file" id="fileInput" multiple accept=".pdf,.txt,.md,.csv,.json">
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+
+      <button class="generate-btn" id="generateBtn" disabled>
+        Roll for Character Creation
+      </button>
+
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-step" id="loadingStep">Preparing...</div>
+      <div class="loading-detail" id="loadingDetail">This usually takes about 60 seconds</div>
+      <div class="loading-progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+    </div>
+
+    <!-- Success Card -->
+    <div class="success-card" id="successCard">
+      <div class="success-icon">⚔️</div>
+      <h2>Character Created!</h2>
+      <p>Meet <strong id="successName">Your Character</strong> — your D&D alter ego is ready for adventure.</p>
+
+      <div class="share-link-box">
+        <span class="share-link-url" id="shareLink"></span>
+        <button class="copy-btn" id="copyLinkBtn">Copy Link</button>
+      </div>
+
+      <div class="success-actions">
+        <a href="index.html" class="primary-action" id="viewSheetBtn">View Character Sheet</a>
+        <a href="campaigns.html" id="viewCampaignsBtn">View Campaigns</a>
+      </div>
+    </div>
+
+    <!-- Past Generated Sheets -->
+    <section class="past-sheets-section" id="pastSheetsSection" style="display:none;">
+      <h2 class="past-sheets-title">Your Previous Characters</h2>
+      <p class="past-sheets-subtitle">Character sheets you've generated before.</p>
+      <div class="past-sheets-grid" id="pastSheetsGrid"></div>
+    </section>
+
+  </div>
+
+  <script src="js/creator.js"></script>
+</body>
+</html>
