@@ -299,13 +299,61 @@ function getClassOverlayContent(classKey) {
   `;
 }
 
-// Generate Alignment overlay content — dynamic from characterData
+// Generate Alignment overlay content
 function getAlignmentOverlayContent() {
+  if (window.__appDataSource === 'default') {
+    return `
+      <div class="overlay-header">
+        <span class="overlay-icon">⚖️</span>
+        <div class="overlay-title-block">
+          <h2 class="overlay-title">Chaotic Good</h2>
+          <div class="overlay-subtitle">Alignment</div>
+        </div>
+      </div>
+      
+      <div class="overlay-section">
+        <div class="overlay-section-title">D&D Definition</div>
+        <div class="dnd-definition">
+          <p>${alignmentDescription.dndDefinition}</p>
+        </div>
+      </div>
+      
+      <div class="overlay-section">
+        <div class="cv-meaning">
+          <div class="cv-meaning-title">${alignmentDescription.cvMeaning}</div>
+          <div class="cv-meaning-desc">${alignmentDescription.cvDescription}</div>
+        </div>
+      </div>
+      
+      <div class="overlay-section">
+        <div class="overlay-section-title">In Practice</div>
+        <ul class="evidence-list">
+          <li class="evidence-item">
+            <span class="evidence-bullet">•</span>
+            <span class="evidence-text">Will challenge established systems if they don't serve the greater good</span>
+          </li>
+          <li class="evidence-item">
+            <span class="evidence-bullet">•</span>
+            <span class="evidence-text">Believes in doing what's right, not what's easy or conventional</span>
+          </li>
+          <li class="evidence-item">
+            <span class="evidence-bullet">•</span>
+            <span class="evidence-text">Values freedom and flexibility over rules and hierarchy</span>
+          </li>
+          <li class="evidence-item">
+            <span class="evidence-bullet">•</span>
+            <span class="evidence-text">Makes decisions based on impact, not protocol</span>
+          </li>
+        </ul>
+      </div>
+    `;
+  }
+
+  // Dynamic content for generated pages
   const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
   const alignment = p.alignment || 'Unknown';
   const alignDesc = p.alignmentDescription || '';
 
-  // Use D&D standard descriptions per alignment type
   const dndAlignments = {
     'Lawful Good': 'Lawful Good characters act with compassion and honor, following the rules and obeying authority when doing so leads to the greater good.',
     'Neutral Good': 'Neutral Good characters do the best they can to help others according to their needs, without bias for or against order.',
@@ -317,7 +365,7 @@ function getAlignmentOverlayContent() {
     'Neutral Evil': 'Neutral Evil characters do whatever they can get away with, without compassion or qualms.',
     'Chaotic Evil': 'Chaotic Evil characters act with arbitrary violence, spurred by greed, hatred, or bloodlust.',
   };
-  const dndDef = dndAlignments[alignment] || `${alignment} alignment reflects this character's moral and ethical outlook.`;
+  const dndDef = dndAlignments[alignment] || (alignment + " alignment reflects this character's moral and ethical outlook.");
 
   return `
     <div class="overlay-header">
@@ -351,39 +399,77 @@ function getCombatStatOverlayContent(statKey) {
   const desc = combatStatDescriptions[statKey];
   const stats = characterData.coreStats;
   
-  let value, title, subtitle;
+  if (statKey === 'heroic-inspiration') return getHeroicInspirationOverlayContent();
   
-  const charLevel = (characterData.personal && characterData.personal.level) ? characterData.personal.level : '?';
-  switch(statKey) {
-    case 'proficiency':
-      value = `+${stats.proficiencyBonus}`;
-      title = 'Proficiency Bonus';
-      subtitle = `Level ${charLevel}`;
-      break;
-    case 'initiative':
-      value = `+${stats.initiative}`;
-      title = 'Initiative';
-      subtitle = stats.initiativeBreakdown || 'Initiative modifier';
-      break;
-    case 'ac':
-      value = stats.armorClass;
-      title = 'Armor Class';
-      subtitle = stats.armorClassExplanation || 'Defense Rating';
-      break;
-    case 'speed':
-      value = stats.speed;
-      title = 'Speed';
-      subtitle = stats.speedExplanation || 'Movement speed';
-      break;
-    case 'hp':
-      value = `${stats.hitPoints.current}/${stats.hitPoints.max}`;
-      title = 'Hit Points';
-      subtitle = stats.hitPoints.meaning;
-      break;
-    case 'heroic-inspiration':
-      return getHeroicInspirationOverlayContent();
-    default:
-      return '<p>Stat not found</p>';
+  let value, title, subtitle, cvTitle, cvDesc;
+  
+  if (window.__appDataSource === 'default') {
+    // Original Buster Franken hardcoded subtitles and cv-meaning
+    switch(statKey) {
+      case 'proficiency':
+        value = '+' + stats.proficiencyBonus;
+        title = 'Proficiency Bonus';
+        subtitle = 'Level 7';
+        break;
+      case 'initiative':
+        value = '+' + stats.initiative;
+        title = 'Initiative';
+        subtitle = stats.initiativeBreakdown;
+        break;
+      case 'ac':
+        value = stats.armorClass;
+        title = 'Armor Class';
+        subtitle = 'Light Armor';
+        break;
+      case 'speed':
+        value = stats.speed;
+        title = 'Speed';
+        subtitle = 'Enhanced by Cunning Action';
+        break;
+      case 'hp':
+        value = stats.hitPoints.current + '/' + stats.hitPoints.max;
+        title = 'Hit Points';
+        subtitle = stats.hitPoints.meaning;
+        break;
+      default:
+        return '<p>Stat not found</p>';
+    }
+    cvTitle = desc.cvMeaning;
+    cvDesc = desc.cvDescription;
+  } else {
+    // Dynamic content for generated pages
+    var charLevel = (characterData.personal && characterData.personal.level) ? characterData.personal.level : '?';
+    switch(statKey) {
+      case 'proficiency':
+        value = '+' + stats.proficiencyBonus;
+        title = 'Proficiency Bonus';
+        subtitle = 'Level ' + charLevel;
+        break;
+      case 'initiative':
+        value = '+' + stats.initiative;
+        title = 'Initiative';
+        subtitle = stats.initiativeBreakdown || 'Initiative modifier';
+        break;
+      case 'ac':
+        value = stats.armorClass;
+        title = 'Armor Class';
+        subtitle = stats.armorClassExplanation || 'Defense Rating';
+        break;
+      case 'speed':
+        value = stats.speed;
+        title = 'Speed';
+        subtitle = stats.speedExplanation || 'Movement speed';
+        break;
+      case 'hp':
+        value = stats.hitPoints.current + '/' + stats.hitPoints.max;
+        title = 'Hit Points';
+        subtitle = stats.hitPoints.meaning;
+        break;
+      default:
+        return '<p>Stat not found</p>';
+    }
+    cvTitle = 'Professional Context';
+    cvDesc = subtitle || '';
   }
   
   return `
@@ -405,8 +491,8 @@ function getCombatStatOverlayContent(statKey) {
     
     <div class="overlay-section">
       <div class="cv-meaning">
-        <div class="cv-meaning-title">Professional Context</div>
-        <div class="cv-meaning-desc">${subtitle || ''}</div>
+        <div class="cv-meaning-title">${cvTitle}</div>
+        <div class="cv-meaning-desc">${cvDesc}</div>
       </div>
     </div>
     
@@ -581,6 +667,81 @@ function getActionOverlayContent(actionName) {
                action.type === 'Bonus Action' ? '⚡' : 
                action.type === 'Reaction' ? '🔄' : '🎬';
 
+  if (window.__appDataSource === 'default') {
+    // Original: use actionDescriptions lookup for Professional Application
+    const desc = actionDescriptions[actionName] || {};
+    return `
+      <div class="overlay-header">
+        <span class="overlay-icon">${desc.icon || icon}</span>
+        <div class="overlay-title-block">
+          <h2 class="overlay-title">${action.name}</h2>
+          <div class="overlay-subtitle">${action.type}${action.uses ? ' • ' + action.uses : ''}</div>
+        </div>
+        ${action.attackBonus !== undefined ? `
+          <div class="overlay-modifier rollable" data-mod="${action.attackBonus}">
+            +${action.attackBonus}
+          </div>
+        ` : ''}
+      </div>
+      
+      <div class="overlay-section">
+        <div class="overlay-section-title">Description</div>
+        <div class="dnd-definition">
+          <p>${action.description}</p>
+        </div>
+      </div>
+      
+      <div class="overlay-section">
+        <div class="cv-meaning">
+          <div class="cv-meaning-title">${desc.cvMeaning || 'Professional Application'}</div>
+          <div class="cv-meaning-desc">${desc.cvDescription || action.description}</div>
+        </div>
+      </div>
+      
+      ${action.attackBonus !== undefined ? `
+        <div class="overlay-section">
+          <div class="overlay-section-title">Attack Details</div>
+          <div class="calculation">
+            <div class="calc-row">
+              <span class="calc-label">Attack Bonus</span>
+              <span class="calc-value">+${action.attackBonus}</span>
+            </div>
+            <div class="calc-row">
+              <span class="calc-label">Damage</span>
+              <span class="calc-value">${action.damage} ${action.damageType}</span>
+            </div>
+            ${action.range ? `
+              <div class="calc-row">
+                <span class="calc-label">Range</span>
+                <span class="calc-value">${action.range}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+        
+        <button class="overlay-roll-btn" onclick="rollFromOverlay('${action.name}', ${action.attackBonus})">
+          <span class="dice-emoji">🎲</span>
+          Roll to Hit
+        </button>
+      ` : ''}
+      
+      ${action.effect ? `
+        <div class="overlay-section">
+          <div class="overlay-section-title">Effect</div>
+          <div class="overlay-section-content">${action.effect}</div>
+        </div>
+      ` : ''}
+      
+      ${action.recharge ? `
+        <div class="overlay-section">
+          <div class="overlay-section-title">Recharge</div>
+          <div class="overlay-section-content">${action.recharge}</div>
+        </div>
+      ` : ''}
+    `;
+  }
+
+  // Dynamic content for generated pages — use val() to filter placeholders
   const hasAttack = action.attackBonus != null;
   const damage = val(action.damage);
   const damageType = val(action.damageType);
@@ -594,7 +755,7 @@ function getActionOverlayContent(actionName) {
       <span class="overlay-icon">${icon}</span>
       <div class="overlay-title-block">
         <h2 class="overlay-title">${action.name}</h2>
-        <div class="overlay-subtitle">${action.type}${uses ? ` • ${uses}` : ''}</div>
+        <div class="overlay-subtitle">${action.type}${uses ? ' • ' + uses : ''}</div>
       </div>
       ${hasAttack ? `
         <div class="overlay-modifier rollable" data-mod="${action.attackBonus}">
@@ -755,24 +916,67 @@ function getConditionsOverlayContent() {
   `;
 }
 
-// Generate Campaign Status overlay content — dynamic from characterData
+// Generate Campaign Status overlay content
 function getCampaignStatusOverlayContent() {
+  if (window.__appDataSource === 'default') {
+    return `
+      <div class="overlay-header">
+        <h2>🎯 Current Campaign: Energy Hardtech Exploration</h2>
+      </div>
+      <div class="overlay-body">
+        <div class="overlay-section">
+          <h3>What I'm Looking For</h3>
+          <p>I'm currently exploring new startup opportunities and open to exciting ventures in:</p>
+          <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
+            <li><strong>Energy & Hardtech:</strong> Particularly interested in energy solutions, hardtech innovations, and deep tech applications</li>
+            <li><strong>Product & Growth Roles:</strong> Open to joining as a Product Owner or in a Growth role at an exciting startup</li>
+            <li><strong>Deep/Hardtech Ideas:</strong> Open to any compelling deep tech or hardtech concepts that solve real problems</li>
+          </ul>
+        </div>
+        
+        <div class="overlay-section">
+          <h3>My Background</h3>
+          <p>With my experience building FruitPunch AI from scratch, raising €1M, and growing a community of 4500+ engineers, I bring:</p>
+          <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
+            <li>Product management expertise (100+ user interviews, experience design, A/B experiments)</li>
+            <li>Growth and community building (4500+ members, 80+ partners)</li>
+            <li>Fundraising and partnerships (€1M raised, Stanford, ESA, Greenpeace partnerships)</li>
+            <li>Platform building and decision-making experience</li>
+          </ul>
+        </div>
+        
+        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+          <h3 style="margin-top: 0;">Get In Touch</h3>
+          <p>Interested in discussing opportunities? Let's connect!</p>
+          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
+            <a href="mailto:busterfranken@gmail.com?subject=Energy Hardtech Opportunity" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+              📧 Email Me
+            </a>
+            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+              💼 LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Dynamic content for generated pages
   const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-  
   const contactLinks = [];
-  if (p.email) contactLinks.push(`<a href="mailto:${p.email}" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>`);
-  if (p.linkedin) contactLinks.push(`<a href="${p.linkedin}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>`);
-  if (p.github) contactLinks.push(`<a href="${p.github}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>`);
+  if (p.email) contactLinks.push('<a href="mailto:' + p.email + '" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>');
+  if (p.linkedin) contactLinks.push('<a href="' + p.linkedin + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>');
+  if (p.github) contactLinks.push('<a href="' + p.github + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>');
 
   return `
     <div class="overlay-header">
-      <h2>🎯 ${p.currentCampaign ? `Current Campaign: ${p.currentCampaign}` : 'Current Status'}</h2>
+      <h2>🎯 ${p.currentCampaign ? 'Current Campaign: ' + p.currentCampaign : 'Current Status'}</h2>
     </div>
     <div class="overlay-body">
       <div class="overlay-section">
         <h3>About ${p.name || 'This Character'}</h3>
         <p>${p.summary || 'No summary available.'}</p>
-        ${p.currentStatus ? `<p><strong>Status:</strong> ${p.currentStatus}</p>` : ''}
+        ${p.currentStatus ? '<p><strong>Status:</strong> ' + p.currentStatus + '</p>' : ''}
       </div>
       
       ${contactLinks.length ? `

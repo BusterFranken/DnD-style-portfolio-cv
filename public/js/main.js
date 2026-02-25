@@ -343,37 +343,8 @@ function setupClickableElements() {
       e.stopPropagation();
       e.stopImmediatePropagation();
       
-      // Use the specific campaign status overlay function
       if (typeof getCampaignStatusOverlayContent === 'function') {
-        const content = getCampaignStatusOverlayContent();
-        openOverlay(content);
-      } else {
-        // Dynamic fallback using characterData
-        const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-        const contactLinks = [];
-        if (p.email) contactLinks.push(`<a href="mailto:${p.email}" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>`);
-        if (p.linkedin) contactLinks.push(`<a href="${p.linkedin}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>`);
-
-        openOverlay(`
-          <div class="overlay-header">
-            <h2>🎯 ${p.currentCampaign ? `Current Campaign: ${p.currentCampaign}` : 'Current Status'}</h2>
-          </div>
-          <div class="overlay-body">
-            <div class="overlay-section">
-              <h3>About ${p.name || 'This Character'}</h3>
-              <p>${p.summary || ''}</p>
-              ${p.currentStatus ? `<p><strong>Status:</strong> ${p.currentStatus}</p>` : ''}
-            </div>
-            ${contactLinks.length ? `
-              <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-                <h3 style="margin-top: 0;">Get In Touch</h3>
-                <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-                  ${contactLinks.join('')}
-                </div>
-              </div>
-            ` : ''}
-          </div>
-        `);
+        openOverlay(getCampaignStatusOverlayContent());
       }
     }, true); // Use capture phase to ensure it runs first
   });
@@ -427,101 +398,202 @@ function setupActionClickables() {
   });
 }
 
-// Generic element overlay content — dynamically built from characterData
+// Generic element overlay content
 function getElementOverlayContent(element) {
-  const cs = (typeof characterData !== 'undefined' && characterData.coreStats) ? characterData.coreStats : {};
-  const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-  const bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
-  const defs = (typeof characterData !== 'undefined' && characterData.defenses) ? characterData.defenses : [];
-  const conds = (typeof characterData !== 'undefined' && characterData.conditions) ? characterData.conditions : [];
+  var info;
 
-  const elementInfo = {
-    'hp': {
-      title: 'Hit Points',
-      icon: '❤️',
-      description: 'Your life force in D&D represents your ability to withstand damage.',
-      cvMeaning: cs.hitPoints ? cs.hitPoints.meaning : 'Resilience',
-      evidence: [
-        cs.hitPoints ? `Current: ${cs.hitPoints.current} / Max: ${cs.hitPoints.max}` : '',
-        'Capacity to absorb challenges and keep going',
-        cs.hitDice ? `Hit Dice: ${cs.hitDice}` : ''
-      ].filter(Boolean)
-    },
-    'ac': {
-      title: 'Armor Class',
-      icon: '🛡️',
-      description: 'How hard you are to hit in combat. Represents your defenses.',
-      cvMeaning: 'Professional Defense',
-      evidence: [
-        cs.armorClass ? `AC ${cs.armorClass}` : '',
-        'Professional network and experience provide protection',
-      ].filter(Boolean)
-    },
-    'initiative': {
-      title: 'Initiative',
-      icon: '⚡',
-      description: 'How quickly you can react and act in combat situations.',
-      cvMeaning: 'Responsiveness',
-      evidence: [
-        cs.initiative !== undefined ? `+${cs.initiative} initiative modifier` : '',
-        cs.initiativeBreakdown || 'How quickly you respond to opportunities',
-      ].filter(Boolean)
-    },
-    'speed': {
-      title: 'Speed',
-      icon: '🏃',
-      description: 'How far you can move in a single turn.',
-      cvMeaning: 'Execution Velocity',
-      evidence: [
-        cs.speed ? `Speed: ${cs.speed}` : '',
-        cs.speedExplanation || 'Pace of career movement and adaptability',
-      ].filter(Boolean)
-    },
-    'proficiency': {
-      title: 'Proficiency Bonus',
+  if (window.__appDataSource === 'default') {
+    // Original Buster Franken hardcoded content
+    var defaultInfo = {
+      'hp': {
+        title: 'Hit Points',
+        icon: '❤️',
+        description: 'Your life force in D&D represents your ability to withstand damage.',
+        cvMeaning: '€45M Crowdsourced Impact',
+        evidence: [
+          'Represents the €45M in AI engineering value crowdsourced',
+          'Your capacity to absorb challenges and keep going',
+          'Current: 45 / Max: 45 (fully healthy and ready for adventure)'
+        ]
+      },
+      'ac': {
+        title: 'Armor Class',
+        icon: '🛡️',
+        description: 'How hard you are to hit in combat. Represents your defenses.',
+        cvMeaning: 'Network Protection',
+        evidence: [
+          'Your professional network provides protection',
+          'Strong relationships deflect problems',
+          'AC 14 represents solid but not impenetrable defenses'
+        ]
+      },
+      'initiative': {
+        title: 'Initiative',
+        icon: '⚡',
+        description: 'How quickly you can react and act in combat situations.',
+        cvMeaning: 'First Mover Advantage',
+        evidence: [
+          'DEX (+4) + Alertness Feat (+4) = +8',
+          'How quickly you can pivot and respond to opportunities',
+          '+8 modifier means you almost always act first'
+        ]
+      },
+      'speed': {
+        title: 'Speed',
+        icon: '🏃',
+        description: 'How far you can move in a single turn.',
+        cvMeaning: 'Execution Velocity',
+        evidence: [
+          '60 ft is double normal human speed',
+          'Cunning Action: Dash as bonus action',
+          'Represents willingness to move anywhere for the right opportunity'
+        ]
+      },
+      'proficiency': {
+        title: 'Proficiency Bonus',
+        icon: '📊',
+        description: 'Reflects your overall experience and training level.',
+        cvMeaning: 'Experience Level',
+        evidence: [
+          '+3 bonus at Level 7',
+          'Added to skills, saves, and attacks where proficient',
+          '7 years of startup experience'
+        ]
+      },
+      'background': {
+        title: 'Background: Entrepreneur',
+        icon: '🎭',
+        description: 'Based on the Criminal background template - because entrepreneurs break into markets.',
+        cvMeaning: 'Origin Story',
+        evidence: [
+          'Grew up in parents\' pawn shop',
+          'Professional teen actor (first IKEA gig at 14)',
+          'Made art until switching to engineering'
+        ]
+      },
+      'defenses': {
+        title: 'Defenses',
+        icon: '🛡️',
+        description: 'Protective traits that provide advantages in difficult situations.',
+        cvMeaning: 'Market Protection',
+        evidence: [
+          'Resilient Network - 4500+ engineers, 80+ partners',
+          'Pivot Ready - Multiple successful pivots',
+          'Community Shield - Strong relationships protect against uncertainty'
+        ]
+      },
+      'conditions': {
+        title: 'Conditions',
+        icon: '✨',
+        description: 'Active effects that influence your capabilities.',
+        cvMeaning: 'Active Buffs',
+        evidence: [
+          'Inspired - Advantage on impact-driven goals',
+          'Alert - +4 initiative, can\'t be surprised',
+          'Mission-Driven - Resistant to distractions'
+        ]
+      }
+    };
+    info = defaultInfo[element];
+  } else {
+    // Dynamic content from characterData for generated pages
+    var cs = (typeof characterData !== 'undefined' && characterData.coreStats) ? characterData.coreStats : {};
+    var p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+    var bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
+    var defs = (typeof characterData !== 'undefined' && characterData.defenses) ? characterData.defenses : [];
+    var conds = (typeof characterData !== 'undefined' && characterData.conditions) ? characterData.conditions : [];
+
+    var dynamicInfo = {
+      'hp': {
+        title: 'Hit Points',
+        icon: '❤️',
+        description: 'Your life force in D&D represents your ability to withstand damage.',
+        cvMeaning: cs.hitPoints ? cs.hitPoints.meaning : 'Resilience',
+        evidence: [
+          cs.hitPoints ? 'Current: ' + cs.hitPoints.current + ' / Max: ' + cs.hitPoints.max : '',
+          'Capacity to absorb challenges and keep going',
+          cs.hitDice ? 'Hit Dice: ' + cs.hitDice : ''
+        ].filter(Boolean)
+      },
+      'ac': {
+        title: 'Armor Class',
+        icon: '🛡️',
+        description: 'How hard you are to hit in combat. Represents your defenses.',
+        cvMeaning: 'Professional Defense',
+        evidence: [
+          cs.armorClass ? 'AC ' + cs.armorClass : '',
+          'Professional network and experience provide protection',
+        ].filter(Boolean)
+      },
+      'initiative': {
+        title: 'Initiative',
+        icon: '⚡',
+        description: 'How quickly you can react and act in combat situations.',
+        cvMeaning: 'Responsiveness',
+        evidence: [
+          cs.initiative !== undefined ? '+' + cs.initiative + ' initiative modifier' : '',
+          cs.initiativeBreakdown || 'How quickly you respond to opportunities',
+        ].filter(Boolean)
+      },
+      'speed': {
+        title: 'Speed',
+        icon: '🏃',
+        description: 'How far you can move in a single turn.',
+        cvMeaning: 'Execution Velocity',
+        evidence: [
+          cs.speed ? 'Speed: ' + cs.speed : '',
+          cs.speedExplanation || 'Pace of career movement and adaptability',
+        ].filter(Boolean)
+      },
+      'proficiency': {
+        title: 'Proficiency Bonus',
+        icon: '📊',
+        description: 'Reflects your overall experience and training level.',
+        cvMeaning: 'Experience Level',
+        evidence: [
+          cs.proficiencyBonus ? '+' + cs.proficiencyBonus + ' proficiency bonus' : '',
+          p.level ? 'Character Level ' + p.level : '',
+          'Added to skills, saves, and attacks where proficient',
+        ].filter(Boolean)
+      },
+      'background': {
+        title: 'Background: ' + (bg.name || p.background || 'Unknown'),
+        icon: '🎭',
+        description: bg.template ? 'Based on the ' + bg.template + ' template.' : 'Your origin story and formative experiences.',
+        cvMeaning: 'Origin Story',
+        evidence: [
+          bg.characteristics && bg.characteristics.backgroundStory ? bg.characteristics.backgroundStory : '',
+          bg.characteristics && bg.characteristics.origin ? 'Origin: ' + bg.characteristics.origin : '',
+          bg.characteristics && bg.characteristics.firstGig ? 'First Gig: ' + bg.characteristics.firstGig : '',
+        ].filter(Boolean)
+      },
+      'defenses': {
+        title: 'Defenses',
+        icon: '🛡️',
+        description: 'Protective traits that provide advantages in difficult situations.',
+        cvMeaning: 'Professional Protections',
+        evidence: defs.length ? defs.map(function(d) { return d.name + ' — ' + d.description; }) : ['No specific defenses listed']
+      },
+      'conditions': {
+        title: 'Conditions',
+        icon: '✨',
+        description: 'Active effects that influence your capabilities.',
+        cvMeaning: 'Active Buffs',
+        evidence: conds.length ? conds.map(function(c) { return c.name + (c.active ? ' (Active)' : '') + ' — ' + c.description; }) : ['No active conditions']
+      }
+    };
+    info = dynamicInfo[element];
+  }
+
+  if (!info) {
+    info = {
+      title: element,
       icon: '📊',
-      description: 'Reflects your overall experience and training level.',
-      cvMeaning: 'Experience Level',
-      evidence: [
-        cs.proficiencyBonus ? `+${cs.proficiencyBonus} proficiency bonus` : '',
-        p.level ? `Character Level ${p.level}` : '',
-        'Added to skills, saves, and attacks where proficient',
-      ].filter(Boolean)
-    },
-    'background': {
-      title: `Background: ${bg.name || p.background || 'Unknown'}`,
-      icon: '🎭',
-      description: bg.template ? `Based on the ${bg.template} template.` : 'Your origin story and formative experiences.',
-      cvMeaning: 'Origin Story',
-      evidence: [
-        bg.characteristics && bg.characteristics.backgroundStory ? bg.characteristics.backgroundStory : '',
-        bg.characteristics && bg.characteristics.origin ? `Origin: ${bg.characteristics.origin}` : '',
-        bg.characteristics && bg.characteristics.firstGig ? `First Gig: ${bg.characteristics.firstGig}` : '',
-      ].filter(Boolean)
-    },
-    'defenses': {
-      title: 'Defenses',
-      icon: '🛡️',
-      description: 'Protective traits that provide advantages in difficult situations.',
-      cvMeaning: 'Professional Protections',
-      evidence: defs.length ? defs.map(d => `${d.name} — ${d.description}`) : ['No specific defenses listed']
-    },
-    'conditions': {
-      title: 'Conditions',
-      icon: '✨',
-      description: 'Active effects that influence your capabilities.',
-      cvMeaning: 'Active Buffs',
-      evidence: conds.length ? conds.map(c => `${c.name}${c.active ? ' (Active)' : ''} — ${c.description}`) : ['No active conditions']
-    }
-  };
-  
-  const info = elementInfo[element] || {
-    title: element,
-    icon: '📊',
-    description: 'Information about this element.',
-    cvMeaning: 'Professional Context',
-    evidence: ['Click for more details']
-  };
+      description: 'Information about this element.',
+      cvMeaning: 'Professional Context',
+      evidence: ['Click for more details']
+    };
+  }
   
   return `
     <div class="overlay-header">
@@ -568,103 +640,220 @@ function setupRollableElements() {
 }
 
 // ============================================
-// REST BUTTONS — Dynamic content from characterData
+// REST BUTTONS
 // ============================================
 function setupRestButtons() {
-  const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-  const extras = (typeof characterData !== 'undefined' && characterData.extras) ? characterData.extras : {};
-  const funFacts = extras.funFacts || [];
-  const interests = extras.interests || [];
-
-  // Short Rest = Interests & Fun Facts
   const shortRestBtn = document.getElementById('shortRestBtn') || document.querySelector('.short-rest');
-  shortRestBtn?.addEventListener('click', () => {
-    openOverlay(`
-      <div class="overlay-header">
-        <span class="overlay-icon">⚡</span>
-        <div class="overlay-title-block">
-          <h2 class="overlay-title">Short Rest</h2>
-          <div class="overlay-subtitle">Interests & Fun Facts</div>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">D&D Definition</div>
-        <div class="dnd-definition">
-          <p>A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</p>
-        </div>
-      </div>
-      
-      ${interests.length ? `
-        <div class="overlay-section">
-          <div class="overlay-section-title">Interests</div>
-          <ul class="evidence-list">
-            ${interests.map(i => `
-              <li class="evidence-item">
-                <span class="evidence-bullet">•</span>
-                <span class="evidence-text">${i}</span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      ` : ''}
-      
-      ${funFacts.length ? `
-        <div class="overlay-section">
-          <div class="overlay-section-title">Fun Facts</div>
-          <ul class="evidence-list">
-            ${funFacts.map(f => `
-              <li class="evidence-item">
-                <span class="evidence-bullet">🎲</span>
-                <span class="evidence-text">${f}</span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      ` : ''}
-    `);
-  });
-  
-  // Long Rest = Contact & Connect
   const longRestBtn = document.getElementById('longRestBtn') || document.querySelector('.long-rest');
-  longRestBtn?.addEventListener('click', () => {
-    const contactLinks = [];
-    if (p.email) contactLinks.push(`<a href="mailto:${p.email}?subject=Let's Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>`);
-    if (p.linkedin) contactLinks.push(`<a href="${p.linkedin}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>`);
-    if (p.github) contactLinks.push(`<a href="${p.github}" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>`);
 
-    openOverlay(`
-      <div class="overlay-header">
-        <span class="overlay-icon">🌙</span>
-        <div class="overlay-title-block">
-          <h2 class="overlay-title">Long Rest</h2>
-          <div class="overlay-subtitle">Connect & Collaborate</div>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">D&D Definition</div>
-        <div class="dnd-definition">
-          <p>A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</p>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">About ${p.name || 'This Character'}</div>
-        <p>${p.summary || 'No summary available.'}</p>
-        ${p.currentStatus ? `<div style="margin-top: var(--spacing-md);"><strong>Status:</strong> ${p.currentStatus}</div>` : ''}
-        ${p.currentCampaign ? `<div><strong>Current Focus:</strong> ${p.currentCampaign}</div>` : ''}
-      </div>
-      
-      ${contactLinks.length ? `
-        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-          <div class="overlay-section-title">Get In Touch</div>
-          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-            ${contactLinks.join('')}
+  shortRestBtn?.addEventListener('click', () => {
+    if (window.__appDataSource === 'default') {
+      openOverlay(`
+        <div class="overlay-header">
+          <span class="overlay-icon">⚡</span>
+          <div class="overlay-title-block">
+            <h2 class="overlay-title">Short Rest</h2>
+            <div class="overlay-subtitle">Daily & Weekly Activities</div>
           </div>
         </div>
-      ` : ''}
-    `);
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">D&D Definition</div>
+          <div class="dnd-definition">
+            <p>A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</p>
+          </div>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">What I Do Daily & Weekly</div>
+          <ul class="evidence-list">
+            <li class="evidence-item">
+              <span class="evidence-bullet">💪</span>
+              <span class="evidence-text"><strong>Fitness & Training:</strong> I love to work out and have done many sports. I go to the gym every day and am big into scientific lifting. I've been training since I was 17, and in the last 2 years I gained 12kg in muscle with this approach.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">🍳</span>
+              <span class="evidence-text"><strong>Cooking:</strong> I love cooking—Arabic, Mediterranean, and modern fusion mostly. Think Ottolenghi style.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">☕</span>
+              <span class="evidence-text"><strong>Foodie & Coffee Nerd:</strong> I'm a big foodie and coffee nerd. Ask me for my top recommendations in any city I've visited—I keep an extensive record in Google Maps.</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">General Interests</div>
+          <ul class="evidence-list">
+            <li class="evidence-item">
+              <span class="evidence-bullet">🎨</span>
+              <span class="evidence-text"><strong>Art:</strong> I'm into art—anything that is cutting edge really, culturally or technologically.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">📚</span>
+              <span class="evidence-text"><strong>Political Economy, Philosophy & Sociology:</strong> I'm a nerd in these fields, always reading and refining my understanding. My Goodreads account is my trophy wall.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">👥</span>
+              <span class="evidence-text"><strong>Meeting New People:</strong> I love meeting new people, am very social, and like to hear from very different backgrounds—that is what makes life rich.</span>
+            </li>
+          </ul>
+        </div>
+      `);
+    } else {
+      const extras = (typeof characterData !== 'undefined' && characterData.extras) ? characterData.extras : {};
+      const funFacts = extras.funFacts || [];
+      const interests = extras.interests || [];
+      openOverlay(`
+        <div class="overlay-header">
+          <span class="overlay-icon">⚡</span>
+          <div class="overlay-title-block">
+            <h2 class="overlay-title">Short Rest</h2>
+            <div class="overlay-subtitle">Interests & Fun Facts</div>
+          </div>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">D&D Definition</div>
+          <div class="dnd-definition">
+            <p>A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</p>
+          </div>
+        </div>
+        
+        ${interests.length ? `
+          <div class="overlay-section">
+            <div class="overlay-section-title">Interests</div>
+            <ul class="evidence-list">
+              ${interests.map(i => `
+                <li class="evidence-item">
+                  <span class="evidence-bullet">•</span>
+                  <span class="evidence-text">${i}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        ` : ''}
+        
+        ${funFacts.length ? `
+          <div class="overlay-section">
+            <div class="overlay-section-title">Fun Facts</div>
+            <ul class="evidence-list">
+              ${funFacts.map(f => `
+                <li class="evidence-item">
+                  <span class="evidence-bullet">🎲</span>
+                  <span class="evidence-text">${f}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        ` : ''}
+      `);
+    }
+  });
+
+  longRestBtn?.addEventListener('click', () => {
+    if (window.__appDataSource === 'default') {
+      openOverlay(`
+        <div class="overlay-header">
+          <span class="overlay-icon">🌙</span>
+          <div class="overlay-title-block">
+            <h2 class="overlay-title">Long Rest</h2>
+            <div class="overlay-subtitle">Day Off Activities</div>
+          </div>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">D&D Definition</div>
+          <div class="dnd-definition">
+            <p>A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</p>
+          </div>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">What I Do With a Day Off</div>
+          <ul class="evidence-list">
+            <li class="evidence-item">
+              <span class="evidence-bullet">🎉</span>
+              <span class="evidence-text"><strong>Community Building:</strong> Organizing events for startup founders and friends, designing unique experiences they won't forget—from whisky tastings with food pairing to big parties, to D&D-themed NY parties where everyone competes in D&D skill-related party games to determine their skillset for the final quest, to boat trips with unique storytelling formats to get deep.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">🧖</span>
+              <span class="evidence-text"><strong>Sauna & Spa:</strong> I love the sauna and going to the nude spa with friends.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">🏔️</span>
+              <span class="evidence-text"><strong>Nature:</strong> Going into nature—hiking, swimming, climbing.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">🎵</span>
+              <span class="evidence-text"><strong>Culture & Nightlife:</strong> Going raving, or to a museum exhibition.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">🎨</span>
+              <span class="evidence-text"><strong>Passion Projects:</strong> Working on passion projects—art or tech.</span>
+            </li>
+            <li class="evidence-item">
+              <span class="evidence-bullet">🧘</span>
+              <span class="evidence-text"><strong>Psychedelics:</strong> Once in a while, doing a psychedelics trip.</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+          <div class="overlay-section-title">Want to Connect?</div>
+          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
+            <a href="mailto:busterfranken@gmail.com?subject=Let's Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+              📧 Email Me
+            </a>
+            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+              💼 LinkedIn
+            </a>
+            <a href="Resume-Buster-short.pdf" download class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+              📄 Download CV
+            </a>
+          </div>
+        </div>
+      `);
+    } else {
+      const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+      const contactLinks = [];
+      if (p.email) contactLinks.push('<a href="mailto:' + p.email + '?subject=Let\'s Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>');
+      if (p.linkedin) contactLinks.push('<a href="' + p.linkedin + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>');
+      if (p.github) contactLinks.push('<a href="' + p.github + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>');
+
+      openOverlay(`
+        <div class="overlay-header">
+          <span class="overlay-icon">🌙</span>
+          <div class="overlay-title-block">
+            <h2 class="overlay-title">Long Rest</h2>
+            <div class="overlay-subtitle">Connect & Collaborate</div>
+          </div>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">D&D Definition</div>
+          <div class="dnd-definition">
+            <p>A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</p>
+          </div>
+        </div>
+        
+        <div class="overlay-section">
+          <div class="overlay-section-title">About ${p.name || 'This Character'}</div>
+          <p>${p.summary || 'No summary available.'}</p>
+          ${p.currentStatus ? '<div style="margin-top: var(--spacing-md);"><strong>Status:</strong> ' + p.currentStatus + '</div>' : ''}
+          ${p.currentCampaign ? '<div><strong>Current Focus:</strong> ' + p.currentCampaign + '</div>' : ''}
+        </div>
+        
+        ${contactLinks.length ? `
+          <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+            <div class="overlay-section-title">Get In Touch</div>
+            <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
+              ${contactLinks.join('')}
+            </div>
+          </div>
+        ` : ''}
+      `);
+    }
   });
 }
 
@@ -754,12 +943,6 @@ function updateHeaderFromData() {
     // Propagate ?slug= to all nav links so navigation stays within this person's sheet
     document.querySelectorAll('.nav-link').forEach(link => {
       const text = link.textContent.trim();
-
-      // Hide "Projects" (only relevant for the site owner)
-      if (text === 'Projects') {
-        link.style.display = 'none';
-        return;
-      }
 
       // Don't modify "Create Yours" — it should always go to the clean creator page
       if (text === 'Create Yours') return;
