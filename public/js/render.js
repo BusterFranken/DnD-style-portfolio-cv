@@ -130,8 +130,9 @@ function renderActions() {
 }
 
 function renderActionItem(action) {
+  function _v(v) { const s = v == null ? '' : String(v).trim(); return (s === '' || s === '/' || s === 'N/A' || s === 'null' || s === 'none') ? '' : s; }
   const hasAttack = action.attackBonus != null && action.attackBonus !== undefined;
-  const hasDamage = action.damage != null && action.damageType != null;
+  const hasDamage = _v(action.damage) !== '' && _v(action.damageType) !== '';
   const icon = action.type === 'Attack' ? '⚔️' : 
                action.type === 'Bonus Action' ? '⚡' : 
                action.type === 'Reaction' ? '🔄' : '🎬';
@@ -146,7 +147,7 @@ function renderActionItem(action) {
       ${hasAttack || hasDamage ? `
         <div class="action-stats">
           ${hasAttack ? `<div class="action-attack rollable" data-mod="${action.attackBonus}">+${action.attackBonus} to hit</div>` : ''}
-          ${hasDamage ? `<div class="action-damage">${action.damage} ${action.damageType}</div>` : ''}
+          ${hasDamage ? `<div class="action-damage">${_v(action.damage)} ${_v(action.damageType)}</div>` : ''}
         </div>
       ` : ''}
     </div>
@@ -727,7 +728,7 @@ function renderNotablePage() {
                 <span>${a.date}</span>
                 <span>${a.category}</span>
               </div>
-              ${a.link ? `<a href="${a.link}" target="_blank" class="card-link">Read coverage &rarr;</a>` : ''}
+              ${a.link && /^https?:\/\/.{4}/.test(a.link) ? `<a href="${a.link}" target="_blank" class="card-link">Read coverage &rarr;</a>` : ''}
             </div>
           `).join('')}
         </div>
@@ -769,12 +770,24 @@ function renderContactPage() {
   const p = characterData.personal || {};
   const orgs = characterData.organizations || [];
 
+  // Only show a contact field if it contains a real value (not a placeholder or "/")
+  function isRealContact(v) {
+    if (!v) return false;
+    const s = String(v).trim().toLowerCase();
+    return s !== '' && s !== '/' && s !== 'null' && s !== 'n/a' && s !== 'none' &&
+      !s.startsWith('linkedin profile') && !s.startsWith('github profile') &&
+      !s.startsWith('http://example') && !s.startsWith('https://example');
+  }
+  function isRealURL(v) {
+    return isRealContact(v) && /^https?:\/\/.{4}/.test(v);
+  }
+
   let contactCards = '';
-  if (p.email) contactCards += `<a href="mailto:${p.email}" class="contact-card primary"><span class="contact-icon">&#128231;</span><div class="contact-info"><h3>Email</h3><p>${p.email}</p><span class="contact-note">Best for detailed inquiries</span></div></a>`;
-  if (p.phone) contactCards += `<a href="tel:${p.phone}" class="contact-card"><span class="contact-icon">&#128241;</span><div class="contact-info"><h3>Phone</h3><p>${p.phone}</p><span class="contact-note">Available during business hours</span></div></a>`;
-  if (p.linkedin) contactCards += `<a href="${p.linkedin}" target="_blank" class="contact-card"><span class="contact-icon">&#128188;</span><div class="contact-info"><h3>LinkedIn</h3><p>LinkedIn Profile</p><span class="contact-note">Professional network</span></div></a>`;
-  if (p.github) contactCards += `<a href="${p.github}" target="_blank" class="contact-card"><span class="contact-icon">&#128187;</span><div class="contact-info"><h3>GitHub</h3><p>GitHub Profile</p><span class="contact-note">Code &amp; projects</span></div></a>`;
-  if (p.location) contactCards += `<div class="contact-card"><span class="contact-icon">&#128205;</span><div class="contact-info"><h3>Location</h3><p>${p.location}</p>${p.address ? `<span class="contact-note">${p.address}</span>` : ''}</div></div>`;
+  if (isRealContact(p.email)) contactCards += `<a href="mailto:${p.email}" class="contact-card primary"><span class="contact-icon">&#128231;</span><div class="contact-info"><h3>Email</h3><p>${p.email}</p><span class="contact-note">Best for detailed inquiries</span></div></a>`;
+  if (isRealContact(p.phone)) contactCards += `<a href="tel:${p.phone}" class="contact-card"><span class="contact-icon">&#128241;</span><div class="contact-info"><h3>Phone</h3><p>${p.phone}</p><span class="contact-note">Available during business hours</span></div></a>`;
+  if (isRealURL(p.linkedin)) contactCards += `<a href="${p.linkedin}" target="_blank" class="contact-card"><span class="contact-icon">&#128188;</span><div class="contact-info"><h3>LinkedIn</h3><p>LinkedIn Profile</p><span class="contact-note">Professional network</span></div></a>`;
+  if (isRealURL(p.github)) contactCards += `<a href="${p.github}" target="_blank" class="contact-card"><span class="contact-icon">&#128187;</span><div class="contact-info"><h3>GitHub</h3><p>GitHub Profile</p><span class="contact-note">Code &amp; projects</span></div></a>`;
+  if (isRealContact(p.location)) contactCards += `<div class="contact-card"><span class="contact-icon">&#128205;</span><div class="contact-info"><h3>Location</h3><p>${p.location}</p>${p.address && isRealContact(p.address) ? `<span class="contact-note">${p.address}</span>` : ''}</div></div>`;
 
   let orgsHtml = '';
   if (orgs.length) {

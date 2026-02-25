@@ -772,6 +772,17 @@ function updateHeaderFromData() {
       }
     });
 
+    // Hide Media tab if there's no media content in the generated sheet
+    const media = typeof mediaMentions !== 'undefined' ? mediaMentions : {};
+    const hasMedia = (media.podcasts && media.podcasts.length) ||
+                     (media.press && media.press.length) ||
+                     (media.profiles && media.profiles.length);
+    if (!hasMedia) {
+      document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.textContent.trim() === 'Media') link.style.display = 'none';
+      });
+    }
+
     // Prepend a "← Back to Buster" link as the first nav item
     if (navLeft && !document.getElementById('backToBusterLink')) {
       const backLink = document.createElement('a');

@@ -565,24 +565,38 @@ function getSpellOverlayContent(spellName) {
 }
 
 // Generate Action overlay content
+// Helper: treat null, undefined, empty string, and "/" as absent
+function val(v) {
+  if (v == null) return '';
+  const s = String(v).trim();
+  return (s === '' || s === '/' || s === 'N/A' || s === 'null' || s === 'none') ? '' : s;
+}
+
 function getActionOverlayContent(actionName) {
   const action = characterData.actions.find(a => a.name === actionName);
-  const desc = actionDescriptions[actionName] || {};
   
   if (!action) return '<p>Action not found</p>';
   
   const icon = action.type === 'Attack' ? '⚔️' : 
                action.type === 'Bonus Action' ? '⚡' : 
                action.type === 'Reaction' ? '🔄' : '🎬';
+
+  const hasAttack = action.attackBonus != null;
+  const damage = val(action.damage);
+  const damageType = val(action.damageType);
+  const range = val(action.range);
+  const effect = val(action.effect);
+  const recharge = val(action.recharge);
+  const uses = val(action.uses);
   
   return `
     <div class="overlay-header">
-      <span class="overlay-icon">${desc.icon || icon}</span>
+      <span class="overlay-icon">${icon}</span>
       <div class="overlay-title-block">
         <h2 class="overlay-title">${action.name}</h2>
-        <div class="overlay-subtitle">${action.type}${action.uses ? ` • ${action.uses}` : ''}</div>
+        <div class="overlay-subtitle">${action.type}${uses ? ` • ${uses}` : ''}</div>
       </div>
-      ${action.attackBonus != null ? `
+      ${hasAttack ? `
         <div class="overlay-modifier rollable" data-mod="${action.attackBonus}">
           +${action.attackBonus}
         </div>
@@ -596,14 +610,7 @@ function getActionOverlayContent(actionName) {
       </div>
     </div>
     
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${action.effect || 'Professional Application'}</div>
-        <div class="cv-meaning-desc">${action.description}</div>
-      </div>
-    </div>
-    
-    ${action.attackBonus != null ? `
+    ${hasAttack ? `
       <div class="overlay-section">
         <div class="overlay-section-title">Attack Details</div>
         <div class="calculation">
@@ -611,16 +618,16 @@ function getActionOverlayContent(actionName) {
             <span class="calc-label">Attack Bonus</span>
             <span class="calc-value">+${action.attackBonus}</span>
           </div>
-          ${action.damage != null ? `
+          ${damage ? `
             <div class="calc-row">
               <span class="calc-label">Damage</span>
-              <span class="calc-value">${action.damage} ${action.damageType || ''}</span>
+              <span class="calc-value">${damage}${damageType ? ' ' + damageType : ''}</span>
             </div>
           ` : ''}
-          ${action.range ? `
+          ${range ? `
             <div class="calc-row">
               <span class="calc-label">Range</span>
-              <span class="calc-value">${action.range}</span>
+              <span class="calc-value">${range}</span>
             </div>
           ` : ''}
         </div>
@@ -632,17 +639,17 @@ function getActionOverlayContent(actionName) {
       </button>
     ` : ''}
     
-    ${action.effect ? `
+    ${effect ? `
       <div class="overlay-section">
         <div class="overlay-section-title">Effect</div>
-        <div class="overlay-section-content">${action.effect}</div>
+        <div class="overlay-section-content">${effect}</div>
       </div>
     ` : ''}
     
-    ${action.recharge ? `
+    ${recharge ? `
       <div class="overlay-section">
         <div class="overlay-section-title">Recharge</div>
-        <div class="overlay-section-content">${action.recharge}</div>
+        <div class="overlay-section-content">${recharge}</div>
       </div>
     ` : ''}
   `;
