@@ -9,10 +9,25 @@ Thumbs.db
 *.swo
 *~
 
-# Dependencies (if any added later)
+# Dependencies
 node_modules/
 
 # Env / secrets
 .env
 .env.local
 *.pem
+
+# Next.js
+.next/
+out/
+
+# Database (local SQLite)
+data/
+*.db
+
+# Large static asset directories (deploy separately via S3/CDN)
+public/fruitpunch/
+
+# Build
+.vercel
+.amplify-hosting
