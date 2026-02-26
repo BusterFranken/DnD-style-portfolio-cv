@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" data-view="dnd">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buster Franken | Founder 3 / Community Builder 2 / Growth Hacker 2</title>
+  <meta name="description" content="D&D-style character sheet portfolio for Buster Franken - Founder & AI Executive. €45M crowdsourced for impact through FruitPunch AI.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/classic-cv.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  <link rel="stylesheet" href="css/dice.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+  <!-- Example banner: visible only on Buster's default page -->
+  <div class="branch-preview-bar" id="exampleBanner" style="background:#2d5016;color:#fff;text-align:center;padding:4px 12px;font-size:12px;font-weight:600;">Example character sheet: Buster Franken (creator)</div>
+  <!-- Admin Login Button (subtle) -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+
+  <!-- Navigation Bar (shared across both views) -->
+  <nav class="navbar" id="mainNavbar">
+    <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-left">
+        <a href="index.html" class="nav-link active">Character Sheet</a>
+        <a href="campaigns.html" class="nav-link">Campaigns</a>
+        <a href="notable.html" class="nav-link">Notable</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="media.html" class="nav-link">Media</a>
+        <a href="https://dnd-cv-maker.dpaft0pdvmuap.amplifyapp.com/creator.html" class="nav-link" target="_blank">Create Yours</a>
+      </div>
+      <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">CAMPAIGN:</span>
+          <span class="campaign-name">Energy Hardtech Exploration</span>
+        </div>
+        <button class="rest-btn short-rest dnd-only" title="Quick Contact" id="shortRestBtn">⚡ Short Rest</button>
+        <button class="rest-btn long-rest dnd-only" title="Download CV" id="longRestBtn">🌙 Long Rest</button>
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- D&D CHARACTER SHEET VIEW -->
+  <!-- ============================================ -->
+  <div class="dnd-view">
+
+    <!-- Character Header -->
+    <header class="character-header">
+      <div class="character-header-content">
+      <div class="character-info">
+        <div class="character-avatar">
+          <img src="assets/images/buster.jpg" alt="Buster Franken" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="avatar-placeholder" style="display:none;">BF</div>
+        </div>
+        <div class="character-name-block">
+          <h1 class="character-name editable" data-field="personal.name">Buster Franken</h1>
+          <div class="character-class clickable" id="classDisplay">
+            <span class="class-item" data-class="founder">Founder 3</span> / 
+            <span class="class-item" data-class="community-builder">Community Builder 2</span> / 
+            <span class="class-item" data-class="growth-hacker">Growth Hacker 2</span>
+          </div>
+          <div class="character-details">
+            <span class="species">Human</span> • 
+            <span class="background clickable" data-element="background">Entrepreneur</span> • 
+            <span class="alignment clickable" data-element="alignment">Chaotic Good</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Stats Row -->
+      <div class="core-stats-row">
+        <!-- Ability Scores -->
+        <div class="ability-scores">
+          <div class="ability-score clickable" data-ability="str">
+            <div class="ability-modifier rollable" data-mod="2">+2</div>
+            <div class="ability-value">14</div>
+            <div class="ability-name">STR</div>
+          </div>
+          <div class="ability-score clickable" data-ability="dex">
+            <div class="ability-modifier rollable" data-mod="4">+4</div>
+            <div class="ability-value">18</div>
+            <div class="ability-name">DEX</div>
+          </div>
+          <div class="ability-score clickable" data-ability="con">
+            <div class="ability-modifier rollable" data-mod="3">+3</div>
+            <div class="ability-value">16</div>
+            <div class="ability-name">CON</div>
+          </div>
+          <div class="ability-score clickable" data-ability="int">
+            <div class="ability-modifier rollable" data-mod="2">+2</div>
+            <div class="ability-value">15</div>
+            <div class="ability-name">INT</div>
+          </div>
+          <div class="ability-score clickable" data-ability="wis">
+            <div class="ability-modifier rollable" data-mod="3">+3</div>
+            <div class="ability-value">16</div>
+            <div class="ability-name">WIS</div>
+          </div>
+          <div class="ability-score clickable" data-ability="cha">
+            <div class="ability-modifier rollable" data-mod="4">+4</div>
+            <div class="ability-value">18</div>
+            <div class="ability-name">CHA</div>
+          </div>
+        </div>
+
+        <!-- Combat Stats -->
+        <div class="combat-stats">
+          <div class="stat-box proficiency clickable" data-element="proficiency">
+            <div class="stat-value rollable" data-mod="3">+3</div>
+            <div class="stat-label">PROFICIENCY<br>BONUS</div>
+          </div>
+          <div class="stat-box initiative clickable" data-element="initiative">
+            <div class="stat-value rollable" data-mod="8">+8</div>
+            <div class="stat-label">INITIATIVE</div>
+          </div>
+          <div class="stat-box armor-class clickable" data-element="ac">
+            <div class="stat-value">14</div>
+            <div class="stat-label">ARMOR<br>CLASS</div>
+          </div>
+          <div class="stat-box speed clickable" data-element="speed">
+            <div class="stat-value">60<span class="unit">ft.</span></div>
+            <div class="stat-label">SPEED</div>
+          </div>
+          <div class="stat-box heroic-inspiration clickable" data-element="heroic-inspiration" title="What inspires you">
+            <div class="stat-value inspiration-icon">✦</div>
+            <div class="stat-label">HEROIC<br>INSPIRATION</div>
+          </div>
+        </div>
+
+        <!-- Hit Points -->
+        <div class="hit-points-container">
+          <div class="hit-points clickable" data-element="hp">
+            <div class="hp-labels">
+              <span class="hp-label">CURRENT</span>
+              <span class="hp-label">MAX</span>
+            </div>
+            <div class="hp-values">
+              <span class="hp-current">45</span>
+              <span class="hp-separator">/</span>
+              <span class="hp-max">45</span>
+            </div>
+            <div class="hp-title">HIT POINTS</div>
+            <div class="hp-meaning">€45M crowdsourced</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Defenses & Conditions Row -->
+      <div class="defenses-conditions-row">
+        <div class="defenses-box clickable" data-element="defenses">
+          <h4 class="dc-title">DEFENSES</h4>
+          <div class="dc-list">
+            <span class="dc-item">Resilient Network</span>
+            <span class="dc-item">Pivot Ready</span>
+            <span class="dc-item">Community Shield</span>
+          </div>
+        </div>
+        <div class="conditions-box clickable" data-element="conditions">
+          <h4 class="dc-title">CONDITIONS</h4>
+          <div class="dc-list">
+            <span class="dc-item active">Inspired</span>
+            <span class="dc-item active">Alert</span>
+            <span class="dc-item active">Mission-Driven</span>
+          </div>
+        </div>
+      </div>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-content">
+      <!-- Left Column -->
+      <aside class="left-column">
+        <!-- Saving Throws -->
+        <section class="section-box saving-throws">
+          <h3 class="section-title">SAVING THROWS</h3>
+          <div class="saves-list">
+            <div class="save-item clickable" data-save="str">
+              <span class="proficiency-marker"></span>
+              <span class="save-abbr">STR</span>
+              <span class="save-mod rollable" data-mod="2" data-save="str">+2</span>
+            </div>
+            <div class="save-item proficient clickable" data-save="dex">
+              <span class="proficiency-marker filled"></span>
+              <span class="save-abbr">DEX</span>
+              <span class="save-mod rollable" data-mod="7" data-save="dex">+7</span>
+            </div>
+            <div class="save-item clickable" data-save="con">
+              <span class="proficiency-marker"></span>
+              <span class="save-abbr">CON</span>
+              <span class="save-mod rollable" data-mod="3" data-save="con">+3</span>
+            </div>
+            <div class="save-item clickable" data-save="int">
+              <span class="proficiency-marker"></span>
+              <span class="save-abbr">INT</span>
+              <span class="save-mod rollable" data-mod="2" data-save="int">+2</span>
+            </div>
+            <div class="save-item proficient clickable" data-save="wis">
+              <span class="proficiency-marker filled"></span>
+              <span class="save-abbr">WIS</span>
+              <span class="save-mod rollable" data-mod="6" data-save="wis">+6</span>
+            </div>
+            <div class="save-item proficient clickable" data-save="cha">
+              <span class="proficiency-marker filled"></span>
+              <span class="save-abbr">CHA</span>
+              <span class="save-mod rollable" data-mod="7" data-save="cha">+7</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Passive Skills -->
+        <section class="section-box passive-skills">
+          <div class="passive-skill clickable" data-skill="perception">
+            <span class="passive-value">13</span>
+            <span class="passive-label">PASSIVE PERCEPTION</span>
+          </div>
+          <div class="passive-skill clickable" data-skill="investigation">
+            <span class="passive-value">12</span>
+            <span class="passive-label">PASSIVE INVESTIGATION</span>
+          </div>
+          <div class="passive-skill clickable" data-skill="insight">
+            <span class="passive-value">16</span>
+            <span class="passive-label">PASSIVE INSIGHT</span>
+          </div>
+          <div class="senses">
+            <span class="senses-label">SENSES</span>
+            <span class="senses-value">Market Awareness 60 ft.</span>
+          </div>
+        </section>
+
+        <!-- Proficiencies -->
+        <section class="section-box proficiencies">
+          <h3 class="section-title">PROFICIENCIES & TRAINING</h3>
+          
+          <div class="prof-category">
+            <span class="prof-label">ARMOR</span>
+            <span class="prof-value">Light (Startup Environments)</span>
+          </div>
+          
+          <div class="prof-category">
+            <span class="prof-label">WEAPONS</span>
+            <span class="prof-value">Pitch Decks, Google Sheets, AI Models, Presentation Tools</span>
+          </div>
+          
+          <div class="prof-category">
+            <span class="prof-label">TOOLS</span>
+            <span class="prof-value">Python, Web Development, Business Operations</span>
+          </div>
+          
+          <div class="prof-category">
+            <span class="prof-label">LANGUAGES</span>
+            <span class="prof-value">English (Native), Dutch (Native), German (B2)</span>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Middle Column - Skills -->
+      <section class="middle-column">
+        <div class="section-box skills-section">
+          <h3 class="section-title">SKILLS</h3>
+          <div class="skills-list" id="skillsList">
+            <!-- Skills will be populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column - Tabbed Content -->
+      <section class="right-column">
+        <div class="section-box tabbed-content">
+          <!-- Tab Navigation -->
+          <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="actions">ACTIONS</button>
+            <button class="tab-btn" data-tab="spells">SPELLS</button>
+            <button class="tab-btn" data-tab="inventory">INVENTORY</button>
+            <button class="tab-btn" data-tab="features">FEATURES & TRAITS</button>
+            <button class="tab-btn" data-tab="background">BACKGROUND</button>
+            <button class="tab-btn" data-tab="notes">NOTES</button>
+            <button class="tab-btn" data-tab="extras">EXTRAS</button>
+          </nav>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <!-- Actions Tab -->
+            <div class="tab-panel active" id="actions-panel">
+              <div class="sub-tabs">
+                <button class="sub-tab active">ALL</button>
+                <button class="sub-tab">ATTACK</button>
+                <button class="sub-tab">ACTION</button>
+                <button class="sub-tab">BONUS ACTION</button>
+              </div>
+              <div class="actions-list" id="actionsList">
+                <!-- Actions populated by JS -->
+              </div>
+            </div>
+
+            <!-- Spells Tab -->
+            <div class="tab-panel" id="spells-panel">
+              <div class="spell-header">
+                <span>Spellcasting Ability: CHA</span>
+                <span>Spell Save DC: <span class="rollable" data-mod="15">15</span></span>
+                <span>Spell Attack: <span class="rollable" data-mod="7">+7</span></span>
+              </div>
+              <div class="spells-list" id="spellsList">
+                <!-- Spells populated by JS -->
+              </div>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div class="tab-panel" id="inventory-panel">
+              <div class="inventory-header">
+                <span>WEIGHT CARRIED: Minimal (ideas are weightless)</span>
+              </div>
+              <div class="inventory-list" id="inventoryList">
+                <!-- Inventory populated by JS -->
+              </div>
+            </div>
+
+            <!-- Features Tab -->
+            <div class="tab-panel" id="features-panel">
+              <div class="sub-tabs">
+                <button class="sub-tab active">ALL</button>
+                <button class="sub-tab">CLASS FEATURES</button>
+                <button class="sub-tab">ACHIEVEMENTS</button>
+              </div>
+              <div class="features-list" id="featuresList">
+                <!-- Features populated by JS -->
+              </div>
+            </div>
+
+            <!-- Background Tab -->
+            <div class="tab-panel" id="background-panel">
+              <div class="sub-tabs">
+                <button class="sub-tab active">ALL</button>
+                <button class="sub-tab">BACKGROUND</button>
+                <button class="sub-tab">CHARACTERISTICS</button>
+              </div>
+              <div class="background-content" id="backgroundContent">
+                <!-- Background populated by JS -->
+              </div>
+            </div>
+
+            <!-- Notes Tab -->
+            <div class="tab-panel" id="notes-panel">
+              <div class="sub-tabs">
+                <button class="sub-tab active">ALL</button>
+                <button class="sub-tab">VOUCHES</button>
+                <button class="sub-tab">ORGS</button>
+              </div>
+              <div class="notes-content" id="notesContent">
+                <!-- Notes populated by JS -->
+              </div>
+            </div>
+
+            <!-- Extras Tab -->
+            <div class="tab-panel" id="extras-panel">
+              <div class="extras-content" id="extrasContent">
+                <!-- Extras populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Contact Bar -->
+    <footer class="contact-bar">
+      <a href="mailto:busterfranken@gmail.com" class="contact-item">
+        <span class="contact-icon">📧</span>
+        <span class="contact-text">busterfranken@gmail.com</span>
+      </a>
+      <a href="tel:+31624877967" class="contact-item">
+        <span class="contact-icon">📱</span>
+        <span class="contact-text">+31 6 2487 7967</span>
+      </a>
+      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
+        <span class="contact-icon">💼</span>
+        <span class="contact-text">LinkedIn</span>
+      </a>
+      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
+        <span class="contact-icon">💻</span>
+        <span class="contact-text">GitHub</span>
+      </a>
+      <span class="contact-item location">
+        <span class="contact-icon">📍</span>
+        <span class="contact-text">Amsterdam, Netherlands</span>
+      </span>
+    </footer>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CLASSIC CV VIEW -->
+  <!-- ============================================ -->
+  <div class="classic-view" style="display: none;">
+    <!-- Navbar is shared above, so it appears in both views -->
+    <!-- Classic CV content will be populated by JS -->
+    <div class="classic-cv-container" id="classicCvContainer">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- OVERLAY MODAL -->
+  <!-- ============================================ -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- DICE ROLL MODAL -->
+  <!-- ============================================ -->
+  <div class="dice-modal" id="diceModal">
+    <div class="dice-content">
+      <div class="dice-title">ROLLING...</div>
+      <div class="dice-container">
+        <div class="dice" id="dice">
+          <div class="dice-face">20</div>
+        </div>
+      </div>
+      <div class="dice-result" id="diceResult">
+        <!-- Result breakdown -->
+      </div>
+      <div class="dice-message" id="diceMessage"></div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- ADMIN LOGIN MODAL -->
+  <!-- ============================================ -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/descriptions.js"></script>
+  <script src="js/load-app-data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/overlay.js"></script>
+  <script src="js/dice.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
