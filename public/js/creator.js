@@ -287,8 +287,16 @@ async function loadPastSheets() {
       return;
     }
 
+    // Filter out any entries without a name (e.g., job records)
+    const validSheets = sheets.filter(s => s.name);
+    
+    if (validSheets.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+    
     section.style.display = '';
-    container.innerHTML = sheets.map(s => {
+    container.innerHTML = validSheets.map(s => {
       const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
       const date = new Date(s.createdAt).toLocaleDateString('en-US', {
         year: 'numeric', month: 'short', day: 'numeric'
