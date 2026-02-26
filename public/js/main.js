@@ -943,6 +943,12 @@ function updateHeaderFromData() {
     avatarImg.alt = p.name || '';
   }
 
+  // ── Hide example banner for generated pages ──
+  const exampleBanner = document.getElementById('exampleBanner');
+  if (exampleBanner && window.__appDataSource !== 'default') {
+    exampleBanner.style.display = 'none';
+  }
+
   // ── Nav updates for generated pages ──
   const slug = window.__appDataSlug;
   const isGenerated = slug && window.__appDataSource && window.__appDataSource !== 'default';
