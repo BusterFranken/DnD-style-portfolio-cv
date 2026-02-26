@@ -28,6 +28,10 @@ export async function GET() {
     return NextResponse.json({ sheets });
   } catch (err) {
     console.error('My sheets error:', err);
+    // Return empty array instead of error - DynamoDB table may not exist yet
+    if (err.name === 'ResourceNotFoundException') {
+      return NextResponse.json({ sheets: [], warning: 'Database not configured' });
+    }
     return NextResponse.json(
       { error: err.message || 'Failed to list your sheets' },
       { status: 500 }
