@@ -4,6 +4,15 @@ import { NextResponse } from 'next/server';
 export const maxDuration = 120; // Allow up to 2 min for OpenAI calls
 export const dynamic = 'force-dynamic';
 
+// GET handler for debugging - check if this endpoint sees env vars
+export async function GET() {
+  return NextResponse.json({
+    endpoint: '/api/create',
+    hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+    keyLength: process.env.OPENAI_API_KEY?.length || 0,
+  });
+}
+
 export async function POST(request) {
   try {
     if (!process.env.OPENAI_API_KEY) {
