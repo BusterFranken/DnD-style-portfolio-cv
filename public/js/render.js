@@ -416,7 +416,11 @@ function renderExtras() {
 }
 
 // Render Classic CV View — fully dynamic from characterData + campaignsData
+// Only rendered for default (Buster's) page, not generated pages
 function renderClassicCV() {
+  // Skip for generated pages - Classic CV is only for Buster's page
+  if (window.__appDataSource !== 'default') return;
+  
   const container = document.getElementById('classicCvContainer');
   if (!container) return;
   

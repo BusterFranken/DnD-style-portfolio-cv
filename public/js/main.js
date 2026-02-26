@@ -122,6 +122,14 @@ function setupViewToggle() {
   const toggleBtns = document.querySelectorAll('.view-toggle-btn');
   const dndView = document.querySelector('.dnd-view');
   const classicView = document.querySelector('.classic-view');
+  const classicBtn = document.querySelector('.view-toggle-btn[data-view="classic"]');
+  
+  // Hide Classic CV button for generated pages (not Buster's default page)
+  if (window.__appDataSource !== 'default' && classicBtn) {
+    classicBtn.style.display = 'none';
+    // Also hide the classic view container
+    if (classicView) classicView.style.display = 'none';
+  }
   
   toggleBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -147,11 +155,13 @@ function setupViewToggle() {
     });
   });
   
-  // Load saved preference
-  const savedView = localStorage.getItem('preferredView');
-  if (savedView) {
-    const btn = document.querySelector(`.view-toggle-btn[data-view="${savedView}"]`);
-    if (btn) btn.click();
+  // Load saved preference (only for default pages)
+  if (window.__appDataSource === 'default') {
+    const savedView = localStorage.getItem('preferredView');
+    if (savedView) {
+      const btn = document.querySelector(`.view-toggle-btn[data-view="${savedView}"]`);
+      if (btn) btn.click();
+    }
   }
 }
 
