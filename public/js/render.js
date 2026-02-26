@@ -160,20 +160,27 @@ function renderSpells() {
   if (!spellsList) return;
   
   const spells = characterData.spells;
+  if (!spells) return;
   
-  let html = `
-    <div class="spell-level-group">
-      <div class="spell-level-title">Cantrips (At Will)</div>
-      ${spells.cantrips.map(spell => `
-        <div class="spell-item clickable" data-spell="${spell.name}">
-          <span class="spell-name">${spell.name}</span>
-          <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
+  let html = '';
   
-  if (spells.level1) {
+  // Cantrips
+  if (spells.cantrips && spells.cantrips.length > 0) {
+    html += `
+      <div class="spell-level-group">
+        <div class="spell-level-title">Cantrips (At Will)</div>
+        ${spells.cantrips.map(spell => `
+          <div class="spell-item clickable" data-spell="${spell.name}">
+            <span class="spell-name">${spell.name}</span>
+            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  
+  // Level 1
+  if (spells.level1 && spells.level1.length > 0) {
     html += `
       <div class="spell-level-group">
         <div class="spell-level-title">1st Level (${spells.level1[0]?.slots || 4} slots)</div>
@@ -187,7 +194,8 @@ function renderSpells() {
     `;
   }
   
-  if (spells.level2) {
+  // Level 2
+  if (spells.level2 && spells.level2.length > 0) {
     html += `
       <div class="spell-level-group">
         <div class="spell-level-title">2nd Level (${spells.level2[0]?.slots || 3} slots)</div>
@@ -201,7 +209,8 @@ function renderSpells() {
     `;
   }
   
-  if (spells.level3) {
+  // Level 3
+  if (spells.level3 && spells.level3.length > 0) {
     html += `
       <div class="spell-level-group">
         <div class="spell-level-title">3rd Level (${spells.level3[0]?.slots || 2} slots)</div>
@@ -213,6 +222,11 @@ function renderSpells() {
         `).join('')}
       </div>
     `;
+  }
+  
+  // If no spells at all, show a message
+  if (!html) {
+    html = '<div class="no-spells">No spells known</div>';
   }
   
   spellsList.innerHTML = html;
