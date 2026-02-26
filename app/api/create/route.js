@@ -1,10 +1,21 @@
-// POST /api/create — Upload CV + docs, generate D&D character sheet
+// POST /api/create — Upload CV, start background job, return jobId
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
+import { nanoid } from 'nanoid';
+import { getDB } from '@/lib/db';
 
-export const maxDuration = 120; // Allow up to 2 min for OpenAI calls
 export const dynamic = 'force-dynamic';
 
-// GET handler for debugging - check if this endpoint sees env vars
+function getClientIP() {
+  const headersList = headers();
+  return (
+    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headersList.get('x-real-ip') ||
+    'unknown'
+  );
+}
+
+// GET handler for debugging
 export async function GET() {
   return NextResponse.json({
     endpoint: '/api/create',
@@ -22,8 +33,8 @@ export async function POST(request) {
       );
     }
 
-    // Dynamic imports to help with Lambda cold starts
-    let extractText, extractImageFromPDF, generateFullSheet;
+    // Dynamic import for PDF parsing
+    let extractText, extractImageFromPDF;
     try {
       const pdfModule = await import('@/lib/parse-pdf');
       extractText = pdfModule.extractText;
@@ -32,17 +43,6 @@ export async function POST(request) {
       console.error('Failed to load parse-pdf module:', pdfErr);
       return NextResponse.json(
         { error: 'Server module loading error (pdf): ' + pdfErr.message },
-        { status: 500 }
-      );
-    }
-
-    try {
-      const openaiModule = await import('@/lib/openai-chunks');
-      generateFullSheet = openaiModule.generateFullSheet;
-    } catch (openaiErr) {
-      console.error('Failed to load openai-chunks module:', openaiErr);
-      return NextResponse.json(
-        { error: 'Server module loading error (openai): ' + openaiErr.message },
         { status: 500 }
       );
     }
@@ -103,24 +103,32 @@ export async function POST(request) {
       combinedText = combinedText.substring(0, 30000) + '\n\n[Text truncated...]';
     }
 
-    // Generate the full D&D character sheet via chunked OpenAI calls
-    const appData = await generateFullSheet(combinedText);
+    // Create a job and return immediately
+    const jobId = nanoid(12);
+    const creatorIp = getClientIP();
+    const db = getDB();
 
-    // Attach extracted image as avatar if found
-    if (extractedImage && appData.characterData) {
-      appData.characterData.avatarImage = extractedImage;
+    // Store the job with CV text (we'll also store the image reference)
+    await db.createJob(jobId, combinedText, creatorIp);
+
+    // Store extracted image in a temporary way (include in job data)
+    if (extractedImage) {
+      // We'll pass it via a separate update or include in cvText as metadata
+      // For simplicity, we'll re-extract on processing or skip image for now
     }
 
-    return NextResponse.json({ success: true, data: appData });
+    // Return the jobId immediately - client will poll for results
+    return NextResponse.json({ 
+      success: true, 
+      jobId,
+      message: 'Job started. Poll /api/job/{jobId} for status.',
+    });
+
   } catch (err) {
     console.error('Create error:', err);
     const errorMsg = err.message || err.toString() || 'Unknown error';
-    const errorStack = err.stack || '';
     return NextResponse.json(
-      { 
-        error: errorMsg,
-        detail: errorStack.split('\n').slice(0, 5).join('\n'),
-      },
+      { error: errorMsg },
       { status: 500 }
     );
   }

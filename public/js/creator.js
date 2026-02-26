@@ -108,25 +108,30 @@ function initCreator() {
         formData.append('files', f);
       }
 
-      const progressInterval = simulateProgress();
-
-      const resp = await fetch('/api/create', {
+      // Step 1: Upload and create job
+      const createResp = await fetch('/api/create', {
         method: 'POST',
         body: formData,
       });
 
-      clearInterval(progressInterval);
-
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(err.error || `Server error: ${resp.status}`);
+      if (!createResp.ok) {
+        const err = await createResp.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(err.error || `Server error: ${createResp.status}`);
       }
 
-      const result = await resp.json();
-
-      if (!result.success || !result.data) {
-        throw new Error('Invalid response from server');
+      const createResult = await createResp.json();
+      if (!createResult.success || !createResult.jobId) {
+        throw new Error('Failed to start generation job');
       }
+
+      const jobId = createResult.jobId;
+      updateProgress(1, 'Processing your CV...', 'Starting AI generation');
+
+      // Step 2: Trigger processing (fire and forget - it may timeout but will continue)
+      fetch(`/api/job/${jobId}`, { method: 'POST' }).catch(() => {});
+
+      // Step 3: Poll for completion
+      const result = await pollForCompletion(jobId);
 
       progressDots.forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
       updateProgress(5, 'Complete!');
@@ -137,7 +142,7 @@ function initCreator() {
         const saveResp = await fetch('/api/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: result.data }),
+          body: JSON.stringify({ data: result }),
         });
         if (saveResp.ok) {
           const saveResult = await saveResp.json();
@@ -147,7 +152,7 @@ function initCreator() {
         console.warn('Could not save to database:', e.message);
       }
 
-      showSuccess(result.data, slug);
+      showSuccess(result, slug);
 
     } catch (err) {
       console.error('Generation failed:', err);
@@ -159,23 +164,61 @@ function initCreator() {
     }
   }
 
-  function simulateProgress() {
+  async function pollForCompletion(jobId) {
     const steps = [
-      { step: 1, msg: 'Analyzing your CV...', detail: 'Extracting text and identifying key information' },
-      { step: 2, msg: 'Rolling ability scores...', detail: 'Mapping your skills to D&D attributes' },
+      { step: 1, msg: 'Analyzing your CV...', detail: 'Extracting text and key information' },
+      { step: 2, msg: 'Rolling ability scores...', detail: 'Mapping skills to D&D attributes' },
       { step: 3, msg: 'Building campaign history...', detail: 'Converting work experience to adventures' },
-      { step: 4, msg: 'Documenting achievements...', detail: 'Creating notable encounters and features' },
-      { step: 5, msg: 'Finalizing character class...', detail: 'Determining your D&D archetype' },
+      { step: 4, msg: 'Documenting achievements...', detail: 'Creating notable encounters' },
+      { step: 5, msg: 'Finalizing character...', detail: 'Almost done!' },
     ];
 
-    let currentStep = 0;
-    return setInterval(() => {
-      if (currentStep < steps.length) {
-        const s = steps[currentStep];
-        updateProgress(s.step, s.msg, s.detail);
-        currentStep++;
+    let pollCount = 0;
+    const maxPolls = 60; // 60 * 3s = 3 minutes max
+    const pollInterval = 3000; // 3 seconds
+
+    while (pollCount < maxPolls) {
+      await new Promise(r => setTimeout(r, pollInterval));
+      pollCount++;
+
+      // Update progress UI
+      const stepIndex = Math.min(Math.floor(pollCount / 4), steps.length - 1);
+      const s = steps[stepIndex];
+      updateProgress(s.step, s.msg, s.detail);
+
+      try {
+        const resp = await fetch(`/api/job/${jobId}`);
+        if (!resp.ok) {
+          console.warn('Poll failed, retrying...');
+          continue;
+        }
+
+        const job = await resp.json();
+
+        if (job.status === 'complete' && job.result) {
+          return job.result;
+        }
+
+        if (job.status === 'failed') {
+          throw new Error(job.error || 'Generation failed');
+        }
+
+        // Still pending or processing - continue polling
+        if (job.status === 'pending') {
+          // Trigger processing again in case first request timed out
+          fetch(`/api/job/${jobId}`, { method: 'POST' }).catch(() => {});
+        }
+
+      } catch (err) {
+        console.warn('Poll error:', err.message);
+        // Continue polling unless it's a definitive error
+        if (err.message && !err.message.includes('Poll failed')) {
+          throw err;
+        }
       }
-    }, 12000);
+    }
+
+    throw new Error('Generation timed out. Please try again.');
   }
 
   function updateProgress(step, message, detail) {
