@@ -8,9 +8,12 @@ export const dynamic = 'force-dynamic';
 
 function getClientIP() {
   const headersList = headers();
+  // CloudFront/Amplify uses various headers for client IP
   return (
     headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     headersList.get('x-real-ip') ||
+    headersList.get('cf-connecting-ip') ||
+    headersList.get('x-client-ip') ||
     'unknown'
   );
 }
