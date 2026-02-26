@@ -114,8 +114,13 @@ export async function POST(request) {
     return NextResponse.json({ success: true, data: appData });
   } catch (err) {
     console.error('Create error:', err);
+    const errorMsg = err.message || err.toString() || 'Unknown error';
+    const errorStack = err.stack || '';
     return NextResponse.json(
-      { error: err.message || 'Failed to generate character sheet' },
+      { 
+        error: errorMsg,
+        detail: errorStack.split('\n').slice(0, 5).join('\n'),
+      },
       { status: 500 }
     );
   }
