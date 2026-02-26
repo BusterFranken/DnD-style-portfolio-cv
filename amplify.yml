@@ -6,6 +6,13 @@ frontend:
         - npm ci
     build:
       commands:
+        # Write env vars to .env.production for Next.js to pick up
+        - echo "OPENAI_API_KEY=$OPENAI_API_KEY" >> .env.production
+        - echo "DB_MODE=$DB_MODE" >> .env.production
+        - echo "DYNAMODB_TABLE=$DYNAMODB_TABLE" >> .env.production
+        - echo "DYNAMODB_REGION=$DYNAMODB_REGION" >> .env.production
+        - echo "DYNAMODB_ACCESS_KEY_ID=$DYNAMODB_ACCESS_KEY_ID" >> .env.production
+        - echo "DYNAMODB_SECRET_ACCESS_KEY=$DYNAMODB_SECRET_ACCESS_KEY" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
