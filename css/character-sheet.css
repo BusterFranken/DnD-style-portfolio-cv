@@ -218,15 +218,14 @@
 
 /* Wrapper kept in the DOM (contract: no elements removed) but flattened out
    of layout so .character-avatar / .character-name-block become direct flex
-   items of .character-header-content, matching the prototype's flat row
-   (avatar / name-block / hit-points-container). Gated to >=741px: below that
-   width, .character-info must stay a real box (not display:contents) so the
-   existing max-width:768px media query's .character-info { flex-direction:
-   column; ... } rule can still stack the avatar/name-block for mobile. Task 6
-   (mobile) owns replacing this whole mobile layer. */
-@media (min-width: 741px) {
-  .character-info { display: contents; }
-}
+   items of .character-header-content at ALL widths, matching the prototype's
+   flat row (avatar / name-block). T2's interim max-width:741px guard is gone:
+   the legacy mobile reflow it was protecting (old .character-info{flex-
+   direction:column} at ≤768px) is deleted below, replaced by Task 6's own
+   ≤740px header-card layout, which handles wrapping explicitly via
+   .character-header-content's flex-wrap — so display:contents is safe
+   unconditionally now. */
+.character-info { display: contents; }
 
 .character-avatar { position: relative; flex: none; }
 .character-avatar img {
@@ -639,195 +638,6 @@
 }
 
 /* ============================================
-   RESPONSIVE STYLES
-   ============================================ */
-@media (max-width: 1200px) {
-  .character-header-content {
-    padding: var(--spacing-md);
-  }
-  
-  .main-content {
-    grid-template-columns: 220px 260px 1fr;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-  }
-}
-
-@media (max-width: 992px) {
-  .main-content {
-    grid-template-columns: 1fr;
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-  }
-  
-  .left-column,
-  .middle-column,
-  .right-column {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .main-content .section-box {
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-  
-  .core-stats-row {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .hit-points-container {
-    margin-left: 0;
-    margin-top: var(--spacing-md);
-  }
-}
-
-/* Mobile navbar: hamburger menu */
-@media (max-width: 992px) {
-  .navbar {
-    position: relative;
-    flex-wrap: wrap;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
-  }
-
-  .navbar-toggle {
-    display: flex;
-    order: 0;
-  }
-
-  .navbar-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: var(--spacing-md);
-    background: var(--dark-bg);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: var(--shadow-lg);
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
-  }
-
-  .navbar.is-open .navbar-menu {
-    display: flex;
-  }
-
-  .navbar-left {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: var(--spacing-md);
-  }
-
-  .navbar-left .nav-link {
-    padding: var(--spacing-md);
-    font-size: 16px;
-    border-radius: var(--radius-sm);
-  }
-
-  .navbar-right {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--spacing-sm);
-  }
-
-  .navbar-right .view-toggle {
-    align-self: center;
-    margin-left: 0;
-  }
-
-  .navbar-right .view-toggle .view-toggle-btn {
-    flex: 1;
-  }
-
-  .campaign-status {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
-  }
-
-  .character-header-content {
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
-    max-width: 100%;
-  }
-
-  .main-content {
-    grid-template-columns: 1fr;
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    max-width: 100%;
-  }
-
-  .left-column,
-  .middle-column,
-  .right-column {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .main-content .section-box {
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-  
-  .ability-scores {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-sm);
-  }
-  
-  .combat-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-sm);
-  }
-  
-  .character-info {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .tab-nav {
-    justify-content: center;
-  }
-  
-  .contact-bar {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-}
-
-/* Mobile: use full viewport width with minimal side padding */
-@media (max-width: 480px) {
-  .character-header-content {
-    padding-left: var(--spacing-xs);
-    padding-right: var(--spacing-xs);
-  }
-
-  .main-content {
-    padding-left: var(--spacing-xs);
-    padding-right: var(--spacing-xs);
-  }
-}
-
-/* ============================================
    DEFENSES & CONDITIONS ROW
    ============================================ */
 .defenses-conditions-row { display: flex; gap: 10px; padding: 16px 26px 16px; }
@@ -951,3 +761,199 @@
   border-radius: var(--radius-sm);
   margin-left: auto;
 }
+
+/* ============================================
+   MOBILE LAYER (≤740px) — Task 6
+   Replaces the entire old dark-theme reflow that used to sit here (three
+   ad-hoc breakpoints at 1200/992/768/480px reshuffling a grid that no longer
+   exists) with one deliberate ≤740px block: vitals stack, swipeable ability
+   strip, section-accordions, sticky quick bar. Nav-dropdown mobile CSS lives
+   in css/main.css instead (Task 6 Step 1) — this file owns the sheet itself.
+
+   Deliberately placed at the very END of the file (not where the old
+   responsive section used to live, earlier up): several rules below share a
+   bare-class selector with an EARLIER, unconditional (non-media) desktop rule
+   elsewhere in this file (e.g. .defenses-box/.conditions-box/.dc-title in the
+   DEFENSES & CONDITIONS ROW section above). Media queries add no specificity,
+   so an equal-specificity tie is broken purely by source order — being last
+   in the file guarantees every override below wins at a matching viewport,
+   without needing to hunt down and out-specify each one individually.
+
+   .sheet/body overrides also sit in here (not main.css, where those selectors
+   are "structurally" defined) so this later-loaded stylesheet wins the
+   cascade at matching viewports without !important — the same later-file-
+   wins pattern Task 1 already established (see main.css's own #mainNavbar-
+   prefix comment) applied in the other direction.
+   ============================================ */
+
+/* New mobile-only component classes: inert/flattened by default so their
+   markup (real elements, not JS-injected) has zero effect above 740px. */
+.acc-head { display: none; }
+.acc-group { display: contents; }
+.ability-strip-wrap { display: contents; }
+.abilities-caption { display: none; }
+.quick-bar { display: none; }
+
+@media (max-width: 740px) {
+  body { padding: 0; }
+  .sheet { width: 100%; min-width: 0; border-width: 2px; }
+
+  /* ---------- Header card ---------- */
+  .character-header { padding: 18px 16px 0; }
+  .character-header-content { flex-wrap: wrap; gap: 12px 14px; }
+  .character-avatar img, .avatar-placeholder {
+    width: 72px; height: 72px; border-width: 2.5px;
+    box-shadow: 0 0 0 2px var(--parchment), 0 0 0 3.5px var(--gold);
+  }
+  .avatar-placeholder { font-size: 19px; }
+  .level-banner { bottom: -6px; font-size: 7.5px; letter-spacing: .14em; padding: 1px 7px; }
+  .character-name { font: 700 23px/1.05 var(--font-display); }
+  .character-class { font-size: 11.5px; margin-top: 3px; }
+  .character-details { font-size: 8px; margin-top: 3px; }
+
+  /* ---------- Margin notes: hidden except the HP one ---------- */
+  .margin-note { display: none; }
+  #note-hp { display: block; right: 8px; top: -13px; transform: rotate(4deg); font-size: 14px; }
+
+  /* ---------- HP: full-width banner wrapping onto its own row ---------- */
+  .hit-points-container { flex: 0 0 100%; margin: 0; }
+  .hit-points { display: flex; align-items: center; gap: 12px; text-align: left; padding: 10px 14px; }
+  .hp-labels { display: none; }
+  .hp-title {
+    order: -1; flex: none; width: 34px; white-space: normal; line-height: 1.15;
+    border-top: none; margin-top: 0; padding-top: 0; font-size: 8.5px;
+  }
+  .hp-values { font-size: 26px; }
+  .hp-separator { font-size: 17px; }
+  .hp-meaning { margin-left: auto; text-align: right; }
+
+  /* ---------- Vitals + ability strip: vitals first, strip below (order) ---------- */
+  .core-stats-row { display: flex; flex-direction: column; position: relative; padding: 0; }
+
+  .combat-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; padding: 10px 16px 0; order: 1; }
+  .stat-box { padding: 10px 2px 8px; }
+  .stat-box.heroic-inspiration { display: none; } /* frame shows 4 tiles; inspiration stays desktop-only */
+  .stat-box.armor-class {
+    order: 1; background: var(--panel); border: 1px solid var(--oxblood);
+    box-shadow: inset 0 0 0 2px var(--panel), inset 0 0 0 3px var(--panel-border);
+  }
+  .stat-box.armor-class::before, .stat-box.armor-class::after { content: none; }
+  .stat-box.initiative { order: 2; }
+  .stat-box.speed { order: 3; }
+  .stat-box.proficiency { order: 4; }
+  .stat-value { font-size: 17px; }
+  .stat-value .unit { font-size: 10px; }
+  .stat-label { font-size: 6.5px; letter-spacing: .1em; }
+
+  .ability-strip-wrap { display: block; order: 2; position: relative; margin-top: 12px; }
+  .ability-scores { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; padding: 0 16px; }
+  .ability-score { flex: none; width: 84px; scroll-snap-align: start; }
+  .ability-score::before { content: none; }
+  .ability-modifier { font-size: 22px; }
+  .ability-value { font-size: 12px; width: 32px; }
+  .ability-name { font-size: 8.5px; margin-top: 3px; }
+  /* Fade lives on the non-scrolling wrapper, not .ability-scores itself — a
+     position:absolute child of the scrolling element would scroll away with
+     the content instead of staying pinned to the visible right edge. */
+  .ability-strip-wrap::after {
+    content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 44px;
+    background: linear-gradient(90deg, transparent, var(--parchment)); pointer-events: none;
+  }
+  .abilities-caption { display: block; font: 500 10px var(--font-body); font-style: italic; color: var(--label); padding: 6px 16px 0; }
+
+  /* ---------- Defenses & Conditions ----------
+     Defenses box is absent from the mobile frame entirely (deliberate, like
+     heroic-inspiration) — conditions becomes a bare wrapping chip row. */
+  .defenses-conditions-row { display: block; padding: 10px 16px 0; }
+  .defenses-box { display: none; }
+  .conditions-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; border: none; background: none; padding: 0; }
+  .dc-title { font-size: 8px; }
+  .conditions-box .dc-item.active { font-size: 11px; padding: 2px 9px; border-radius: 9px; }
+
+  /* ---------- Main content: flatten the 3-column grid into one accordion stack ----------
+     .right-column .section-box is a real compound selector earlier in this
+     file (higher specificity than a bare .tabbed-content), so it's repeated
+     here verbatim to win the cascade rather than silently losing to it. */
+  .main-content { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 76px; }
+  .left-column, .middle-column, .right-column,
+  .tabbed-content, .tab-content, .right-column .section-box { display: contents; }
+  .tab-nav { display: none; }
+  .section-box > .section-title { display: none; }
+
+  .section-box, .tab-panel, .acc-group {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-ring);
+    padding: 12px 14px;
+  }
+  /* Every wrapped tab-panel becomes its own always-rendered accordion bar,
+     regardless of which one desktop's (now-hidden) tab-nav last marked
+     .active — mobile visibility is driven entirely by .collapsed/.acc-open. */
+  .tab-panel { display: block; }
+  /* .acc-group defaults to display:contents (desktop-safe no-op); it must
+     become a real box here so #profSensesGroup/#miscGroup actually render
+     the parchment panel + border set above instead of leaving their .acc-head
+     as a bare, unboxed row with the two/four wrapped panels floating below it. */
+  .acc-group { display: block; }
+
+  /* Proficiencies & Senses: the two wrapped section-boxes lose their own
+     border/box (the shared .acc-group rule above already draws one) and are
+     separated by a plain dotted rule instead of double-nested panels. */
+  #profSensesGroup .passive-skills, #profSensesGroup .proficiencies {
+    background: none; border: none; box-shadow: none; padding: 0;
+  }
+  #profSensesGroup .proficiencies { margin-top: 10px; padding-top: 10px; border-top: 1px dotted var(--dot-rule); }
+
+  /* Features, Background & Notes: all four panels render at once when open
+     (no data lost); a dotted rule separates them since there's no tab-nav
+     left to mark where one ends and the next begins. */
+  .acc-group .tab-panel + .tab-panel { border-top: 1px dotted var(--dot-rule); margin-top: 14px; padding-top: 14px; }
+
+  /* ---------- Accordion mechanics ---------- */
+  .acc-head {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    background: none; border: none; padding: 0 0 4px; cursor: pointer;
+  }
+  .acc-title { font: 700 10px var(--font-sc); letter-spacing: .2em; color: var(--oxblood); }
+  .acc-preview {
+    font: 500 10.5px var(--font-body); font-style: italic; color: var(--label);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; text-align: left;
+  }
+  .acc-chevron { font: 700 12px var(--font-display); color: var(--gold); }
+  .acc-hint { display: none; font: 500 10px var(--font-body); font-style: italic; color: var(--gold); flex: 1; text-align: left; }
+
+  .collapsed > :not(.acc-head) { display: none; }
+  .acc-open { padding-bottom: 8px; }
+  .acc-open > :not(.acc-head) { animation: pi-fadeup .25s; }
+  .acc-open > .acc-head { border-bottom: 1px solid var(--panel-border); padding-bottom: 9px; }
+  .acc-open .acc-preview { display: none; }
+  .acc-open .acc-hint { display: inline; }
+
+  /* Skill rows: 44px tap-to-roll pills */
+  .skill-item { grid-template-columns: 14px 32px 1fr auto; }
+  .skill-name { font-size: 13.5px; padding: 9px 0; }
+  .skill-item:last-child .skill-name { border-bottom: none; }
+  .skill-mod {
+    font: 700 14px var(--font-display); background: var(--parchment);
+    border: 1px solid var(--panel-border); border-radius: 9px; padding: 6px 13px;
+  }
+  .sub-tabs { flex-wrap: wrap; }
+
+  /* ---------- Sticky quick bar ---------- */
+  .quick-bar {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, var(--oxblood-hi), var(--oxblood-lo));
+    border-top: 2px solid var(--gold); z-index: 900;
+  }
+  .quick-bar button {
+    flex: 1; padding: 15px 0; font: 700 9.5px var(--font-sc); letter-spacing: .14em;
+    color: var(--gold-chip); background: none; border: none; cursor: pointer;
+    box-shadow: 1px 0 0 rgba(201,168,92,.4);
+  }
+  .quick-bar button:last-child { box-shadow: none; }
+  .quick-bar button:first-child { color: var(--gold-max); }
+}
+
+/* Above 740px: every rule above is inert (.acc-head/.quick-bar/.abilities-
+   caption default to display:none, .acc-group/.ability-strip-wrap default to
+   display:contents) — desktop is byte-for-byte the same layout as before
+   this task. */

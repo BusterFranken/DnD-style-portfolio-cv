@@ -200,6 +200,10 @@ a:hover {
 .view-toggle-btn { font: 700 9px var(--font-sc); letter-spacing: .06em; color: var(--gold-dim); padding: 4px 7px; background: transparent; border: none; border-radius: 0; cursor: pointer; }
 .view-toggle-btn:hover { color: var(--gold-max); background: transparent; }
 .view-toggle-btn.active { background: var(--gold-bright); color: var(--oxblood-lo); }
+/* Centered page name shown only in the ≤740px nav band (Task 6); one span per
+   page ("Character Sheet"/"Campaign Journal"/etc.), added as a direct child
+   of #mainNavbar alongside .nav-d20/.navbar-toggle/.navbar-menu. */
+.navbar-page-title { display: none; }
 
 /* Footer contact band */
 .sheet .contact-bar {
@@ -447,4 +451,64 @@ body.admin-mode::before {
   .admin-login-btn {
     bottom: 120px;
   }
+}
+
+/* ============================================
+   MOBILE NAV (≤740px) — Task 6
+   #mainNavbar-scoped for the same reason as the NAV BAND rules above:
+   css/character-sheet.css's unconditional (non-media) hamburger-icon geometry
+   (.navbar-toggle-icon and its ::before/::after) loads AFTER this file and
+   ties in specificity with a bare-class override, so it would win regardless
+   of this block's own source order. An ID-anchored selector beats that bare
+   class regardless of load order — same fix Task 1 already applied elsewhere.
+   The sheet/header/vitals/accordion/quick-bar mobile layer itself lives in
+   css/character-sheet.css's own ≤740px block (Task 6 Step 2/4/5); this block
+   is nav-dropdown + admin-button only, per this task's file split.
+   ============================================ */
+@media (max-width: 740px) {
+  #mainNavbar { flex-wrap: wrap; position: relative; padding: 13px 16px; }
+
+  /* Hamburger: visible, gold bars (17x2px, third 11px) replacing the old
+     22px-equal-bar / dark-dropdown treatment entirely. */
+  #mainNavbar .navbar-toggle { display: flex; order: 1; }
+  #mainNavbar .navbar-toggle-icon { width: 17px; background: var(--gold-chip); }
+  #mainNavbar .navbar-toggle-icon::before { width: 17px; top: -5px; background: var(--gold-chip); }
+  #mainNavbar .navbar-toggle-icon::after { width: 11px; top: 5px; background: var(--gold-chip); }
+  #mainNavbar.is-open .navbar-toggle-icon { background: transparent; }
+  #mainNavbar.is-open .navbar-toggle-icon::before,
+  #mainNavbar.is-open .navbar-toggle-icon::after { top: 0; }
+
+  /* Centered page name */
+  .navbar-page-title { display: block; order: 2; flex: 1; text-align: center; font: 700 11px var(--font-sc); letter-spacing: .22em; color: var(--gold-max); }
+
+  /* d20 mark: right edge */
+  #mainNavbar .nav-d20 { order: 3; }
+
+  /* Dropdown: red/gold band (not the old dark-bg), stacked links + chips/
+     buttons/toggle folded in below the links, one full-width column. */
+  #mainNavbar .navbar-menu {
+    order: 4; display: none; position: absolute; top: 100%; left: 0; right: 0;
+    flex: none; flex-direction: column; align-items: stretch; gap: 0;
+    background: linear-gradient(180deg, var(--oxblood), var(--oxblood-lo));
+    border-top: 1px solid var(--gold); border-bottom: 2px solid var(--gold);
+    box-shadow: 0 14px 30px rgba(0,0,0,.45);
+    max-height: calc(100vh - 54px); overflow-y: auto; z-index: 150;
+  }
+  #mainNavbar.is-open .navbar-menu { display: flex; }
+  #mainNavbar .navbar-left { flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px; }
+  #mainNavbar .navbar-left .nav-link { padding: 12px 0; font-size: 12px; letter-spacing: .14em; text-align: center; border-bottom: 1px solid rgba(201,168,92,.25); }
+  #mainNavbar .navbar-left .nav-link:last-child { border-bottom: none; }
+  #mainNavbar .navbar-right {
+    margin-left: 0; flex-direction: column; align-items: stretch; gap: 8px;
+    padding: 12px 16px 16px; border-top: 1px solid rgba(201,168,92,.25);
+  }
+  #mainNavbar .campaign-status { justify-content: center; text-align: center; }
+  #mainNavbar .rest-btn { width: 100%; text-align: center; padding: 11px 0; }
+  #mainNavbar .view-toggle { align-self: stretch; margin-left: 0; }
+  #mainNavbar .view-toggle-btn { flex: 1; padding: 11px 0; }
+
+  /* index.html now has a fixed ~44px quick bar at the very bottom ≤740px;
+     the admin button is a shared fixed element on all 6 pages, simplest to
+     raise it consistently rather than special-case it per page. */
+  .admin-login-btn { bottom: 60px; }
 }

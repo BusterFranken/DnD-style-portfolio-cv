@@ -32,6 +32,7 @@
     <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
       <span class="navbar-toggle-icon"></span>
     </button>
+    <span class="navbar-page-title">Character Sheet</span>
     <div class="navbar-menu" id="navbarMenu">
       <div class="navbar-left">
         <a href="index.html" class="nav-link active">Character Sheet</a>
@@ -100,7 +101,7 @@
             <span class="hp-separator">/</span>
             <span class="hp-max">45</span>
           </div>
-          <div class="hp-title">HIT POINTS</div>
+          <div class="hp-title">Hit Points</div>
           <div class="hp-meaning">€45M crowdsourced</div>
         </div>
         <span class="margin-note margin-note--red" id="note-hp">still full HP!</span>
@@ -110,7 +111,10 @@
 
     <!-- Core Stats Row -->
     <div class="core-stats-row">
-      <!-- Ability Scores -->
+      <!-- Ability Scores (wrapped so the mobile right-edge scroll fade has a
+           non-scrolling anchor; display:contents at >740px keeps desktop
+           byte-identical — see css/character-sheet.css) -->
+      <div class="ability-strip-wrap">
       <div class="ability-scores">
         <div class="ability-score clickable" data-ability="str">
           <div class="ability-modifier rollable" data-mod="2">+2</div>
@@ -143,6 +147,8 @@
           <div class="ability-name">CHA</div>
           <span class="margin-note" id="note-cha">the money-maker</span>
         </div>
+      </div>
+      <div class="abilities-caption">swipe · tap to roll</div>
       </div>
 
       <!-- Combat Stats -->
@@ -197,6 +203,11 @@
       <aside class="left-column">
         <!-- Saving Throws -->
         <section class="section-box saving-throws">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span class="acc-title">Saving Throws</span>
+            <span class="acc-preview"></span>
+            <span class="acc-chevron">▸</span>
+          </button>
           <h3 class="section-title">Saving Throws</h3>
           <div class="saves-list">
             <div class="save-item clickable" data-save="str">
@@ -232,6 +243,15 @@
           </div>
         </section>
 
+        <!-- Proficiencies & Senses (mobile accordion: combines Passive Skills +
+             Proficiencies under one head so no data is lost — desktop keeps
+             them as two independent boxes via .acc-group{display:contents}) -->
+        <div class="acc-group" id="profSensesGroup">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span class="acc-title">Proficiencies &amp; Senses</span>
+            <span class="acc-preview"></span>
+            <span class="acc-chevron">▸</span>
+          </button>
         <!-- Passive Skills -->
         <section class="section-box passive-skills">
           <div class="passive-skill clickable" data-skill="perception">
@@ -278,11 +298,18 @@
             <span class="margin-note" id="note-languages">— ja, echt waar</span>
           </div>
         </section>
+        </div>
       </aside>
 
       <!-- Middle Column - Skills -->
       <section class="middle-column">
         <div class="section-box skills-section">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span class="acc-title">Skills</span>
+            <span class="acc-preview"></span>
+            <span class="acc-hint">tap a value to roll</span>
+            <span class="acc-chevron">▸</span>
+          </button>
           <h3 class="section-title">Skills</h3>
           <div class="skills-list" id="skillsList">
             <!-- Skills will be populated by JavaScript -->
@@ -309,6 +336,11 @@
           <div class="tab-content">
             <!-- Actions Tab -->
             <div class="tab-panel active" id="actions-panel">
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Actions</span>
+                <span class="acc-preview"></span>
+                <span class="acc-chevron">▸</span>
+              </button>
               <div class="sub-tabs">
                 <button class="sub-tab active">ALL</button>
                 <button class="sub-tab">ATTACK</button>
@@ -322,6 +354,11 @@
 
             <!-- Spells Tab -->
             <div class="tab-panel" id="spells-panel">
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Spells</span>
+                <span class="acc-preview"></span>
+                <span class="acc-chevron">▸</span>
+              </button>
               <div class="spell-header">
                 <span>Spellcasting: <span>CHA</span></span>
                 <span>Save DC: <span class="rollable" data-mod="15">15</span></span>
@@ -334,6 +371,11 @@
 
             <!-- Inventory Tab -->
             <div class="tab-panel" id="inventory-panel">
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Inventory</span>
+                <span class="acc-preview"></span>
+                <span class="acc-chevron">▸</span>
+              </button>
               <div class="inventory-header">
                 <span>Weight carried: <span>Minimal (ideas are weightless)</span></span>
               </div>
@@ -342,6 +384,16 @@
               </div>
             </div>
 
+            <!-- Features, Background & Notes (mobile accordion: merges 4 tab
+                 panels under one head so no data is lost — desktop keeps them
+                 as independent tabs via .acc-group{display:contents}; the
+                 tab-nav JS still toggles .active on each panel unaffected) -->
+            <div class="acc-group" id="miscGroup">
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Features, Background &amp; Notes</span>
+                <span class="acc-preview"></span>
+                <span class="acc-chevron">▸</span>
+              </button>
             <!-- Features Tab -->
             <div class="tab-panel" id="features-panel">
               <div class="sub-tabs">
@@ -387,6 +439,7 @@
               </div>
               <div class="extras-cta">Want a sheet of your own? <a href="https://dnd-cv-maker.dpaft0pdvmuap.amplifyapp.com/creator.html" target="_blank">Create Yours ↗</a></div>
             </div>
+            </div>
           </div>
         </div>
       </section>
@@ -400,6 +453,13 @@
       <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
       <span class="contact-item location">❖ Amsterdam, Netherlands</span>
     </footer>
+
+    <!-- Mobile Quick Bar (≤740px only) -->
+    <div class="quick-bar dnd-only">
+      <button type="button" id="qbShort">✦ Short Rest</button>
+      <button type="button" id="qbLong">☾ Long Rest</button>
+      <button type="button" id="qbClassic">❖ Classic CV</button>
+    </div>
   </div>
   </div>
 

@@ -21,6 +21,7 @@ function init() {
   setupClickableElements();
   setupRollableElements();
   setupRestButtons();
+  setupMobileAccordions();
   
   // Set fixed height for right column to match left column (one-time calculation)
   // Only runs on character sheet page (index.html) where .left-column exists
@@ -179,6 +180,100 @@ function setupTabNavigation() {
       });
     });
   });
+}
+
+// ============================================
+// MOBILE ACCORDIONS (≤740px)
+// ============================================
+// .acc-head buttons are static markup (index.html), one per mapped section-
+// box/tab-panel/acc-group (see css/character-sheet.css's mobile block for the
+// section-to-accordion mapping). Above 740px .acc-head is display:none and
+// this is a no-op; ≤740px exactly one box is ever .acc-open at a time.
+function setupMobileAccordions() {
+  const mq = window.matchMedia('(max-width: 740px)');
+  const heads = document.querySelectorAll('.acc-head');
+  if (!heads.length) return;
+
+  function collapseAll() {
+    heads.forEach(h => {
+      h.parentElement.classList.add('collapsed');
+      h.parentElement.classList.remove('acc-open');
+      h.setAttribute('aria-expanded', 'false');
+      h.querySelector('.acc-chevron').textContent = '▸';
+    });
+  }
+
+  function apply() {
+    if (mq.matches) {
+      collapseAll();
+      fillAccordionPreviews();
+    } else {
+      heads.forEach(h => {
+        h.parentElement.classList.remove('collapsed', 'acc-open');
+      });
+    }
+  }
+
+  heads.forEach(h => h.addEventListener('click', () => {
+    if (!mq.matches) return;
+    const box = h.parentElement;
+    const wasOpen = box.classList.contains('acc-open');
+    collapseAll();
+    if (!wasOpen) {
+      box.classList.remove('collapsed');
+      box.classList.add('acc-open');
+      h.setAttribute('aria-expanded', 'true');
+      h.querySelector('.acc-chevron').textContent = '▾';
+    }
+  }));
+
+  mq.addEventListener('change', apply);
+  apply();
+}
+
+// Collapsed-bar preview text ("DEX +7 · WIS +6 · CHA +7", etc.) — display-
+// only, derived from the same characterData the desktop tabs already render
+// from. Property names/shapes match js/data.js exactly (d.spells is a level-
+// grouped object, not a flat array; d.actions items carry attackBonus only on
+// attacks; the Inventory blurb reuses the existing "Weight carried" copy
+// already in the DOM rather than duplicating it as a second hardcoded string).
+function fillAccordionPreviews() {
+  const d = typeof characterData !== 'undefined' ? characterData : null;
+  if (!d) return;
+
+  const set = (title, text) => {
+    document.querySelectorAll('.acc-head').forEach(h => {
+      if (h.querySelector('.acc-title').textContent === title) {
+        const preview = h.querySelector('.acc-preview');
+        if (preview) preview.textContent = text;
+      }
+    });
+  };
+
+  const profSaves = Object.values(d.abilities).filter(a => a.saveProficient)
+    .map(a => `${a.abbr} +${a.modifier + d.coreStats.proficiencyBonus}`).join(' · ');
+  set('Saving Throws', profSaves);
+
+  const topSkills = [...d.skills].sort((a, b) => b.modifier - a.modifier).slice(0, 2)
+    .map(s => `${s.name} +${s.modifier}`).join(' · ') + ' …';
+  set('Skills', topSkills);
+
+  const attacks = d.actions.filter(a => a.attackBonus != null);
+  const nonAttacks = d.actions.length - attacks.length;
+  if (attacks.length) {
+    set('Actions', `${attacks[0].name} +${attacks[0].attackBonus} · ${attacks.length} attacks, ${nonAttacks} moves`);
+  }
+
+  // d.spells is {spellcastingAbility, spellSaveDC, spellAttackBonus, cantrips[],
+  // level1[], level2[], level3[]} — not a flat array — mirrors the existing
+  // static .spell-header text ("Spellcasting: CHA / Save DC: 15 / Spell Attack: +7").
+  set('Spells', `${d.spells.spellcastingAbility} · save DC ${d.spells.spellSaveDC} · attack +${d.spells.spellAttackBonus}`);
+
+  // "ideas are weightless" lives in the existing static .inventory-header markup,
+  // not in characterData — read it from the DOM rather than hardcoding a second
+  // copy of the same copy that could drift out of sync.
+  const weightNote = document.querySelector('.inventory-header > span > span');
+  set('Inventory', weightNote ? weightNote.textContent : `${d.inventory.length} items`);
 }
 
 // ============================================
@@ -572,6 +667,18 @@ function setupRestButtons() {
         </div>
       </div>
     `);
+  });
+
+  // Mobile quick bar (≤740px, index.html only): dispatches to the same
+  // buttons/toggle above rather than duplicating their content/behavior.
+  // #shortRestBtn/#longRestBtn live inside the ≤740px nav dropdown (hidden
+  // until opened) and .view-toggle-btn is always in the DOM — a .click() on a
+  // hidden (display:none only on the closed dropdown's ancestor, not on the
+  // buttons themselves once open) element still fires its click handler.
+  document.getElementById('qbShort')?.addEventListener('click', () => shortRestBtn?.click());
+  document.getElementById('qbLong')?.addEventListener('click', () => longRestBtn?.click());
+  document.getElementById('qbClassic')?.addEventListener('click', () => {
+    document.querySelector('.view-toggle-btn[data-view="classic"]')?.click();
   });
 }
 
