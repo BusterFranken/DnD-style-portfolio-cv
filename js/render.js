@@ -93,36 +93,43 @@ function renderActions() {
     }
   });
   
+  // Category header: "✦ Label" text, a flexible gold divider, and (Attacks only) the
+  // "click to-hit to roll" hint — all as explicit DOM children so the hint can sit after
+  // the divider, matching the prototype's structure (finding 8: hint attaches to the
+  // Attacks header specifically, not the whole tab).
+  const categoryTitle = (label, hint) =>
+    `<div class="action-category-title">✦ ${label}<span class="category-divider"></span>${hint ? `<span class="category-hint">${hint}</span>` : ''}</div>`;
+
   let html = '';
-  
+
   // Attacks first
   if (actionsByType['Attack'].length) {
-    html += '<div class="action-category"><div class="action-category-title">⚔️ Attacks</div>';
+    html += `<div class="action-category">${categoryTitle('Attacks', 'click to-hit to roll')}`;
     html += actionsByType['Attack'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   // Actions
   if (actionsByType['Action'].length) {
-    html += '<div class="action-category"><div class="action-category-title">🎬 Actions</div>';
+    html += `<div class="action-category">${categoryTitle('Actions')}`;
     html += actionsByType['Action'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   // Bonus Actions
   if (actionsByType['Bonus Action'].length) {
-    html += '<div class="action-category"><div class="action-category-title">⚡ Bonus Actions</div>';
+    html += `<div class="action-category">${categoryTitle('Bonus Actions')}`;
     html += actionsByType['Bonus Action'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   // Reactions
   if (actionsByType['Reaction'].length) {
-    html += '<div class="action-category"><div class="action-category-title">🔄 Reactions</div>';
+    html += `<div class="action-category">${categoryTitle('Reactions')}`;
     html += actionsByType['Reaction'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   actionsList.innerHTML = html;
 }
 
@@ -131,7 +138,7 @@ function renderActionItem(action) {
   const tags = (action.properties || []).map(p => p.toLowerCase()).join(' · ');
 
   return `
-    <div class="action-item clickable" data-action="${action.name}">
+    <div class="action-item clickable${hasAttack ? ' attack' : ''}" data-action="${action.name}">
       <span class="action-name">${action.name}</span>
       ${tags ? `<span class="action-tags">${tags}</span>` : ''}
       ${!hasAttack ? `<div class="action-effect">${action.effect || action.description || ''}</div>` : ''}
@@ -147,63 +154,33 @@ function renderActionItem(action) {
 function renderSpells() {
   const spellsList = document.getElementById('spellsList');
   if (!spellsList) return;
-  
+
   const spells = characterData.spells;
-  
-  let html = `
-    <div class="spell-level-group">
-      <div class="spell-level-title">Cantrips (At Will)</div>
-      ${spells.cantrips.map(spell => `
+
+  // Flat list, no level-group headers (finding 3): each row is name + a descriptive
+  // blurb (existing cvMeaning field, copy-synced to the prototype) + a level-badge
+  // column ("Cantrip" / "1st ·4" style). ordinal labels are structural, not copy.
+  const groups = [
+    { ordinal: null, list: spells.cantrips },
+    { ordinal: '1st', list: spells.level1 },
+    { ordinal: '2nd', list: spells.level2 },
+    { ordinal: '3rd', list: spells.level3 }
+  ];
+
+  let html = '';
+  groups.forEach(group => {
+    (group.list || []).forEach(spell => {
+      const badge = group.ordinal ? `${group.ordinal} ·${spell.slots}` : 'Cantrip';
+      html += `
         <div class="spell-item clickable" data-spell="${spell.name}">
+          <span class="spell-level-badge">${badge}</span>
           <span class="spell-name">${spell.name}</span>
-          <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
+          <span class="spell-meta">${spell.cvMeaning}</span>
         </div>
-      `).join('')}
-    </div>
-  `;
-  
-  if (spells.level1) {
-    html += `
-      <div class="spell-level-group">
-        <div class="spell-level-title">1st Level (${spells.level1[0]?.slots || 4} slots)</div>
-        ${spells.level1.map(spell => `
-          <div class="spell-item clickable" data-spell="${spell.name}">
-            <span class="spell-name">${spell.name}</span>
-            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
-  if (spells.level2) {
-    html += `
-      <div class="spell-level-group">
-        <div class="spell-level-title">2nd Level (${spells.level2[0]?.slots || 3} slots)</div>
-        ${spells.level2.map(spell => `
-          <div class="spell-item clickable" data-spell="${spell.name}">
-            <span class="spell-name">${spell.name}</span>
-            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
-  if (spells.level3) {
-    html += `
-      <div class="spell-level-group">
-        <div class="spell-level-title">3rd Level (${spells.level3[0]?.slots || 2} slots)</div>
-        ${spells.level3.map(spell => `
-          <div class="spell-item clickable" data-spell="${spell.name}">
-            <span class="spell-name">${spell.name}</span>
-            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
+      `;
+    });
+  });
+
   spellsList.innerHTML = html;
 }
 
@@ -212,13 +189,14 @@ function renderInventory() {
   const inventoryList = document.getElementById('inventoryList');
   if (!inventoryList) return;
   
+  // qty fuses into the name string (e.g. "Customer Interview Notes ×500") — no separate
+  // flex-ordered qty element (finding 4); row order is name, notes, value, per prototype.
   inventoryList.innerHTML = characterData.inventory.map(item => `
     <div class="inventory-item clickable" data-item="${item.name}">
       <span class="inventory-active ${item.active ? 'equipped' : ''}"></span>
-      <span class="inventory-name">${item.name}</span>
-      <span class="inventory-qty">${item.qty > 1 ? `×${item.qty}` : ''}</span>
-      <span class="inventory-value">${item.value}</span>
+      <span class="inventory-name">${item.name}${item.qty > 1 ? ` ×${item.qty}` : ''}</span>
       <span class="inventory-notes">${item.notes}</span>
+      <span class="inventory-value">${item.value}</span>
     </div>
   `).join('');
 }
@@ -227,107 +205,74 @@ function renderInventory() {
 function renderFeatures() {
   const featuresList = document.getElementById('featuresList');
   if (!featuresList) return;
-  
+
   const features = characterData.features;
-  
-  let html = `
+  // Background Feature folds into the SAME "Class Features" list (no second header),
+  // distinguished only by its oxblood name color (finding 2). Identity (`===`) picks
+  // out that one entry after the arrays are combined.
+  const allClassFeatures = [...features.classFeatures, features.backgroundFeature];
+
+  // Each feature is ONE inline line: "Name — Source · Description" (.feature-source and
+  // .feature-desc are both `display:inline` and CSS-prepend their own "— "/" · " glyphs).
+  const classFeaturesHtml = allClassFeatures.map(f => {
+    const isBackgroundFeature = f === features.backgroundFeature;
+    return `
+        <div class="feature-item clickable" data-feature="${f.name}"><span class="feature-name${isBackgroundFeature ? ' feature-name--highlight' : ''}">${f.name}</span><span class="feature-source">${f.source}</span>${f.description ? `<span class="feature-desc">${f.description}</span>` : ''}</div>
+      `;
+  }).join('');
+
+  // Achievements: curated to the items carrying the optional `rarity` field (Legendary/
+  // Epic tier), rendered as a badge pill + name + optional short description — matches
+  // the prototype's 3-item curated subset while the full 8-item list stays in data.js.
+  const achievementsHtml = features.achievements.filter(a => a.rarity).map(a => `
+        <div class="feature-item clickable" data-feature="${a.name}">${a.rarity ? `<span class="feature-badge feature-badge--${a.rarity.toLowerCase()}">${a.rarity}</span>` : ''} <span class="feature-name">${a.name}</span>${a.description ? `<span class="feature-source">${a.description}</span>` : ''}</div>
+      `).join('');
+
+  featuresList.innerHTML = `
     <div class="feature-category">
-      <div class="feature-category-title">Class Features & Feats</div>
-      ${features.classFeatures.map(f => `
-        <div class="feature-item clickable" data-feature="${f.name}">
-          <div class="feature-name">${f.name}</div>
-          <div class="feature-source">${f.source}</div>
-          <div class="feature-desc">${f.description}</div>
-        </div>
-      `).join('')}
+      <div class="feature-category-title">✦ Class Features</div>
+      ${classFeaturesHtml}
     </div>
-    
+
     <div class="feature-category">
-      <div class="feature-category-title">Background Feature</div>
-      <div class="feature-item clickable" data-feature="${features.backgroundFeature.name}">
-        <div class="feature-name">${features.backgroundFeature.name}</div>
-        <div class="feature-source">${features.backgroundFeature.source}</div>
-        <div class="feature-desc">${features.backgroundFeature.description}</div>
-      </div>
-    </div>
-    
-    <div class="feature-category">
-      <div class="feature-category-title">Achievements</div>
-      ${features.achievements.map(a => `
-        <div class="feature-item clickable" data-feature="${a.name}">
-          <div class="feature-name">🏆 ${a.name}${a.date ? ` <span class="feature-date">(${a.date})</span>` : ''}</div>
-          <div class="feature-desc">${a.description}</div>
-          ${a.link ? `<a href="${a.link}" target="_blank" class="feature-link">Read more →</a>` : ''}
-        </div>
-      `).join('')}
+      <div class="feature-category-title">✦ Achievements</div>
+      ${achievementsHtml}
     </div>
   `;
-  
-  featuresList.innerHTML = html;
 }
 
 // Render Background
 function renderBackground() {
   const backgroundContent = document.getElementById('backgroundContent');
   if (!backgroundContent) return;
-  
+
   const bg = characterData.background;
-  
+
+  // Ideals: only the entries carrying the optional `featured` rank are joined into the
+  // single "Ideals" characteristics line (curated + ordered per the prototype); the
+  // un-featured Interdependence ideal stays in data.js, untouched.
+  const featuredIdeals = bg.ideals
+    .filter(i => i.featured)
+    .sort((a, b) => a.featured - b.featured)
+    .map(i => `${i.name} — ${i.description.charAt(0).toLowerCase()}${i.description.slice(1)}`)
+    .join(' ');
+
+  // Exactly 2 sections (finding 5): "Origin Story" (one flowing narrative paragraph —
+  // backgroundStory, now the merged prototype copy) and "Characteristics" (5 single
+  // curated label:value lines — first entry of each traits array, per existing order).
   backgroundContent.innerHTML = `
     <div class="background-section">
-      <div class="background-section-title">Background: ${bg.name}</div>
-      <div class="trait-item">
-        <span class="trait-label">Skill Proficiencies:</span> ${bg.skillProficiencies.join(', ')}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">Tool Proficiencies:</span> ${bg.toolProficiencies.join(', ')}
-      </div>
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Origin Story</div>
+      <div class="background-section-title">✦ Origin Story</div>
       <div class="trait-item origin-story">${bg.characteristics.backgroundStory}</div>
-      <div class="trait-item">
-        <span class="trait-label">Origin:</span> ${bg.characteristics.origin}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">Former Life:</span> ${bg.characteristics.formerLife}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">First Gig:</span> ${bg.characteristics.firstGig}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">Transition:</span> ${bg.characteristics.artToEngineering}
-      </div>
     </div>
-    
+
     <div class="background-section">
-      <div class="background-section-title">Personality Traits</div>
-      ${bg.personalityTraits.map(t => `<div class="trait-item">"${t}"</div>`).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Ideals</div>
-      ${bg.ideals.map(i => `
-        <div class="trait-item">
-          <span class="trait-label">${i.name}:</span> ${i.description} <em>(${i.alignment})</em>
-        </div>
-      `).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Bonds</div>
-      ${bg.bonds.map(b => `<div class="trait-item">${b}</div>`).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Flaws</div>
-      ${bg.flaws.map(f => `<div class="trait-item">${f}</div>`).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Faith & Philosophy</div>
-      <div class="trait-item"><span class="trait-label">Faith:</span> ${bg.characteristics.faith}</div>
+      <div class="background-section-title">✦ Characteristics</div>
+      <div class="trait-item"><span class="trait-label">Personality </span><em>"${bg.personalityTraits[0]}"</em></div>
+      <div class="trait-item"><span class="trait-label">Ideals </span><em>${featuredIdeals}</em></div>
+      <div class="trait-item"><span class="trait-label">Bond </span><em>${bg.bonds[0]}</em></div>
+      <div class="trait-item"><span class="trait-label">Flaw </span><em>${bg.flaws[0]}</em></div>
+      <div class="trait-item"><span class="trait-label">Faith </span><em>${bg.characteristics.faith}</em></div>
     </div>
   `;
 }
@@ -336,32 +281,23 @@ function renderBackground() {
 function renderNotes() {
   const notesContent = document.getElementById('notesContent');
   if (!notesContent) return;
-  
+
   notesContent.innerHTML = `
     <div class="background-section">
-      <div class="background-section-title">Vouches (Testimonials)</div>
+      <div class="background-section-title">✦ Vouches</div>
       ${characterData.vouches.map(v => `
         <div class="vouch-item">
           <div class="vouch-text">"${v.text}"</div>
-          <div class="vouch-author">– ${v.author}</div>
-          <div class="vouch-role">${v.role}</div>
+          <div class="vouch-author">${v.author}</div><div class="vouch-role">${v.role}</div>
         </div>
       `).join('')}
     </div>
-    
+
     <div class="background-section">
-      <div class="background-section-title">Organizations</div>
-      ${characterData.organizations.map(o => `
-        <div class="org-item clickable" data-org="${o.name}">
-          <div class="org-header">
-            <span class="org-name">${o.name}</span>
-            <span class="org-role">${o.role}</span>
-          </div>
-          <div class="org-dates">${o.dates}</div>
-          <div class="org-description">${o.description}</div>
-          ${o.url ? `<a href="${o.url}" target="_blank" class="org-link">Visit website →</a>` : ''}
-        </div>
-      `).join('')}
+      <div class="background-section-title">✦ Guilds & Orgs</div>
+      <div class="org-chips">
+        ${characterData.organizations.filter(o => o.featured).map(o => `<span class="chip-tag">${o.name}</span>`).join('')}
+      </div>
     </div>
   `;
 }
@@ -370,18 +306,35 @@ function renderNotes() {
 function renderExtras() {
   const extrasContent = document.getElementById('extrasContent');
   if (!extrasContent) return;
-  
+
   const extras = characterData.extras;
-  
+  const personal = characterData.personal;
+
+  // "✦ Current Campaign" highlighted block + two CTA buttons come BEFORE the Fun
+  // Facts/Interests content (finding 7). Fun Facts/Interests keep their own explicit
+  // modifier classes (not :nth-of-type) so inserting this block ahead of them can't
+  // shift which one gets bullets vs. chip styling.
   extrasContent.innerHTML = `
-    <div class="extras-section">
+    <div class="extras-campaign">
+      <div class="extras-title">✦ Current Campaign</div>
+      <div class="campaign-card">
+        <div class="campaign-card-name">${personal.currentCampaignName}</div>
+        <div class="campaign-card-desc">${personal.currentCampaign} Status: <span class="campaign-card-status">${personal.currentStatus}</span></div>
+      </div>
+      <div class="extras-cta-row">
+        <a href="mailto:${personal.email}?subject=New Quest Inquiry" class="extras-cta-btn extras-cta-btn--solid">✦ Start a Quest</a>
+        <a href="Resume-Buster-short.pdf" target="_blank" class="extras-cta-btn extras-cta-btn--outline">❖ Download Classic CV</a>
+      </div>
+    </div>
+
+    <div class="extras-section extras-section--facts">
       <div class="extras-title">Fun Facts</div>
       <div class="extras-list">
         ${extras.funFacts.map(f => `<span class="extras-item">${f}</span>`).join('')}
       </div>
     </div>
-    
-    <div class="extras-section">
+
+    <div class="extras-section extras-section--interests">
       <div class="extras-title">Interests</div>
       <div class="extras-list">
         ${extras.interests.map(i => `<span class="extras-item">${i}</span>`).join('')}

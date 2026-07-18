@@ -438,14 +438,6 @@
 .sub-tab { font: 700 8.5px var(--font-sc); letter-spacing: .12em; color: var(--label); background: none; border: 1px solid var(--panel-border); border-radius: 10px; padding: 2px 10px; cursor: pointer; }
 .sub-tab:hover { border-color: var(--gold); }
 .sub-tab.active { background: var(--oxblood); color: var(--gold-max); border-color: var(--gold); }
-/* "click to-hit to roll" hint: lives only on the Actions tab's sub-tab bar (the
-   prototype shows it next to the Attacks category header, which renderActions()
-   generates outside this task's owned JS — reattached here via generated content
-   since .sub-tabs is a flex row already) */
-#actions-panel .sub-tabs::after {
-  content: 'click to-hit to roll'; margin-left: auto;
-  font: 500 10px var(--font-body); font-style: italic; color: var(--gold);
-}
 
 /* Actions List */
 .actions-list { display: flex; flex-direction: column; }
@@ -455,12 +447,19 @@
   font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
   text-transform: none;
 }
-.action-category-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+/* Divider + "click to-hit to roll" hint are explicit DOM children (render.js), not a
+   ::after, so the hint can sit after the divider on the Attacks header specifically
+   (finding 8) — other category headers (Actions/Bonus Actions/Reactions) only emit
+   the divider span, no hint. */
+.action-category-title .category-divider { flex: 1; height: 1px; background: var(--panel-border); }
+.action-category-title .category-hint { font: 500 10px var(--font-body); font-style: italic; color: var(--gold); letter-spacing: normal; }
 
 .action-item {
-  display: flex; align-items: baseline; gap: 8px; padding: 5px 0;
+  display: flex; align-items: baseline; gap: 8px; padding: 4px 0;
   border-bottom: 1px dotted var(--dot-rule); cursor: pointer;
 }
+/* Attack rows get slightly taller padding than Action/Bonus Action/Reaction rows, per prototype (Minor-1). */
+.action-item.attack { padding: 5px 0; }
 .action-item:hover { background: var(--parchment); opacity: 1; }
 .action-name { font: 600 13.5px var(--font-body); }
 .action-tags { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); }
@@ -478,14 +477,11 @@
 }
 .spell-header > span > span { color: var(--oxblood); }
 
-.spell-level-group { margin-bottom: 10px; }
-.spell-level-title {
-  font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--oxblood);
-  text-transform: none; margin-bottom: 4px;
-}
-
+/* Flat list, no level-group headers (finding 3) — the level-badge column carries the
+   "Cantrip" / "1st ·4" label per row instead. */
 .spell-item { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
 .spell-item:hover { background: var(--parchment); opacity: 1; }
+.spell-level-badge { font: 700 8.5px var(--font-sc); color: var(--gold); width: 58px; flex: none; }
 .spell-name { font: 600 13.5px var(--font-body); flex: none; }
 .spell-meta { margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
 
@@ -500,10 +496,10 @@
 .inventory-list { display: flex; flex-direction: column; }
 .inventory-item { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); }
 .inventory-active { display: none; }
-.inventory-name { order: 1; font: 600 13.5px var(--font-body); }
-.inventory-qty { order: 2; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
-.inventory-notes { order: 3; margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
-.inventory-value { order: 4; font: 700 11px var(--font-display); color: var(--gold); }
+/* qty fuses into the name string in render.js — no separate qty element (finding 4). */
+.inventory-name { font: 600 13.5px var(--font-body); }
+.inventory-notes { margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.inventory-value { font: 700 11px var(--font-display); color: var(--gold); }
 
 /* Features List */
 .features-list { display: flex; flex-direction: column; }
@@ -518,9 +514,23 @@
 .feature-item { padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
 .feature-item:hover { background: var(--parchment); opacity: 1; }
 .feature-name { display: inline; font: 600 13.5px var(--font-body); }
+/* Background Feature (folded into the Class Features list) is distinguished only by an
+   oxblood name color — no second category header (finding 2). */
+.feature-name--highlight { color: var(--oxblood); }
 .feature-source { display: inline; font: 500 11px var(--font-body); font-style: italic; color: var(--label); margin-left: 6px; }
 .feature-source::before { content: '— '; }
-.feature-desc { font: 500 11px var(--font-body); font-style: italic; color: var(--label); margin-top: 2px; }
+/* .feature-desc is inline too, matching .feature-source's technique, so the whole row
+   reads as ONE line: "Name — Source · Description" (finding 2). Also reused as-is for
+   achievements' optional trailing description (e.g. "— acquired by Zindi, 2025"). */
+.feature-desc { display: inline; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.feature-desc::before { content: ' · '; }
+/* Achievement rarity badge pill (additive `rarity` field: Legendary/Epic). */
+.feature-badge {
+  font: 700 9px var(--font-sc); letter-spacing: .1em; padding: 1px 7px; border-radius: 8px;
+  background: var(--parchment);
+}
+.feature-badge--legendary { color: var(--gold); border: 1px solid var(--gold-bright); }
+.feature-badge--epic { color: var(--oxblood); border: 1px solid var(--tile-border); }
 
 /* Background Content (background-section-title shared with Notes tab) */
 .background-content { display: flex; flex-direction: column; }
@@ -533,30 +543,42 @@
 .background-section-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
 
 .trait-item { padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); font: 500 12.5px/1.5 var(--font-body); color: var(--body-ink); }
+.trait-item:last-child { border-bottom: none; }
 .trait-label { font: 700 9px var(--font-sc); letter-spacing: .14em; color: var(--label); }
-.origin-story { font-style: italic; border-left: 3px solid var(--gold); padding-left: 10px; }
+/* Origin Story: one flowing non-italic narrative paragraph (finding 5) — not a
+   dotted-border trait row, and not italic (unlike the Characteristics trait values). */
+.trait-item.origin-story { font: 500 13px/1.55 var(--font-body); font-style: normal; border-left: none; border-bottom: none; padding: 0; }
 
 /* Notes Content (Vouches & Organizations) */
 .notes-content { display: flex; flex-direction: column; }
 .vouch-item { border-left: 3px solid var(--gold); padding: 2px 0 2px 10px; margin: 6px 0; }
 .vouch-text { font: 500 12.5px var(--font-body); font-style: italic; color: var(--body-ink); }
-/* vouch-author's JS-rendered text already begins with "– " (renderNotes(), outside
-   this task's scope), so no ::before dash is added here — just a plain space
-   joins it to vouch-role for the prototype's "– Author Role" single line */
+/* "Author — Role, Org" on one line: vouch-author carries no leading dash (render.js),
+   vouch-role's ::before supplies the em-dash join (finding 6). */
 .vouch-author { display: inline; font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label); margin-top: 2px; }
 .vouch-role { display: inline; font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label); }
-.vouch-role::before { content: ' '; }
-
-.org-item { padding: 6px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
-.org-item:hover { background: var(--parchment); opacity: 1; }
-.org-header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 2px; }
-.org-name { font: 600 13.5px var(--font-body); }
-.org-role { font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
-.org-dates { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); margin-bottom: 2px; }
-.org-description { font: 500 11.5px/1.4 var(--font-body); color: var(--body-ink); }
+.vouch-role::before { content: ' — '; }
+/* Orgs render as name-only chips (finding 6), reusing the site-wide .chip-tag class
+   (defined in main.css) — no per-org card/link markup. */
+.org-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* Extras Content */
 .extras-content { display: flex; flex-direction: column; }
+
+/* "✦ Current Campaign" highlighted block + CTAs (finding 7) — reuses .extras-title for
+   its header (same SC-label + gold-divider look already used elsewhere on this tab). */
+.extras-campaign { margin-bottom: 12px; }
+.campaign-card { border: 1px solid var(--panel-border); background: var(--parchment); padding: 10px 14px; }
+.campaign-card-name { font: 700 16px var(--font-display); color: var(--oxblood); }
+.campaign-card-desc { font: 500 12.5px var(--font-body); font-style: italic; color: var(--body-ink); margin-top: 3px; }
+.campaign-card-status { color: var(--oxblood); font-weight: 600; }
+.extras-cta-row { display: flex; gap: 10px; margin-top: 12px; }
+.extras-cta-btn { display: inline-block; font: 700 10px var(--font-sc); letter-spacing: .12em; padding: 8px 14px; border-radius: 2px; border: 1px solid var(--gold); }
+.extras-cta-btn--solid { color: var(--gold-max); background: var(--oxblood); }
+.extras-cta-btn--solid:hover { background: var(--oxblood-hi); }
+.extras-cta-btn--outline { color: var(--oxblood); background: none; }
+.extras-cta-btn--outline:hover { color: var(--red-hover); }
+
 .extras-section { margin-bottom: 12px; }
 .extras-title {
   display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
@@ -567,10 +589,11 @@
 
 .extras-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .extras-item { width: 100%; font: 500 12.5px var(--font-body); padding: 3px 0; border-bottom: 1px dotted var(--dot-rule); }
-/* Fun Facts (1st extras-section): bulleted block rows, per the prototype */
-.extras-section:nth-of-type(1) .extras-item::before { content: '◆ '; color: var(--gold); }
-/* Interests (2nd extras-section): chip-tag-style pills, per the prototype */
-.extras-section:nth-of-type(2) .extras-item { width: auto; border: 1px solid var(--tile-border); background: var(--parchment); padding: 2px 10px; border-radius: 10px; }
+/* Fun Facts / Interests get explicit modifier classes (render.js) rather than
+   :nth-of-type, so inserting .extras-campaign ahead of them can't shift which one gets
+   bulleted rows vs. chip-tag styling. */
+.extras-section--facts .extras-item::before { content: '◆ '; color: var(--gold); }
+.extras-section--interests .extras-item { width: auto; border: 1px solid var(--tile-border); background: var(--parchment); padding: 2px 10px; border-radius: 10px; }
 
 .extras-cta, .tab-footer-link { margin-top: 12px; font: 500 12px var(--font-body); font-style: italic; color: var(--label); }
 .extras-cta a, .tab-footer-link a { color: var(--oxblood); border-bottom: 1px dotted var(--gold); }
@@ -818,14 +841,11 @@
 /* Saving throws / org / action-category / origin-story / inventory-qty are
    fully (re)defined above in the LEFT COLUMN and RIGHT COLUMN - TABBED CONTENT
    sections; the old dark-theme duplicates that used to live here (and would
-   otherwise win the cascade by appearing later in the file) have been removed. */
-.org-link { font: 500 11px var(--font-body); font-style: italic; color: var(--oxblood); border-bottom: 1px dotted var(--gold); }
-
-/* ============================================
-   FEATURE IMPROVEMENTS
-   ============================================ */
-.feature-date { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); }
-.feature-link { font: 500 12px var(--font-body); font-style: italic; color: var(--oxblood); border-bottom: 1px dotted var(--gold); margin-top: 2px; display: inline-block; }
+   otherwise win the cascade by appearing later in the file) have been removed.
+   .org-link/.feature-date/.feature-link (per-item "Read more"/date/"Visit website"
+   markup) are no longer emitted by render.js — orgs are name-only chips and
+   achievements are a badge + name + optional inline description now (T3 review
+   fixes) — so those three rules have been removed rather than left dead. */
 
 /* ============================================
    CONTACT OPTIONS IN OVERLAY
