@@ -345,7 +345,7 @@ const characterData = {
       damageType: "connection",
       description: "Leverage your network to create new opportunities. Each connection can cascade into more.",
       range: "Unlimited (email/LinkedIn)",
-      properties: ["Ranged"]
+      properties: ["Ranged", "Unlimited"]
     },
     {
       name: "Cold Outreach",
@@ -362,67 +362,67 @@ const characterData = {
       name: "Strategic Pivot",
       type: "Action",
       description: "Completely change direction based on new information. Requires wisdom and courage.",
-      uses: "1/long rest",
-      effect: "Redirect all resources to a new approach. Previous investments are not lost, they become lessons."
+      uses: "1 / long rest",
+      effect: "investments become lessons, not losses"
     },
     {
       name: "Community Rally",
       type: "Action",
       description: "Call upon your community for support. 4500+ engineers respond to meaningful challenges.",
-      uses: "At will",
-      effect: "Summon 10-100 allied engineers to work on a challenge for 10 weeks."
+      uses: "at will",
+      effect: "summon 10–100 allied engineers for a 10-week challenge"
     },
     {
       name: "User Interview",
       type: "Action",
       description: "Conduct deep research to understand what users really need vs what they say they want.",
-      uses: "At will",
-      effect: "Gain insights that inform product decisions. Roll Investigation to determine quality of insights."
+      uses: "at will",
+      effect: "what users need vs. what they say they want"
     },
     {
       name: "A/B Experiment",
       type: "Action",
       description: "Run a controlled experiment to validate hypotheses before committing resources.",
-      uses: "At will",
-      effect: "Test two approaches simultaneously. Data determines winner."
+      uses: "at will",
+      effect: "test both — the data crowns the winner"
     },
     // Bonus Actions
     {
       name: "Dash",
       type: "Bonus Action",
       description: "Sprint to achieve remarkable results in a short time. A burst of focused energy and speed.",
-      uses: "1/short rest",
-      effect: "Double your movement speed this turn. Represents the ability to move fast when needed.",
+      uses: "1 / short rest",
+      effect: "a burst of focused speed toward remarkable results",
       recharge: "Short Rest"
     },
     {
       name: "Cunning Action",
       type: "Bonus Action",
       description: "Take the Dash, Disengage, or Hide action as a bonus action. Pivot quickly when needed.",
-      uses: "At will",
-      effect: "Dash, Disengage, or Hide as bonus action."
+      uses: "at will",
+      effect: "Dash, Disengage or Hide as a bonus action"
     },
     {
       name: "Inspire Team",
       type: "Bonus Action",
       description: "Boost an ally's confidence with encouraging words. Your acting background shows.",
-      uses: "3/long rest",
-      effect: "One ally gains advantage on their next roll."
+      uses: "3 / long rest",
+      effect: "one ally gains advantage on their next roll"
     },
     {
       name: "Operational Maneuver",
       type: "Bonus Action",
       description: "Reposition team and resources for tactical advantage.",
-      uses: "At will",
-      effect: "Reorganize team allocation without losing momentum."
+      uses: "at will",
+      effect: "reposition the party without losing momentum"
     },
     // Reactions
     {
       name: "Sneak Attack (Startup Edition)",
       type: "Reaction",
       description: "When you have advantage or an ally nearby, deal extra impact damage.",
-      uses: "1/turn",
-      effect: "Add 2d6 extra damage when conditions are met. Represents striking when the timing is right."
+      uses: "1 / turn",
+      effect: "+2d6 impact when the timing is right"
     }
   ],
 

@@ -60,20 +60,17 @@ function getCategoryEmoji(category) {
 function renderSkills() {
   const skillsList = document.getElementById('skillsList');
   if (!skillsList) return;
-  
+
   skillsList.innerHTML = characterData.skills.map(skill => {
-    const profClass = skill.expertise ? 'expertise' : (skill.proficient ? 'proficient' : '');
-    const markerClass = skill.expertise ? 'expertise' : (skill.proficient ? 'filled' : '');
-    const modSign = skill.modifier >= 0 ? '+' : '';
-    
+    const skillKey = skill.name.toLowerCase().replace(/\s+/g, '');
+
     return `
-      <div class="skill-item ${profClass} clickable" data-skill="${skill.name.toLowerCase().replace(/\s+/g, '')}">
-        <span class="proficiency-marker ${markerClass}"></span>
-        <span class="skill-ability">${skill.ability.toUpperCase()}</span>
+      <div class="skill-item ${skill.proficient ? 'proficient' : ''} clickable" data-skill="${skillKey}">
+        <span class="proficiency-marker ${skill.expertise ? 'expertise' : skill.proficient ? 'filled' : ''}"></span>
+        <span class="skill-abbr">${skill.ability.toUpperCase()}</span>
         <span class="skill-name">${skill.name}</span>
-        <span class="skill-mod rollable" data-mod="${skill.modifier}" data-skill="${skill.name}">${modSign}${skill.modifier}</span>
-      </div>
-    `;
+        <span class="skill-mod rollable" data-mod="${skill.modifier}" data-skill="${skill.name}">${skill.modifier >= 0 ? '+' : ''}${skill.modifier}</span>
+      </div>`;
   }).join('');
 }
 
@@ -131,23 +128,17 @@ function renderActions() {
 
 function renderActionItem(action) {
   const hasAttack = action.attackBonus !== undefined;
-  const icon = action.type === 'Attack' ? '⚔️' : 
-               action.type === 'Bonus Action' ? '⚡' : 
-               action.type === 'Reaction' ? '🔄' : '🎬';
-  
+  const tags = (action.properties || []).map(p => p.toLowerCase()).join(' · ');
+
   return `
     <div class="action-item clickable" data-action="${action.name}">
-      <span class="action-icon">${icon}</span>
-      <div class="action-details">
-        <div class="action-name">${action.name}</div>
-        <div class="action-type">${action.type}${action.uses ? ` • ${action.uses}` : ''}</div>
-      </div>
+      <span class="action-name">${action.name}</span>
+      ${tags ? `<span class="action-tags">${tags}</span>` : ''}
+      ${!hasAttack ? `<div class="action-effect">${action.effect || action.description || ''}</div>` : ''}
       ${hasAttack ? `
-        <div class="action-stats">
-          <div class="action-attack rollable" data-mod="${action.attackBonus}">+${action.attackBonus} to hit</div>
-          <div class="action-damage">${action.damage} ${action.damageType}</div>
-        </div>
-      ` : ''}
+        <span class="action-attack rollable" data-mod="${action.attackBonus}" data-skill="${action.name}">+${action.attackBonus} to hit</span>
+        <span class="action-damage">${action.damage} ${action.damageType}</span>
+      ` : `<span class="action-type">${action.uses || ''}</span>`}
     </div>
   `;
 }

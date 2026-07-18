@@ -327,189 +327,67 @@
    ============================================ */
 .main-content {
   display: grid;
-  grid-template-columns: 250px 300px 1fr;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg) var(--spacing-xl);
-  max-width: 1600px;
-  margin: 0 auto;
+  grid-template-columns: 300px 330px 1fr;
+  gap: 14px;
+  padding: 2px 26px 20px;
 }
 
 /* ============================================
    LEFT COLUMN
    ============================================ */
-.left-column {
-  display: flex;
-  flex-direction: column;
-}
+.left-column { display: flex; flex-direction: column; gap: 12px; }
 
 /* Saving Throws */
-.saving-throws .saves-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.save-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-xs) 0;
-}
-
-.save-abbr {
-  font-size: 12px;
-  font-weight: 600;
-  width: 35px;
-}
-
-.save-mod {
-  font-size: 14px;
-  font-weight: 700;
-  margin-left: auto;
-}
+.saves-list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; }
+.save-item { display: flex; align-items: center; gap: 7px; border-bottom: 1px dotted var(--panel-border); padding: 3px 0; }
+.save-abbr { font: 700 10px var(--font-sc); letter-spacing: .1em; color: var(--label); }
+.save-mod { margin-left: auto; font: 700 13px var(--font-display); color: var(--ink); }
+.save-item.proficient .save-mod { color: var(--oxblood); }
 
 /* Passive Skills */
-.passive-skills {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.passive-skill {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-xs);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.passive-skill:hover {
-  background: var(--light-bg);
-}
-
+.passive-skills { display: flex; flex-direction: column; gap: 6px; }
+.passive-skill { display: flex; align-items: center; gap: 9px; position: relative; }
 .passive-value {
-  font-size: 18px;
-  font-weight: 700;
-  background: var(--dark-bg);
-  color: var(--white);
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
+  font: 700 16px var(--font-display); color: var(--ink);
+  background: var(--parchment); border: 1px solid var(--tile-border);
+  width: 32px; text-align: center; padding: 2px 0;
 }
+.passive-skill.proficient .passive-value { color: var(--oxblood); }
+.passive-label { font: 700 9.5px var(--font-sc); letter-spacing: .14em; color: var(--body-ink); }
+/* note-passives: absolutely positioned per the design system's floating-margin-note
+   convention (Task 1's .margin-note), right-aligned within the Passive Insight row;
+   font-size 14px reconciled against the prototype's rendering */
+#note-passives { right: 4px; top: 50%; transform: translateY(-50%) rotate(-2deg); font-size: 14px; }
 
-.passive-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.senses {
-  display: flex;
-  flex-direction: column;
-  margin-top: var(--spacing-sm);
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
-}
-
-.senses-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-xs);
-}
-
-.senses-value {
-  font-size: 13px;
-  color: var(--text-primary);
-}
+.senses { border-top: 1px dotted var(--panel-border); padding-top: 6px; font: 500 11.5px var(--font-body); font-style: italic; color: var(--body-ink); }
+.senses-label { font: 700 9px var(--font-sc); letter-spacing: .16em; color: var(--label); font-style: normal; }
+.senses-value { font-style: italic; }
 
 /* Proficiencies */
-.proficiencies .prof-category {
-  margin-bottom: var(--spacing-sm);
-}
-
-.prof-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 2px;
-}
-
-.prof-value {
-  font-size: 13px;
-  color: var(--text-primary);
-  line-height: 1.4;
-}
+.prof-category { position: relative; margin-bottom: 7px; }
+.prof-category:last-child { margin-bottom: 0; }
+.prof-label { display: block; font: 700 9px var(--font-sc); letter-spacing: .16em; color: var(--label); }
+.prof-value { font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink); margin-top: 1px; }
+/* note-languages: exact placement per brief (overhangs the LANGUAGES row's top-right corner);
+   font-size 14px (not the .margin-note default 15px) reconciled against the prototype's rendering */
+#note-languages { right: 0; top: -4px; transform: rotate(-2deg); font-size: 14px; }
 
 /* ============================================
    MIDDLE COLUMN - SKILLS
    ============================================ */
-.middle-column {
-  display: flex;
-  flex-direction: column;
-}
+.middle-column { display: flex; flex-direction: column; }
+.skills-section { position: relative; }
 
-.skills-section {
-  /* Removed flex: 1 to allow natural sizing based on content */
-}
-
-.skills-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.skill-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background var(--transition-fast);
-}
-
-.skill-item:hover {
-  background: var(--light-bg);
-}
-
-.skill-item.proficient .skill-name {
-  font-weight: 600;
-}
-
-.skill-item.expertise .proficiency-marker {
-  background: var(--expertise);
-  border-color: var(--expertise);
-}
-
-.skill-ability {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-  width: 30px;
-}
-
-.skill-name {
-  font-size: 13px;
-  flex: 1;
-}
-
-.skill-mod {
-  font-size: 14px;
-  font-weight: 700;
-  min-width: 30px;
-  text-align: right;
-}
+.skills-list { display: block; }
+.skill-item { display: grid; grid-template-columns: 14px 32px 1fr auto; align-items: center; gap: 0 9px; padding: 0; cursor: pointer; }
+.skill-item:hover { background: none; opacity: .8; }
+.skill-abbr { font: 700 8.5px var(--font-sc); color: var(--gold); }
+.skill-name { font: 500 12.5px var(--font-body); border-bottom: 1px dotted var(--dot-rule); padding: 2.5px 0; }
+.skill-item.proficient .skill-name { font-weight: 600; }
+.skill-mod { font: 700 12.5px var(--font-display); color: var(--ink); text-align: right; }
+.skill-item.proficient .skill-mod { color: var(--oxblood); }
+/* note-skills: exact placement per brief (hangs off the Skills box's bottom-right corner) */
+#note-skills { right: 10px; bottom: -6px; transform: rotate(-2deg); }
 
 /* ============================================
    RIGHT COLUMN - TABBED CONTENT
@@ -525,7 +403,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-bottom: 0 !important; /* Remove bottom margin to match left column exactly */
   box-sizing: border-box; /* Ensure padding and border are included in height */
   /* Height will be set by JavaScript to match left column - fixed value, not dynamic */
 }
@@ -540,38 +417,10 @@
 }
 
 /* Tab Navigation */
-.tab-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--border-color);
-  padding-bottom: var(--spacing-sm);
-}
-
-.tab-btn {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: none;
-  background: transparent;
-  font-family: var(--font-primary);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  border-radius: var(--radius-sm);
-}
-
-.tab-btn:hover {
-  color: var(--text-primary);
-  background: var(--light-bg);
-}
-
-.tab-btn.active {
-  color: var(--white);
-  background: var(--primary-red);
-}
+.tab-nav { display: flex; gap: 2px; border-bottom: 2px solid var(--oxblood); margin-bottom: 10px; flex-wrap: wrap; background: none; }
+.tab-btn { font: 700 9.5px var(--font-sc); letter-spacing: .1em; color: var(--label); padding: 5px 10px 4px; background: none; border: none; border-radius: 0; cursor: pointer; }
+.tab-btn:hover { color: var(--oxblood); background: none; opacity: 1; }
+.tab-btn.active { background: var(--oxblood); color: var(--gold-max); }
 
 /* Tab Content */
 .tab-content {
@@ -581,336 +430,150 @@
   min-height: 0; /* Critical: Allows flex child to shrink below content size and enable scrolling */
 }
 
-.tab-panel {
-  display: none;
-}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
-.tab-panel.active {
-  display: block;
-}
-
-/* Sub Tabs */
-.sub-tabs {
-  display: flex;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.sub-tab {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--border-color);
-  background: transparent;
-  font-family: var(--font-primary);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
-}
-
-.sub-tab:hover {
-  border-color: var(--text-secondary);
-}
-
-.sub-tab.active {
-  background: var(--dark-bg);
-  color: var(--white);
-  border-color: var(--dark-bg);
+/* Sub Tabs (JS behavior owned by main.js; restyle only) */
+.sub-tabs { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-bottom: 0; border-bottom: none; position: relative; }
+.sub-tab { font: 700 8.5px var(--font-sc); letter-spacing: .12em; color: var(--label); background: none; border: 1px solid var(--panel-border); border-radius: 10px; padding: 2px 10px; cursor: pointer; }
+.sub-tab:hover { border-color: var(--gold); }
+.sub-tab.active { background: var(--oxblood); color: var(--gold-max); border-color: var(--gold); }
+/* "click to-hit to roll" hint: lives only on the Actions tab's sub-tab bar (the
+   prototype shows it next to the Attacks category header, which renderActions()
+   generates outside this task's owned JS — reattached here via generated content
+   since .sub-tabs is a flex row already) */
+#actions-panel .sub-tabs::after {
+  content: 'click to-hit to roll'; margin-left: auto;
+  font: 500 10px var(--font-body); font-style: italic; color: var(--gold);
 }
 
 /* Actions List */
-.actions-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+.actions-list { display: flex; flex-direction: column; }
+.action-category:first-child .action-category-title { margin-top: 0; }
+.action-category-title {
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
 }
+.action-category-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
 
 .action-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
+  display: flex; align-items: baseline; gap: 8px; padding: 5px 0;
+  border-bottom: 1px dotted var(--dot-rule); cursor: pointer;
 }
-
-.action-item:hover {
-  background: var(--border-color);
-}
-
-.action-icon {
-  font-size: 20px;
-}
-
-.action-details {
-  flex: 1;
-}
-
-.action-name {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.action-type {
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-.action-stats {
-  text-align: right;
-}
-
-.action-attack {
-  font-weight: 700;
-  color: var(--primary-red);
-}
-
-.action-damage {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
+.action-item:hover { background: var(--parchment); opacity: 1; }
+.action-name { font: 600 13.5px var(--font-body); }
+.action-tags { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); }
+.action-effect { font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.action-attack { margin-left: auto; font: 700 12px var(--font-display); color: var(--oxblood); }
+.action-damage { font: 500 11.5px var(--font-body); color: var(--body-ink); }
+.action-type { margin-left: auto; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
 
 /* Spells List */
 .spell-header {
-  display: flex;
-  justify-content: space-between;
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-md);
-  font-size: 12px;
+  display: flex; flex-wrap: wrap; gap: 14px;
+  font: 700 9.5px var(--font-sc); letter-spacing: .12em; color: var(--label);
+  border: 1px solid var(--panel-border); background: var(--parchment);
+  padding: 6px 10px; margin-bottom: 10px; border-radius: 0;
 }
+.spell-header > span > span { color: var(--oxblood); }
 
-.spell-level-group {
-  margin-bottom: var(--spacing-md);
-}
-
+.spell-level-group { margin-bottom: 10px; }
 .spell-level-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
+  font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--oxblood);
+  text-transform: none; margin-bottom: 4px;
 }
 
-.spell-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-}
-
-.spell-item:hover {
-  background: var(--light-bg);
-}
-
-.spell-name {
-  font-weight: 500;
-  flex: 1;
-}
-
-.spell-meta {
-  font-size: 11px;
-  color: var(--text-secondary);
-}
+.spell-item { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
+.spell-item:hover { background: var(--parchment); opacity: 1; }
+.spell-name { font: 600 13.5px var(--font-body); flex: none; }
+.spell-meta { margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
 
 /* Inventory List */
 .inventory-header {
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-md);
-  font-size: 12px;
-  color: var(--text-secondary);
+  font: 700 9.5px var(--font-sc); letter-spacing: .12em; color: var(--label);
+  border: 1px solid var(--panel-border); background: var(--parchment);
+  padding: 6px 10px; margin-bottom: 10px; border-radius: 0;
 }
+.inventory-header > span > span { color: var(--oxblood); font-style: normal; }
 
-.inventory-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.inventory-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.inventory-active {
-  width: 12px;
-  height: 12px;
-  background: var(--primary-red);
-  border-radius: 2px;
-}
-
-.inventory-name {
-  flex: 1;
-  font-weight: 500;
-}
-
-.inventory-value {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.inventory-notes {
-  font-size: 11px;
-  color: var(--text-light);
-  font-style: italic;
-}
+.inventory-list { display: flex; flex-direction: column; }
+.inventory-item { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); }
+.inventory-active { display: none; }
+.inventory-name { order: 1; font: 600 13.5px var(--font-body); }
+.inventory-qty { order: 2; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.inventory-notes { order: 3; margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.inventory-value { order: 4; font: 700 11px var(--font-display); color: var(--gold); }
 
 /* Features List */
-.features-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.feature-category {
-  margin-bottom: var(--spacing-md);
-}
-
+.features-list { display: flex; flex-direction: column; }
+.feature-category:first-child .feature-category-title { margin-top: 0; }
 .feature-category-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
 }
+.feature-category-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
 
-.feature-item {
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-sm);
-  cursor: pointer;
-}
+.feature-item { padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
+.feature-item:hover { background: var(--parchment); opacity: 1; }
+.feature-name { display: inline; font: 600 13.5px var(--font-body); }
+.feature-source { display: inline; font: 500 11px var(--font-body); font-style: italic; color: var(--label); margin-left: 6px; }
+.feature-source::before { content: '— '; }
+.feature-desc { font: 500 11px var(--font-body); font-style: italic; color: var(--label); margin-top: 2px; }
 
-.feature-item:hover {
-  background: var(--border-color);
-}
-
-.feature-name {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.feature-source {
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-.feature-desc {
-  font-size: 13px;
-  margin-top: var(--spacing-xs);
-  color: var(--text-primary);
-}
-
-/* Background Content */
-.background-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.background-section {
-  margin-bottom: var(--spacing-md);
-}
-
+/* Background Content (background-section-title shared with Notes tab) */
+.background-content { display: flex; flex-direction: column; }
+.background-section:first-child .background-section-title { margin-top: 0; }
 .background-section-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
 }
+.background-section-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
 
-.trait-item {
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-sm);
-  font-size: 13px;
-  line-height: 1.5;
-}
+.trait-item { padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); font: 500 12.5px/1.5 var(--font-body); color: var(--body-ink); }
+.trait-label { font: 700 9px var(--font-sc); letter-spacing: .14em; color: var(--label); }
+.origin-story { font-style: italic; border-left: 3px solid var(--gold); padding-left: 10px; }
 
-.trait-label {
-  font-weight: 600;
-  color: var(--text-secondary);
-}
+/* Notes Content (Vouches & Organizations) */
+.notes-content { display: flex; flex-direction: column; }
+.vouch-item { border-left: 3px solid var(--gold); padding: 2px 0 2px 10px; margin: 6px 0; }
+.vouch-text { font: 500 12.5px var(--font-body); font-style: italic; color: var(--body-ink); }
+/* vouch-author's JS-rendered text already begins with "– " (renderNotes(), outside
+   this task's scope), so no ::before dash is added here — just a plain space
+   joins it to vouch-role for the prototype's "– Author Role" single line */
+.vouch-author { display: inline; font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label); margin-top: 2px; }
+.vouch-role { display: inline; font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label); }
+.vouch-role::before { content: ' '; }
 
-/* Notes Content */
-.notes-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.vouch-item {
-  padding: var(--spacing-md);
-  background: var(--light-bg);
-  border-left: 3px solid var(--primary-red);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  margin-bottom: var(--spacing-sm);
-}
-
-.vouch-text {
-  font-size: 14px;
-  font-style: italic;
-  line-height: 1.5;
-  margin-bottom: var(--spacing-sm);
-}
-
-.vouch-author {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.vouch-role {
-  font-size: 11px;
-  color: var(--text-light);
-}
+.org-item { padding: 6px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
+.org-item:hover { background: var(--parchment); opacity: 1; }
+.org-header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+.org-name { font: 600 13.5px var(--font-body); }
+.org-role { font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.org-dates { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); margin-bottom: 2px; }
+.org-description { font: 500 11.5px/1.4 var(--font-body); color: var(--body-ink); }
 
 /* Extras Content */
-.extras-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.extras-section {
-  margin-bottom: var(--spacing-md);
-}
-
+.extras-content { display: flex; flex-direction: column; }
+.extras-section { margin-bottom: 12px; }
 .extras-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
 }
+.extras-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
 
-.extras-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-}
+.extras-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.extras-item { width: 100%; font: 500 12.5px var(--font-body); padding: 3px 0; border-bottom: 1px dotted var(--dot-rule); }
+/* Fun Facts (1st extras-section): bulleted block rows, per the prototype */
+.extras-section:nth-of-type(1) .extras-item::before { content: '◆ '; color: var(--gold); }
+/* Interests (2nd extras-section): chip-tag-style pills, per the prototype */
+.extras-section:nth-of-type(2) .extras-item { width: auto; border: 1px solid var(--tile-border); background: var(--parchment); padding: 2px 10px; border-radius: 10px; }
 
-.extras-item {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-}
+.extras-cta, .tab-footer-link { margin-top: 12px; font: 500 12px var(--font-body); font-style: italic; color: var(--label); }
+.extras-cta a, .tab-footer-link a { color: var(--oxblood); border-bottom: 1px dotted var(--gold); }
 
 /* ============================================
    CONTACT BAR
@@ -1152,146 +815,17 @@
 .conditions-box .dc-item.active { font: 600 11.5px var(--font-body); color: var(--gold-max); background: var(--oxblood); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 10px; }
 #note-conditions { right: -8px; top: 50%; transform: translateY(-50%); position: absolute; }
 
-/* ============================================
-   SAVING THROWS CLICKABLE
-   ============================================ */
-.save-item.clickable {
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  transition: background var(--transition-fast);
-}
-
-.save-item.clickable:hover {
-  background: var(--light-bg);
-}
-
-/* ============================================
-   SKILL VOUCH INDICATOR (removed - vouches shown in overlay only)
-   ============================================ */
-
-/* ============================================
-   ACTION CATEGORIES
-   ============================================ */
-.action-category {
-  margin-bottom: var(--spacing-md);
-}
-
-.action-category-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
-  padding-bottom: var(--spacing-xs);
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* ============================================
-   ORGANIZATION ITEMS
-   ============================================ */
-.org-item {
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.org-item:hover {
-  background: var(--border-color);
-}
-
-.org-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-xs);
-}
-
-.org-name {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.org-role {
-  font-size: 11px;
-  color: var(--primary-red);
-  font-weight: 500;
-}
-
-.org-dates {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.org-description {
-  font-size: 12px;
-  color: var(--text-primary);
-  line-height: 1.4;
-}
-
-.org-link {
-  display: inline-block;
-  margin-top: var(--spacing-xs);
-  font-size: 11px;
-  color: var(--accent-blue);
-}
-
-.org-link:hover {
-  text-decoration: underline;
-}
+/* Saving throws / org / action-category / origin-story / inventory-qty are
+   fully (re)defined above in the LEFT COLUMN and RIGHT COLUMN - TABBED CONTENT
+   sections; the old dark-theme duplicates that used to live here (and would
+   otherwise win the cascade by appearing later in the file) have been removed. */
+.org-link { font: 500 11px var(--font-body); font-style: italic; color: var(--oxblood); border-bottom: 1px dotted var(--gold); }
 
 /* ============================================
    FEATURE IMPROVEMENTS
    ============================================ */
-.feature-date {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-weight: 400;
-}
-
-.feature-link {
-  display: inline-block;
-  margin-top: var(--spacing-xs);
-  font-size: 11px;
-  color: var(--accent-blue);
-}
-
-.feature-link:hover {
-  text-decoration: underline;
-}
-
-/* Origin story styling */
-.origin-story {
-  font-style: italic;
-  border-left: 3px solid var(--primary-red);
-  padding-left: var(--spacing-sm);
-}
-
-/* ============================================
-   INVENTORY IMPROVEMENTS
-   ============================================ */
-.inventory-item.clickable {
-  cursor: pointer;
-  transition: background var(--transition-fast);
-}
-
-.inventory-item.clickable:hover {
-  background: var(--light-bg);
-}
-
-.inventory-active.equipped {
-  background: var(--primary-red);
-}
-
-.inventory-qty {
-  font-size: 11px;
-  color: var(--text-secondary);
-  min-width: 30px;
-}
+.feature-date { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); }
+.feature-link { font: 500 12px var(--font-body); font-style: italic; color: var(--oxblood); border-bottom: 1px dotted var(--gold); margin-top: 2px; display: inline-block; }
 
 /* ============================================
    CONTACT OPTIONS IN OVERLAY
@@ -1326,19 +860,10 @@
   border-color: var(--primary-red);
 }
 
-/* ============================================
-   TAB CONTENT FILL SPACE
-   ============================================ */
-.tab-content {
-  flex: 1;
-  overflow-y: auto;
-  max-height: none;
-}
-
-.tabbed-content {
-  height: 100%;
-  min-height: 500px;
-}
+/* .tab-content / .tabbed-content sizing is fully defined once, in the
+   RIGHT COLUMN - TABBED CONTENT section above; the old duplicate redefinition
+   that used to live here (min-height:500px could flash before main.js sets the
+   matched fixed height) has been removed. */
 
 /* ============================================
    DEFENSE/CONDITION OVERLAY ITEMS
