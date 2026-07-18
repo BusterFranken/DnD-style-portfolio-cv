@@ -431,16 +431,22 @@
   <!-- ============================================ -->
   <div class="dice-modal" id="diceModal">
     <div class="dice-content">
-      <div class="dice-title">ROLLING...</div>
-      <div class="dice-container">
-        <div class="dice" id="dice">
-          <div class="dice-face">20</div>
+      <div class="dice-card">
+        <div class="dice-grabber"></div>
+        <div class="dice-kicker">Ability Check</div>
+        <div class="dice-title">ROLLING...</div>
+        <div class="dice-container">
+          <div class="dice" id="dice">
+            <div class="die-hex-outer"></div>
+            <div class="die-hex-inner"></div>
+            <div class="die-hex-text"><span class="dice-face">20</span><span class="die-d20-label">d20</span></div>
+          </div>
         </div>
+        <div class="dice-tumble-hint">the die tumbles across the table…</div>
+        <div class="dice-result" id="diceResult"></div>
+        <div class="dice-message" id="diceMessage"></div>
+        <div class="dice-hint">click outside the card to close</div>
       </div>
-      <div class="dice-result" id="diceResult">
-        <!-- Result breakdown -->
-      </div>
-      <div class="dice-message" id="diceMessage"></div>
     </div>
   </div>
 

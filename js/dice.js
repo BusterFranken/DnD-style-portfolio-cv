@@ -20,99 +20,47 @@ function rollD20() {
 function rollDice(checkName, modifier) {
   if (isRolling) return;
   isRolling = true;
-  
-  // Reset state
   diceModal.classList.add('active');
   diceModal.classList.remove('done');
-  diceElement.classList.remove('done');
-  diceElement.classList.add('rolling');
   diceResult.classList.remove('visible');
   diceMessage.classList.remove('visible', 'crit-success', 'crit-fail');
-  diceTitle.classList.remove('done');
-  diceTitle.textContent = 'ROLLING...';
-  
+  diceTitle.textContent = checkName;
   document.body.style.overflow = 'hidden';
-  
-  // Generate the roll
+
   const roll = rollD20();
   const total = roll + modifier;
-  
-  // Animate through random numbers
-  let animationFrame = 0;
-  const animationDuration = 1500;
-  const startTime = Date.now();
-  
-  function animateNumbers() {
-    const elapsed = Date.now() - startTime;
-    if (elapsed < animationDuration) {
-      diceFace.textContent = Math.floor(Math.random() * 20) + 1;
-      requestAnimationFrame(animateNumbers);
-    } else {
-      // Show final result
-      showResult(roll, modifier, total, checkName);
-    }
-  }
-  
-  animateNumbers();
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const duration = reduced ? 550 : 1400;
+  let rot = 0;
+
+  const iv = setInterval(() => {
+    diceFace.textContent = Math.floor(Math.random() * 20) + 1;
+    rot += 80 + Math.random() * 160;
+    diceElement.style.transform = `rotate(${rot}deg)`;
+  }, 85);
+
+  setTimeout(() => {
+    clearInterval(iv);
+    rot = Math.ceil(rot / 360) * 360;
+    diceElement.style.transform = `rotate(${rot}deg)`;
+    showResult(roll, modifier, total, checkName);
+  }, duration);
 }
 
-// Show the final result
 function showResult(roll, modifier, total, checkName) {
-  // Update dice face
   diceFace.textContent = roll;
-  diceElement.classList.remove('rolling');
-  diceElement.classList.add('done');
-  
-  // Style for nat 20 or nat 1
-  diceFace.classList.remove('nat-20', 'nat-1');
-  if (roll === 20) {
-    diceFace.classList.add('nat-20');
-  } else if (roll === 1) {
-    diceFace.classList.add('nat-1');
-  }
-  
-  // Update title
-  diceTitle.classList.add('done');
-  diceTitle.textContent = checkName.toUpperCase() + ' CHECK';
-  
-  // Show result breakdown
+  diceModal.classList.add('done');
   diceResult.innerHTML = `
-    <div class="result-title">${checkName}</div>
-    <div class="result-breakdown">
-      <div class="result-row roll">
-        <span class="result-label">1d20</span>
-        <span class="result-value">${roll}${roll === 20 ? ' (NAT 20!)' : roll === 1 ? ' (NAT 1!)' : ''}</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Modifier</span>
-        <span class="result-value">${modifier >= 0 ? '+' : ''}${modifier}</span>
-      </div>
-      <div class="result-total">
-        <span class="total-label">TOTAL</span>
-        <span class="total-value">${total}</span>
-      </div>
-    </div>
-  `;
-  
-  setTimeout(() => {
-    diceResult.classList.add('visible');
-  }, 200);
-  
-  // Show flavor message
-  const message = getDiceMessage(roll, total, checkName);
-  diceMessage.textContent = message;
-  
-  if (roll === 20) {
-    diceMessage.classList.add('crit-success');
-  } else if (roll === 1) {
-    diceMessage.classList.add('crit-fail');
-  }
-  
-  setTimeout(() => {
-    diceMessage.classList.add('visible');
-    diceModal.classList.add('done');
-    isRolling = false;
-  }, 500);
+    <div class="result-row"><span>1d20 — the roll</span><span class="result-value">${roll}</span></div>
+    <div class="result-row"><span>Modifier</span><span class="result-value">${modifier >= 0 ? '+' : ''}${modifier}</span></div>
+    <div class="result-total"><span class="total-label">Total</span><span class="total-stamp">${total}</span></div>
+    ${roll === 20 ? '<div class="dice-banner--crit">✦ ✦ ✦ &nbsp;CRITICAL&nbsp; ✦ ✦ ✦</div>' : ''}
+    ${roll === 1 ? '<div class="dice-banner--fumble">✕ &nbsp;FUMBLE&nbsp; ✕</div>' : ''}`;
+  setTimeout(() => diceResult.classList.add('visible'), 60);
+  diceMessage.textContent = getDiceMessage(roll, total, checkName);
+  if (roll === 20) diceMessage.classList.add('crit-success');
+  if (roll === 1) diceMessage.classList.add('crit-fail');
+  setTimeout(() => { diceMessage.classList.add('visible'); isRolling = false; }, 500);
 }
 
 // Handle roll click on any rollable element
@@ -147,6 +95,13 @@ document.addEventListener('keydown', (e) => {
     closeDiceModal();
   }
 });
+
+// Swipe-down to close (mobile bottom sheet)
+let touchStartY = null;
+diceModal?.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+diceModal?.addEventListener('touchmove', (e) => {
+  if (touchStartY !== null && e.touches[0].clientY - touchStartY > 60) { touchStartY = null; closeDiceModal(); }
+}, { passive: true });
 
 // Export
 if (typeof module !== 'undefined' && module.exports) {
