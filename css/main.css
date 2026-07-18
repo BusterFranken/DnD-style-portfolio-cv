@@ -286,12 +286,14 @@ body.admin-mode::before {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--accent-blue);
-  color: var(--white);
+  background: var(--oxblood);
+  color: var(--gold-max);
   padding: var(--spacing-xs) var(--spacing-md);
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  font: 700 11px var(--font-sc);
+  letter-spacing: .14em;
+  border: 1px solid var(--gold);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
   z-index: 10000;
 }
 
@@ -362,6 +364,46 @@ body.admin-mode::before {
 .admin-close:hover {
   color: var(--primary-red);
   transform: rotate(90deg);
+}
+
+/* ============================================
+   ADMIN MODAL — parchment panel restyle
+   (.overlay-close itself is hidden via css/overlay.css — the band ✕ replaces
+   it there; .admin-close keeps the mechanics above, just restyled below.)
+   ============================================ */
+.admin-modal { background: rgba(20,12,6,.74); }
+.admin-close { color: var(--label); }
+.admin-close:hover { color: var(--oxblood); transform: rotate(90deg); }
+
+.admin-content {
+  width: 340px; max-width: 90vw;
+  background: var(--grain), var(--panel);
+  border: 3px double var(--gold);
+  box-shadow: inset 0 0 40px rgba(120,84,30,.18), 0 24px 70px rgba(0,0,0,.65);
+  padding: 30px 26px 24px;
+  position: relative;
+  animation: pi-fadeup .25s;
+}
+.admin-content h2 {
+  font: 700 19px var(--font-display); color: var(--oxblood);
+  text-align: center; margin-bottom: 18px;
+}
+.admin-content input[type="password"] {
+  display: block; width: 100%;
+  font: 500 14px var(--font-body); color: var(--ink);
+  background: var(--parchment); border: 1px solid var(--panel-border);
+  padding: 9px 12px; border-radius: 2px; margin-bottom: 14px;
+}
+.admin-content input[type="password"]:focus { outline: none; border-color: var(--gold); }
+.admin-content button[type="submit"] {
+  display: block; width: 100%;
+  font: 700 10.5px var(--font-sc); letter-spacing: .14em;
+  color: var(--gold-max); background: var(--oxblood); border: 1px solid var(--gold);
+  padding: 10px 18px; border-radius: 2px; cursor: pointer;
+}
+.admin-content button[type="submit"]:hover { background: #6b2413; }
+@media (prefers-reduced-motion: reduce) {
+  .admin-content { animation: none; }
 }
 
 /* Loading State */

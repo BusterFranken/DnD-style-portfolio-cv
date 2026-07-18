@@ -22,7 +22,7 @@ const characterData = {
     address: "Nieuwegrachtje 5-3, 1011 VP",
     currentStatus: "Open to Adventures.",
     currentCampaignName: "Energy Hardtech Exploration",
-    currentCampaign: "Currently exploring new adventures in energy hardtech — open to other impact-focused ventures.",
+    currentCampaign: "Exploring new adventures in energy hardtech — open to other impact-focused ventures. Party applications welcome via Short Rest.",
     summary: "With my past startup FruitPunch AI we crowdsourced €45M in AI engineering for impact organizations. Through our platform >4500 AI engineers built AI solutions for: Stanford, ESA, Greenpeace, WWF, Philips, NXP, Huawei, etc.",
     avatar: "assets/images/buster.jpg"
   },
@@ -147,10 +147,10 @@ const characterData = {
       saveProficient: false,
       dndMeaning: "Measures physical power, athletic training, and the extent to which you can exert raw physical force.",
       cvMeaning: "Impact Force",
-      cvDescription: "The ability to move big things - closing major deals, moving organizations, physical endurance for events.",
+      cvDescription: "The ability to move big things — closing major deals, moving whole organizations, endurance for events.",
       evidence: [
         "Closed €45M in deals with major organizations",
-        "Moved organizations like Stanford, ESA, Greenpeace to action",
+        "Moved Stanford, ESA and Greenpeace to action",
         "Physical endurance for conferences and events worldwide"
       ]
     },
@@ -162,10 +162,10 @@ const characterData = {
       saveProficient: true,
       dndMeaning: "Measures agility, reflexes, balance, and coordination.",
       cvMeaning: "Adaptability",
-      cvDescription: "Quick pivots, handling multiple things at once, operational agility - essential for the startup lifestyle.",
+      cvDescription: "Quick pivots, handling many things at once, operational agility — essential for the startup lifestyle.",
       evidence: [
-        "Pivoted FruitPunch AI multiple times based on market feedback",
-        "Managed multiple roles simultaneously (CEO + AI Program Manager)",
+        "Pivoted FruitPunch AI multiple times on market feedback",
+        "Managed multiple roles at once (CEO + AI Program Manager)",
         "Quick decision-making in uncertain startup environments",
         "Rapid iteration cycles on product features"
       ]
@@ -180,9 +180,9 @@ const characterData = {
       cvMeaning: "Resilience",
       cvDescription: "Surviving startup hardships, persistence through failures, never giving up.",
       evidence: [
-        "7 years of startup grind (2018-2025)",
-        "Survived NGO phase, pivot to startup, COVID, and eventual acquisition",
-        "Continued building through countless rejections and setbacks"
+        "7 years of startup grind (2018–2025)",
+        "Survived the NGO phase, the pivot, COVID and the acquisition",
+        "Kept building through countless rejections and setbacks"
       ]
     },
     int: {
@@ -197,8 +197,8 @@ const characterData = {
       evidence: [
         "BSc Mechanical Engineering & Neuroscience (TU/e)",
         "60 ECTS in Data Science courses",
-        "10/10 Brain Computer Interfacing research",
-        "Built AI platform used by 4500+ engineers"
+        "10/10 Brain-Computer Interfacing research",
+        "Built the AI platform used by 4500+ engineers"
       ]
     },
     wis: {
@@ -209,13 +209,13 @@ const characterData = {
       saveProficient: true,
       dndMeaning: "Measures awareness, intuition, and insight.",
       cvMeaning: "People Understanding",
-      cvDescription: "Community building, reading situations, understanding what motivates people. Experience gained from all past adventures.",
+      cvDescription: "Community building, reading situations, understanding what motivates people.",
       evidence: [
-        "Built communities of 4500+ AI engineers",
+        "Built a community of 4500+ AI engineers",
         "50% female founder representation in Sigma Squared",
         "Understanding what makes engineers engage with impact work",
-        "500+ user and customer interviews conducted",
-        "Designed challenge-based learning experience from first principles"
+        "500+ user & customer interviews conducted",
+        "Designed challenge-based learning from first principles"
       ]
     },
     cha: {
@@ -226,9 +226,9 @@ const characterData = {
       saveProficient: true,
       dndMeaning: "Measures force of personality, persuasiveness, and leadership.",
       cvMeaning: "Influence",
-      cvDescription: "Sales, presenting, inspiring others - rooted in professional acting background.",
+      cvDescription: "Sales, presenting, inspiring others — rooted in a professional acting background.",
       evidence: [
-        "Professional teen actor (Groen Casting, 2010-2015)",
+        "Professional teen actor (Groen Casting, 2010–2015)",
         "€45M in deals closed through persuasion",
         "Public speaking at major events",
         "Inspiring engineers to work on impact projects"
@@ -265,15 +265,21 @@ const characterData = {
   // ==========================================
   // DEFENSES & CONDITIONS
   // ==========================================
+  // description: the row text rendered after "Name — " in the Defenses overlay
+  // (js/overlay.js getDefensesOverlayContent) — synced verbatim to the
+  // prototype's OV.defenses bullets.
   defenses: [
-    { name: "Resilient Network", description: "Allies provide backup support - 4500+ engineers and 80+ partner organizations" },
-    { name: "Pivot Ready", description: "Can quickly adapt to changing situations - multiple successful pivots in startup journey" },
-    { name: "Community Shield", description: "Strong community relationships provide protection against market uncertainties" }
+    { name: "Resilient Network", description: "4500+ engineers and 80+ partner organizations to fall back on." },
+    { name: "Pivot Ready", description: "halves damage from sudden market shifts." },
+    { name: "Community Shield", description: "allies interpose themselves when the going gets rough." }
   ],
+  // description: same "Name — description" row pattern, consumed by
+  // getConditionsOverlayContent — synced verbatim to the prototype's
+  // OV.conditions bullets.
   conditions: [
-    { name: "Inspired", active: true, description: "Advantage on Charisma checks when pursuing impact-driven goals" },
-    { name: "Alert", active: true, description: "Cannot be surprised while conscious, +4 to initiative (Alertness feat)" },
-    { name: "Mission-Driven", active: true, description: "Resistance to distractions that don't align with core values" }
+    { name: "Inspired", active: true, description: "advantage on Charisma checks when pursuing impact-driven goals. The mission to create AI for Good provides constant motivation." },
+    { name: "Alert", active: true, description: "cannot be surprised while conscious; +4 to initiative. Always aware of market changes and opportunities." },
+    { name: "Mission-Driven", active: true, description: "resistance to distractions that do not align with core values. Technology should serve humanity." }
   ],
 
   // ==========================================

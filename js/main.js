@@ -324,60 +324,18 @@ function setupClickableElements() {
   // Actions (after render)
   setupActionClickables();
   
-  // Campaign Status - handle first to prevent generic handler
+  // Campaign Status - handle first to prevent generic handler. The hardcoded
+  // fallback that used to live here (old .overlay-header/emoji markup, only
+  // reachable if getCampaignStatusOverlayContent were somehow undefined) is
+  // dropped: js/overlay.js is always loaded before js/main.js on every page
+  // (see index.html/campaigns.html/etc. script order), so the function is
+  // always defined and that branch was dead code.
   document.querySelectorAll('.campaign-status.clickable').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      
-      // Use the specific campaign status overlay function
-      if (typeof getCampaignStatusOverlayContent === 'function') {
-        const content = getCampaignStatusOverlayContent();
-        openOverlay(content);
-      } else {
-        // Fallback: show custom content directly
-        openOverlay(`
-          <div class="overlay-header">
-            <h2>🎯 Current Campaign: Energy Hardtech Exploration</h2>
-          </div>
-          <div class="overlay-body">
-            <div class="overlay-section">
-              <h3>What I'm Looking For</h3>
-              <p>I'm currently exploring new startup opportunities and open to exciting ventures in:</p>
-              <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
-                <li><strong>Energy & Hardtech:</strong> Particularly interested in energy solutions, hardtech innovations, and deep tech applications</li>
-                <li><strong>Product & Growth Roles:</strong> Open to joining as a Product Owner or in a Growth role at an exciting startup</li>
-                <li><strong>Deep/Hardtech Ideas:</strong> Open to any compelling deep tech or hardtech concepts that solve real problems</li>
-              </ul>
-            </div>
-            
-            <div class="overlay-section">
-              <h3>My Background</h3>
-              <p>With my experience building FruitPunch AI from scratch to €45M in AI engineering work crowdsourced for impact organizations, raising €1M, and growing a community of 4500+ engineers, I bring:</p>
-              <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
-                <li>Product management expertise (500+ user and customer interviews conducted, experience design, A/B experiments)</li>
-                <li>Growth and community building (4500+ members, 80+ partners)</li>
-                <li>Fundraising and partnerships (€1M raised, Stanford, ESA, Greenpeace partnerships)</li>
-                <li>Platform building and decision-making experience</li>
-              </ul>
-            </div>
-            
-            <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-              <h3 style="margin-top: 0;">Get In Touch</h3>
-              <p>Interested in discussing opportunities? Let's connect!</p>
-              <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-                <a href="mailto:busterfranken@gmail.com?subject=Energy Hardtech Opportunity" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-                  📧 Email Me
-                </a>
-                <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-                  💼 LinkedIn
-                </a>
-              </div>
-            </div>
-          </div>
-        `);
-      }
+      openOverlay(getCampaignStatusOverlayContent());
     }, true); // Use capture phase to ensure it runs first
   });
   
@@ -430,14 +388,17 @@ function setupActionClickables() {
   });
 }
 
-// Generic element overlay content
+// Generic element overlay content — fallback used by the bottom [data-element]
+// handler in setupClickableElements(). Every other key here (hp/ac/initiative/
+// speed/proficiency/defenses/conditions) also has its own dedicated function
+// in js/overlay.js that always wins first, so in the current UI only
+// 'background' (the header's "Entrepreneur" pill) actually reaches this path;
+// the rest are kept as a defensive fallback, restyled the same way.
 function getElementOverlayContent(element) {
   const elementInfo = {
     'hp': {
       title: 'Hit Points',
-      icon: '❤️',
-      description: 'Your life force in D&D represents your ability to withstand damage.',
-      cvMeaning: '€45M Crowdsourced Impact',
+      sub: '€45M Crowdsourced Impact',
       evidence: [
         'Represents the €45M in AI engineering value crowdsourced',
         'Your capacity to absorb challenges and keep going',
@@ -446,9 +407,7 @@ function getElementOverlayContent(element) {
     },
     'ac': {
       title: 'Armor Class',
-      icon: '🛡️',
-      description: 'How hard you are to hit in combat. Represents your defenses.',
-      cvMeaning: 'Network Protection',
+      sub: 'Network Protection',
       evidence: [
         'Your professional network provides protection',
         'Strong relationships deflect problems',
@@ -457,9 +416,7 @@ function getElementOverlayContent(element) {
     },
     'initiative': {
       title: 'Initiative',
-      icon: '⚡',
-      description: 'How quickly you can react and act in combat situations.',
-      cvMeaning: 'First Mover Advantage',
+      sub: 'First Mover Advantage',
       evidence: [
         'DEX (+4) + Alertness Feat (+4) = +8',
         'How quickly you can pivot and respond to opportunities',
@@ -468,9 +425,7 @@ function getElementOverlayContent(element) {
     },
     'speed': {
       title: 'Speed',
-      icon: '🏃',
-      description: 'How far you can move in a single turn.',
-      cvMeaning: 'Execution Velocity',
+      sub: 'Execution Velocity',
       evidence: [
         '60 ft is double normal human speed',
         'Cunning Action: Dash as bonus action',
@@ -479,31 +434,24 @@ function getElementOverlayContent(element) {
     },
     'proficiency': {
       title: 'Proficiency Bonus',
-      icon: '📊',
-      description: 'Reflects your overall experience and training level.',
-      cvMeaning: 'Experience Level',
+      sub: 'Experience Level',
       evidence: [
         '+3 bonus at Level 7',
         'Added to skills, saves, and attacks where proficient',
         '7 years of startup experience'
       ]
     },
+    // Copy synced verbatim to the prototype's OV.background (title/sub/badge/
+    // blurb, no evidence — the prototype's `k` is absent for this key).
     'background': {
-      title: 'Background: Entrepreneur',
-      icon: '🎭',
-      description: 'Based on the Criminal background template - because entrepreneurs break into markets.',
-      cvMeaning: 'Origin Story',
-      evidence: [
-        'Grew up in parents\' pawn shop',
-        'Professional teen actor (first IKEA gig at 14)',
-        'Made art until switching to engineering'
-      ]
+      title: 'Entrepreneur',
+      sub: 'Background',
+      badge: 'BG',
+      blurb: "Grew up in the family pawn shop — learned to see value where others don't. Then: actor, security guard, teacher, engineer, founder."
     },
     'defenses': {
       title: 'Defenses',
-      icon: '🛡️',
-      description: 'Protective traits that provide advantages in difficult situations.',
-      cvMeaning: 'Market Protection',
+      sub: 'Market Protection',
       evidence: [
         'Resilient Network - 4500+ engineers, 80+ partners',
         'Pivot Ready - Multiple successful pivots',
@@ -512,9 +460,7 @@ function getElementOverlayContent(element) {
     },
     'conditions': {
       title: 'Conditions',
-      icon: '✨',
-      description: 'Active effects that influence your capabilities.',
-      cvMeaning: 'Active Buffs',
+      sub: 'Active Buffs',
       evidence: [
         'Inspired - Advantage on impact-driven goals',
         'Alert - +4 initiative, can\'t be surprised',
@@ -522,48 +468,29 @@ function getElementOverlayContent(element) {
       ]
     }
   };
-  
+
   const info = elementInfo[element] || {
     title: element,
-    icon: '📊',
-    description: 'Information about this element.',
-    cvMeaning: 'Professional Context',
+    sub: 'Professional Context',
     evidence: ['Click for more details']
   };
-  
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${info.icon}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${info.title}</h2>
+    <div class="ov-head">
+      <span class="ov-title">${info.title}</span>
+      <span class="ov-sub">${info.sub}</span>
+      ${info.badge ? `<span class="ov-badge">${info.badge}</span>` : ''}
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+    </div>
+    <div class="ov-body">
+      <div class="ov-main">
+        ${info.blurb ? `<div class="ov-blurb">${info.blurb}</div>` : ''}
+        ${info.evidence ? `
+          <div class="ov-evidence-title">Key Evidence</div>
+          ${info.evidence.map(e => `<div class="ov-evidence-row">◆ ${e}</div>`).join('')}
+        ` : ''}
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Meaning</div>
-      <div class="dnd-definition">
-        <p>${info.description}</p>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${info.cvMeaning}</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Details</div>
-      <ul class="evidence-list">
-        ${info.evidence.map(e => `
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">${e}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-  `;
+    </div>`;
 }
 
 // ============================================
@@ -579,124 +506,69 @@ function setupRollableElements() {
 // REST BUTTONS
 // ============================================
 function setupRestButtons() {
-  // Short Rest = Daily/Weekly Activities
+  // Short Rest = Daily/Weekly Activities. Content text unchanged from the
+  // pre-redesign version — only the wrapper/bullet markup is restyled to the
+  // ov-head/ov-body template, and emoji bullets swapped to glyphs (brief's
+  // Step 5 mapping covers 🎨→✦; the other Short Rest bullets aren't in that
+  // mapping, so they reuse the same small glyph set already established for
+  // Long Rest's mapped bullets: 💪→✦, 🍳→❖, ☕→◇, 📚→◆, 👥→❖).
   const shortRestBtn = document.getElementById('shortRestBtn') || document.querySelector('.short-rest');
   shortRestBtn?.addEventListener('click', () => {
     openOverlay(`
-      <div class="overlay-header">
-        <span class="overlay-icon">⚡</span>
-        <div class="overlay-title-block">
-          <h2 class="overlay-title">Short Rest</h2>
-          <div class="overlay-subtitle">Daily & Weekly Activities</div>
+      <div class="ov-head">
+        <span class="ov-title">Short Rest</span>
+        <span class="ov-sub">Daily & Weekly Activities</span>
+        <span class="ov-badge">✦</span>
+        <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+      </div>
+      <div class="ov-body">
+        <div class="ov-main">
+          <div class="ov-blurb">A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</div>
+
+          <div class="ov-evidence-title">What I Do Daily & Weekly</div>
+          <div class="ov-evidence-row">✦ <strong>Fitness & Training:</strong> I love to work out and have done many sports. I go to the gym every day and am big into scientific lifting. I've been training since I was 17, and in the last 2 years I gained 12kg in muscle with this approach.</div>
+          <div class="ov-evidence-row">❖ <strong>Cooking:</strong> I love cooking—Arabic, Mediterranean, and modern fusion mostly. Think Ottolenghi style.</div>
+          <div class="ov-evidence-row">◇ <strong>Foodie & Coffee Nerd:</strong> I'm a big foodie and coffee nerd. Ask me for my top recommendations in any city I've visited—I keep an extensive record in Google Maps.</div>
+
+          <div class="ov-evidence-title">General Interests</div>
+          <div class="ov-evidence-row">✦ <strong>Art:</strong> I'm into art—anything that is cutting edge really, culturally or technologically.</div>
+          <div class="ov-evidence-row">◆ <strong>Political Economy, Philosophy & Sociology:</strong> I'm a nerd in these fields, always reading and refining my understanding. My Goodreads account is my trophy wall.</div>
+          <div class="ov-evidence-row">❖ <strong>Meeting New People:</strong> I love meeting new people, am very social, and like to hear from very different backgrounds—that is what makes life rich.</div>
         </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">D&D Definition</div>
-        <div class="dnd-definition">
-          <p>A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</p>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">What I Do Daily & Weekly</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">💪</span>
-            <span class="evidence-text"><strong>Fitness & Training:</strong> I love to work out and have done many sports. I go to the gym every day and am big into scientific lifting. I've been training since I was 17, and in the last 2 years I gained 12kg in muscle with this approach.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🍳</span>
-            <span class="evidence-text"><strong>Cooking:</strong> I love cooking—Arabic, Mediterranean, and modern fusion mostly. Think Ottolenghi style.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">☕</span>
-            <span class="evidence-text"><strong>Foodie & Coffee Nerd:</strong> I'm a big foodie and coffee nerd. Ask me for my top recommendations in any city I've visited—I keep an extensive record in Google Maps.</span>
-          </li>
-        </ul>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">General Interests</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎨</span>
-            <span class="evidence-text"><strong>Art:</strong> I'm into art—anything that is cutting edge really, culturally or technologically.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">📚</span>
-            <span class="evidence-text"><strong>Political Economy, Philosophy & Sociology:</strong> I'm a nerd in these fields, always reading and refining my understanding. My Goodreads account is my trophy wall.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">👥</span>
-            <span class="evidence-text"><strong>Meeting New People:</strong> I love meeting new people, am very social, and like to hear from very different backgrounds—that is what makes life rich.</span>
-          </li>
-        </ul>
       </div>
     `);
   });
-  
-  // Long Rest = Day Off Activities
+
+  // Long Rest = Day Off Activities. Same treatment; glyph swap follows the
+  // brief's Step 5 mapping exactly (🎉→✦, 🧖→❖, 🏔️→◆, 🎵→◇, 🎨→✦, 🧘→☾,
+  // 📧→✉, 💼→❖, 📄→❖, 🌙→☾). Contact CTAs use .ov-roll-btn (solid, Email)
+  // and .ov-outline-btn (gold outline, LinkedIn/Download CV) instead of the
+  // old inline var(--primary-red)/var(--accent-blue) styles.
   const longRestBtn = document.getElementById('longRestBtn') || document.querySelector('.long-rest');
   longRestBtn?.addEventListener('click', () => {
     openOverlay(`
-      <div class="overlay-header">
-        <span class="overlay-icon">🌙</span>
-        <div class="overlay-title-block">
-          <h2 class="overlay-title">Long Rest</h2>
-          <div class="overlay-subtitle">Day Off Activities</div>
-        </div>
+      <div class="ov-head">
+        <span class="ov-title">Long Rest</span>
+        <span class="ov-sub">Day Off Activities</span>
+        <span class="ov-badge">☾</span>
+        <span class="ov-close-x" onclick="closeOverlay()">✕</span>
       </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">D&D Definition</div>
-        <div class="dnd-definition">
-          <p>A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</p>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">What I Do With a Day Off</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎉</span>
-            <span class="evidence-text"><strong>Community Building:</strong> Organizing events for startup founders and friends, designing unique experiences they won't forget—from whisky tastings with food pairing to big parties, to D&D-themed NY parties where everyone competes in D&D skill-related party games to determine their skillset for the final quest, to boat trips with unique storytelling formats to get deep.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🧖</span>
-            <span class="evidence-text"><strong>Sauna & Spa:</strong> I love the sauna and going to the nude spa with friends.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🏔️</span>
-            <span class="evidence-text"><strong>Nature:</strong> Going into nature—hiking, swimming, climbing.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎵</span>
-            <span class="evidence-text"><strong>Culture & Nightlife:</strong> Going raving, or to a museum exhibition.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🎨</span>
-            <span class="evidence-text"><strong>Passion Projects:</strong> Working on passion projects—art or tech.</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">🧘</span>
-            <span class="evidence-text"><strong>Psychedelics:</strong> Once in a while, doing a psychedelics trip.</span>
-          </li>
-        </ul>
-      </div>
-      
-      <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-        <div class="overlay-section-title">Want to Connect?</div>
-        <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-          <a href="mailto:${characterData.personal.email}?subject=Let's Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-            📧 Email Me
-          </a>
-          <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-            💼 LinkedIn
-          </a>
-          <a href="Resume-Buster-short.pdf" download class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-            📄 Download CV
-          </a>
+      <div class="ov-body">
+        <div class="ov-main">
+          <div class="ov-blurb">A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</div>
+
+          <div class="ov-evidence-title">What I Do With a Day Off</div>
+          <div class="ov-evidence-row">✦ <strong>Community Building:</strong> Organizing events for startup founders and friends, designing unique experiences they won't forget—from whisky tastings with food pairing to big parties, to D&D-themed NY parties where everyone competes in D&D skill-related party games to determine their skillset for the final quest, to boat trips with unique storytelling formats to get deep.</div>
+          <div class="ov-evidence-row">❖ <strong>Sauna & Spa:</strong> I love the sauna and going to the nude spa with friends.</div>
+          <div class="ov-evidence-row">◆ <strong>Nature:</strong> Going into nature—hiking, swimming, climbing.</div>
+          <div class="ov-evidence-row">◇ <strong>Culture & Nightlife:</strong> Going raving, or to a museum exhibition.</div>
+          <div class="ov-evidence-row">✦ <strong>Passion Projects:</strong> Working on passion projects—art or tech.</div>
+          <div class="ov-evidence-row">☾ <strong>Psychedelics:</strong> Once in a while, doing a psychedelics trip.</div>
+
+          <div class="ov-evidence-title">Want to Connect?</div>
+          <a href="mailto:${characterData.personal.email}?subject=Let's Connect!" class="ov-roll-btn">✉ Email Me</a>
+          <a href="https://linkedin.com/in/buster-franken" target="_blank" class="ov-outline-btn">❖ LinkedIn</a>
+          <a href="Resume-Buster-short.pdf" download class="ov-outline-btn">❖ Download CV</a>
         </div>
       </div>
     `);

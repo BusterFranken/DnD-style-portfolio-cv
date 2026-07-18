@@ -7,26 +7,32 @@ const abilityDescriptions = {
   str: {
     icon: '💪',
     dndDefinition: "Strength measures physical power, athletic training, and the extent to which you can exert raw physical force. A Strength check can model any attempt to lift, push, pull, or break something.",
+    artLabel: 'commissioned art — "impact force"',
   },
   dex: {
     icon: '🎯',
     dndDefinition: "Dexterity measures agility, reflexes, and balance. A Dexterity check can model any attempt to move nimbly, quickly, or quietly, or to keep from falling on tricky footing.",
+    artLabel: 'commissioned art — "the pivot dance"',
   },
   con: {
     icon: '🛡️',
     dndDefinition: "Constitution measures health, stamina, and vital force. Constitution checks are uncommon, and no skills apply. A Constitution check can model your attempt to push beyond normal limits.",
+    artLabel: 'commissioned art — "the long march"',
   },
   int: {
     icon: '🧠',
     dndDefinition: "Intelligence measures mental acuity, accuracy of recall, and the ability to reason. An Intelligence check comes into play when you need to draw on logic, education, memory, or deductive reasoning.",
+    artLabel: 'commissioned art — "the scholar of three schools"',
   },
   wis: {
     icon: '👁️',
     dndDefinition: "Wisdom reflects how attuned you are to the world around you and represents perceptiveness and intuition. A Wisdom check might reflect an effort to read body language or understand someone's feelings.",
+    artLabel: 'commissioned art — "the counsel of elders"',
   },
   cha: {
     icon: '✨',
     dndDefinition: "Charisma measures your ability to interact effectively with others. It includes factors such as confidence and eloquence, and it can represent a charming or commanding personality.",
+    photoCaption: 'The Face of the Party',
   }
 };
 
@@ -157,32 +163,32 @@ const combatStatDescriptions = {
     icon: '📊',
     dndDefinition: "Your proficiency bonus reflects your overall experience and training. It's added to attack rolls, saving throws, and ability checks where you're proficient.",
     cvMeaning: "Experience Level",
-    cvDescription: "+3 proficiency bonus reflects 7 years of startup experience, multiple ventures, and deep expertise in AI, community building, and business operations."
+    cvDescription: "+3 reflects 7 years of startup experience, multiple ventures, and deep expertise in AI, community building and business operations."
   },
   initiative: {
     icon: '⚡',
     dndDefinition: "Initiative determines the order of turns during combat. At the start of every combat, you roll initiative by making a Dexterity check.",
     cvMeaning: "First Mover Advantage",
-    cvDescription: "+8 Initiative = DEX (+4) + Alertness Feat (+4). Always aware of opportunities and threats. Quick to act on new information. First to spot market gaps.",
+    cvDescription: "+8 = DEX (+4) + Alertness feat (+4). Cannot be surprised — always aware of opportunities and threats, first to spot market gaps.",
     breakdown: "DEX modifier (+4) + Alertness Feat (+4) = +8"
   },
   ac: {
     icon: '🛡️',
     dndDefinition: "Armor Class (AC) represents how hard it is for opponents to land a solid, damaging blow on you.",
     cvMeaning: "Market Protection",
-    cvDescription: "AC 14 represents strong positioning through community (4500+ engineers), partnerships (80+ organizations), and a proven track record that protects against competitive threats."
+    cvDescription: "Strong positioning through a 4500-engineer community, 80+ partner organizations, and a proven track record that protects against competitive threats."
   },
   speed: {
     icon: '🏃',
     dndDefinition: "Speed determines how far you can move on your turn during combat.",
     cvMeaning: "Execution Velocity",
-    cvDescription: "60 ft speed (double normal) represents willingness to move anywhere for the right opportunity. Rogue Cunning Action: Dash allows doubling movement as a bonus action - sprint to achieve remarkable results in short time."
+    cvDescription: "Base 30 ft, doubled by Cunning Action: Dash. Willingness to move anywhere for the right opportunity — and sprint when it matters."
   },
   hp: {
     icon: '❤️',
     dndDefinition: "Hit Points represent a combination of physical and mental durability, the will to live, and luck.",
     cvMeaning: "Impact Capacity",
-    cvDescription: "45 HP = €45M crowdsourced in AI engineering for impact organizations. Each point represents roughly €1M of real-world value created."
+    cvDescription: "Hit points measure impact capacity: each point stands for roughly €1M of AI engineering crowdsourced for organizations like Stanford, ESA, Greenpeace and WWF."
   }
 };
 
@@ -191,7 +197,7 @@ const alignmentDescription = {
   icon: '⚖️',
   dndDefinition: "Chaotic Good characters do what is necessary to bring about change for the better, disdaining bureaucratic organizations that get in the way of social improvement.",
   cvMeaning: "Impact-Driven Rebel",
-  cvDescription: "Doing the right thing, but not following rules. Always does exactly what they think is the right thing to do, regardless of conventions or expectations. Will challenge authority when it conflicts with doing good. 'I will always do exactly what I think the right thing to do is.'"
+  cvDescription: "\"I will always do exactly what I think the right thing to do is.\" Challenges authority when it conflicts with doing good — ask Tata Steel."
 };
 
 // Defenses Descriptions
