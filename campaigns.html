@@ -8,7 +8,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/character-sheet.css">
@@ -21,10 +21,12 @@
 </head>
 <body>
   <!-- Admin Login Button -->
-  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
 
+  <div class="sheet">
   <!-- Navigation Bar (shared across both views) -->
   <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
     <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
       <span class="navbar-toggle-icon"></span>
     </button>
@@ -44,8 +46,8 @@
         </div>
         <!-- View Toggle -->
         <div class="view-toggle">
-          <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
-          <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
         </div>
       </div>
     </div>
@@ -545,29 +547,15 @@
       
     </main>
 
-    <!-- Footer -->
-    <footer class="contact-bar">
-      <a href="mailto:busterfranken@gmail.com" class="contact-item">
-        <span class="contact-icon">📧</span>
-        <span class="contact-text">busterfranken@gmail.com</span>
-      </a>
-      <a href="tel:+31624877967" class="contact-item">
-        <span class="contact-icon">📱</span>
-        <span class="contact-text">+31 6 2487 7967</span>
-      </a>
-      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
-        <span class="contact-icon">💼</span>
-        <span class="contact-text">LinkedIn</span>
-      </a>
-      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
-        <span class="contact-icon">💻</span>
-        <span class="contact-text">GitHub</span>
-      </a>
-      <span class="contact-item location">
-        <span class="contact-icon">📍</span>
-        <span class="contact-text">Amsterdam, Netherlands</span>
-      </span>
-    </footer>
+  </div>
+
+  <footer class="contact-bar">
+    <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+    <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+    <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+    <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+    <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+  </footer>
   </div>
 
   <!-- Overlay Modal -->
