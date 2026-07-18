@@ -70,20 +70,41 @@
         <div class="character-avatar">
           <img src="assets/images/buster.jpg" alt="Buster Franken" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <div class="avatar-placeholder" style="display:none;">BF</div>
+          <span class="level-banner">Level 7</span>
         </div>
         <div class="character-name-block">
           <h1 class="character-name editable" data-field="personal.name">Buster Franken</h1>
           <div class="character-class clickable" id="classDisplay">
-            <span class="class-item" data-class="founder">Founder 3</span> / 
-            <span class="class-item" data-class="community-builder">Community Builder 2</span> / 
+            <span class="class-item" data-class="founder">Founder 3</span> /
+            <span class="class-item" data-class="community-builder">Community Builder 2</span> /
             <span class="class-item" data-class="growth-hacker">Growth Hacker 2</span>
           </div>
           <div class="character-details">
-            <span class="species">Human</span> • 
-            <span class="background clickable" data-element="background">Entrepreneur</span> • 
+            <span class="species">Human</span> ❖
+            <span class="background clickable" data-element="background">Entrepreneur</span> ❖
             <span class="alignment clickable" data-element="alignment">Chaotic Good</span>
+            <span class="margin-note" id="note-alignment">← "chaotic" is generous —B</span>
           </div>
         </div>
+      </div>
+
+      <!-- Hit Points -->
+      <div class="hit-points-container">
+        <div class="hit-points clickable" data-element="hp">
+          <div class="hp-labels">
+            <span class="hp-label">CURRENT</span>
+            <span class="hp-label">MAX</span>
+          </div>
+          <div class="hp-values">
+            <span class="hp-current">45</span>
+            <span class="hp-separator">/</span>
+            <span class="hp-max">45</span>
+          </div>
+          <div class="hp-title">HIT POINTS</div>
+          <div class="hp-meaning">€45M crowdsourced</div>
+        </div>
+        <span class="margin-note margin-note--red" id="note-hp">still full HP!</span>
+      </div>
       </div>
 
       <!-- Core Stats Row -->
@@ -119,6 +140,7 @@
             <div class="ability-modifier rollable" data-mod="4">+4</div>
             <div class="ability-value">18</div>
             <div class="ability-name">CHA</div>
+            <span class="margin-note" id="note-cha">the money-maker</span>
           </div>
         </div>
 
@@ -145,23 +167,6 @@
             <div class="stat-label">HEROIC<br>INSPIRATION</div>
           </div>
         </div>
-
-        <!-- Hit Points -->
-        <div class="hit-points-container">
-          <div class="hit-points clickable" data-element="hp">
-            <div class="hp-labels">
-              <span class="hp-label">CURRENT</span>
-              <span class="hp-label">MAX</span>
-            </div>
-            <div class="hp-values">
-              <span class="hp-current">45</span>
-              <span class="hp-separator">/</span>
-              <span class="hp-max">45</span>
-            </div>
-            <div class="hp-title">HIT POINTS</div>
-            <div class="hp-meaning">€45M crowdsourced</div>
-          </div>
-        </div>
       </div>
 
       <!-- Defenses & Conditions Row -->
@@ -181,8 +186,8 @@
             <span class="dc-item active">Alert</span>
             <span class="dc-item active">Mission-Driven</span>
           </div>
+          <span class="margin-note" id="note-conditions">always, tbh</span>
         </div>
-      </div>
       </div>
     </header>
 

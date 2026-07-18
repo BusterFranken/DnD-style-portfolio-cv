@@ -212,323 +212,113 @@
 /* ============================================
    CHARACTER HEADER
    ============================================ */
-.character-header {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
-  color: var(--white);
-  width: 100%;
-}
+.character-header { padding: 22px 26px 8px; background: none; border: none; }
 
-.character-header-content {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: var(--spacing-lg) var(--spacing-xl);
-}
+.character-header-content { display: flex; gap: 20px; align-items: center; }
 
-.character-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
-}
+/* Wrapper kept in the DOM (contract: no elements removed) but flattened out
+   of layout so .character-avatar / .character-name-block become direct flex
+   items of .character-header-content, matching the prototype's flat row
+   (avatar / name-block / hit-points-container). Task 6 (mobile): this
+   currently applies at every width; the .character-info rule inside the
+   existing max-width:768px media query further down (which still assumes a
+   real flex box) will need to switch this back to a real display value for
+   the stacked mobile layout. */
+.character-info { display: contents; }
 
-.character-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--primary-red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--primary-red);
-}
-
+.character-avatar { position: relative; flex: none; }
 .character-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 104px; height: 104px; border-radius: 50%; object-fit: cover;
+  filter: sepia(.28) contrast(1.04); border: 3px solid var(--oxblood);
+  box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--gold), 0 3px 8px rgba(60,35,10,.35);
 }
-
+/* onerror fallback for the avatar img: same circular frame, parchment fill */
 .avatar-placeholder {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--white);
+  width: 104px; height: 104px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--panel); color: var(--oxblood);
+  font: 700 28px var(--font-display);
+  border: 3px solid var(--oxblood);
+  box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--gold), 0 3px 8px rgba(60,35,10,.35);
+}
+.level-banner {
+  position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+  background: var(--oxblood); color: var(--gold-pale);
+  font: 700 8.5px var(--font-sc); letter-spacing: .16em; padding: 2px 9px;
+  border: 1px solid var(--gold); border-radius: 2px; white-space: nowrap;
 }
 
-.character-name-block {
-  flex: 1;
-}
+.character-name-block { flex: 1; }
+.character-name { font: 700 34px/1 var(--font-display); color: var(--oxblood); text-shadow: 0 1px 0 rgba(255,248,224,.6); }
+.character-class { font: 500 14.5px var(--font-body); font-style: italic; color: var(--body-ink); margin-top: 5px; }
+.character-class:hover { color: var(--oxblood); }
+.character-details { font: 700 10px var(--font-sc); letter-spacing: .16em; color: var(--label); margin-top: 5px; position: relative; }
+.character-details .clickable { border-bottom: 1px dotted var(--gold); }
+.character-details .clickable:hover { color: var(--oxblood); opacity: 1; }
+/* #note-alignment: inline aside right after the details line, not an absolute-positioned note like the other three */
+#note-alignment { display: inline; position: static; margin-left: 8px; pointer-events: none; }
 
-.character-name {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-xs);
+.hit-points-container { position: relative; margin-left: auto; }
+.hit-points {
+  text-align: center; background: var(--panel); border: 1px solid var(--panel-border);
+  box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-border), 0 1px 3px rgba(60,35,10,.15);
+  padding: 12px 22px 10px; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease;
 }
-
-.character-class {
-  font-size: 16px;
-  color: var(--text-light);
-  margin-bottom: var(--spacing-xs);
-}
-
-.class-item {
-  color: var(--white);
-  cursor: pointer;
-  transition: color var(--transition-fast);
-}
-
-.class-item:hover {
-  color: var(--primary-red);
-}
-
-.character-details {
-  font-size: 14px;
-  color: var(--text-light);
-}
-
-.character-details .clickable {
-  color: var(--accent-blue);
-}
+.hit-points:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-border), 0 4px 10px rgba(60,35,10,.3); }
+.hp-labels { display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs); }
+.hp-label { font: 700 8px var(--font-sc); letter-spacing: .18em; color: var(--label); }
+.hp-values { font: 700 30px var(--font-display); color: var(--oxblood); }
+.hp-separator { color: var(--gold); font-size: 20px; margin: 0 2px; }
+/* color/border-top/margin-top/padding-top reconciled against the prototype's rendering (divider rule above "Hit Points") */
+.hp-title { font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--ink); border-top: 1px solid var(--panel-border); margin-top: 6px; padding-top: 5px; }
+.hp-meaning { font: 500 11px var(--font-body); font-style: italic; color: var(--oxblood); }
+/* right: -12px (not 8px) reconciled against the prototype: the note overhangs the box's top-right corner rather than sitting inside it */
+#note-hp { right: -12px; top: -16px; transform: rotate(5deg); font-size: 16px; }
 
 /* Core Stats Row */
-.core-stats-row {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-xl);
-  flex-wrap: wrap;
-}
+.core-stats-row { display: flex; gap: 10px; align-items: stretch; padding: 14px 26px 4px; }
 
 /* Ability Scores */
-.ability-scores {
-  display: flex;
-  gap: var(--spacing-md);
-}
-
+.ability-scores { display: flex; gap: 8px; }
 .ability-score {
-  text-align: center;
-  background: var(--white);
-  border: 2px solid var(--primary-red);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm);
-  min-width: 60px;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  width: 92px; background: var(--panel); border: 1px solid var(--tile-border);
+  box-shadow: inset 0 1px 0 rgba(255,250,235,.8), 0 1px 2px rgba(60,35,10,.12);
+  text-align: center; padding: 9px 0 7px; position: relative; cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease; border-radius: 0;
 }
-
-.ability-score:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(197, 49, 49, 0.3);
-}
-
-.ability-modifier {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
+.ability-score:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(60,35,10,.28); opacity: 1; }
+.ability-score::before { content: '✦'; position: absolute; top: 2px; left: 5px; color: var(--panel-border); font-size: 8px; }
+.ability-modifier { font: 700 24px var(--font-display); color: var(--oxblood); border-radius: 4px; }
+.ability-modifier:hover { background: var(--parchment); }
 .ability-value {
-  font-size: 24px;
-  font-weight: 700;
-  background: var(--primary-red);
-  color: var(--white);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto var(--spacing-xs);
+  font: 600 13px var(--font-body); color: var(--body-ink); background: var(--parchment);
+  border: 1px solid var(--panel-border); border-radius: 9px; width: 34px; margin: 3px auto;
 }
+.ability-name { font: 700 9.5px var(--font-sc); letter-spacing: .2em; color: var(--label); margin-top: 4px; }
+#note-cha { bottom: -18px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
 
-.ability-name {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-/* Combat Stats */
-.combat-stats {
-  display: flex;
-  gap: var(--spacing-md);
-}
-
+.combat-stats { display: flex; gap: 8px; flex: 1; }
 .stat-box {
-  text-align: center;
-  background: var(--white);
-  border: 2px solid var(--primary-red);
-  padding: var(--spacing-sm) var(--spacing-md);
-  color: var(--text-primary);
+  flex: 1; background: var(--panel); border: 1px solid var(--tile-border); text-align: center;
+  padding: 10px 4px 7px; cursor: pointer; position: relative; transition: transform 150ms ease, box-shadow 150ms ease;
 }
-
-.stat-box.proficiency {
-  border-radius: var(--radius-md);
-}
-
-.stat-box.initiative {
-  padding: var(--spacing-md);
-  border: none;
-  position: relative;
-  min-width: 70px;
-  min-height: 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: transparent; /* Make transparent so border shows */
-}
-
-/* Create hexagon border using ::before - larger hexagon with red background */
-.stat-box.initiative::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: var(--primary-red);
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Create white inner hexagon using ::after */
-.stat-box.initiative::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: var(--white);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.stat-box.initiative .stat-value,
-.stat-box.initiative .stat-label {
-  position: relative;
-  z-index: 2;
-}
-
-.stat-box.armor-class {
-  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-  padding: var(--spacing-md) var(--spacing-lg);
-}
-
-.stat-box.speed {
-  border-radius: var(--radius-md);
-}
-
-/* Heroic Inspiration (D&D Inspiration) */
-.stat-box.heroic-inspiration {
-  border-radius: var(--radius-md);
-  min-width: 56px;
-  min-height: 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm);
-}
-
-.stat-box.heroic-inspiration .inspiration-icon {
-  font-size: 36px;
-  color: var(--primary-red);
-  line-height: 1;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stat-box.heroic-inspiration .stat-label {
-  font-size: 8px;
-  line-height: 1.15;
-  flex-shrink: 0;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.stat-value .unit {
-  font-size: 12px;
-  font-weight: 400;
-}
-
-.stat-label {
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  line-height: 1.2;
-  margin-top: var(--spacing-xs);
-}
-
-/* Hit Points */
-.hit-points-container {
-  margin-left: auto;
-}
-
-.hit-points {
-  background: var(--white);
-  border: 2px solid var(--primary-red);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  text-align: center;
-  min-width: 180px;
-  color: var(--text-primary);
-  cursor: pointer;
-}
-
-.hp-labels {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: var(--spacing-xs);
-}
-
-.hp-label {
-  font-size: 9px;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-}
-
-.hp-values {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-xs);
-}
-
-.hp-current, .hp-max {
-  font-size: 32px;
-  font-weight: 700;
-}
-
-.hp-separator {
-  font-size: 20px;
-  color: var(--text-light);
-}
-
-.hp-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  margin-top: var(--spacing-xs);
-}
-
-.hp-meaning {
-  font-size: 11px;
-  color: var(--primary-red);
-  font-style: italic;
-}
+.stat-box:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(60,35,10,.28); opacity: 1; }
+.stat-value { font: 700 22px var(--font-display); color: var(--ink); }
+.stat-value .unit { font-size: 12px; color: var(--label); }
+.stat-label { font: 700 8.5px var(--font-sc); letter-spacing: .12em; color: var(--label); margin-top: 4px; }
+/* Initiative: gold hexagon, two stacked clip-path layers */
+.stat-box.initiative { background: none; border: none; }
+.stat-box.initiative::before { content: ''; position: absolute; inset: 0; clip-path: polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%); background: var(--gold); }
+.stat-box.initiative::after { content: ''; position: absolute; inset: 2px; clip-path: polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%); background: var(--panel); }
+.stat-box.initiative > * { position: relative; z-index: 1; }
+.stat-box.initiative .stat-value { color: var(--oxblood); }
+/* Armor Class: oxblood shield */
+.stat-box.armor-class { background: none; border: none; }
+.stat-box.armor-class::before { content: ''; position: absolute; inset: 0; clip-path: polygon(50% 0,100% 14%,93% 62%,50% 100%,7% 62%,0 14%); background: var(--oxblood); }
+.stat-box.armor-class::after { content: ''; position: absolute; inset: 2.5px; clip-path: polygon(50% 0,100% 14%,93% 62%,50% 100%,7% 62%,0 14%); background: var(--panel); }
+.stat-box.armor-class > * { position: relative; z-index: 1; }
+.stat-box.armor-class .stat-value { color: var(--oxblood); padding-top: 1px; }
+.stat-box.heroic-inspiration .stat-value { color: var(--gold); font-weight: 400; font-family: serif; line-height: 1; }
 
 /* ============================================
    MAIN CONTENT GRID
@@ -1342,86 +1132,23 @@
 /* ============================================
    DEFENSES & CONDITIONS ROW
    ============================================ */
-.defenses-conditions-row {
-  display: flex;
-  gap: var(--spacing-lg);
-  margin-top: var(--spacing-md);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.defenses-conditions-row { display: flex; gap: 10px; padding: 16px 26px 16px; }
+/* border/background/padding + hover, and the 1.4:1 flex split, reconciled against
+   the prototype's rendering (a bordered, tinted box — not a bare/borderless row) */
+.defenses-box, .conditions-box {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--panel-border); background: rgba(247,238,216,.6);
+  padding: 8px 12px; cursor: pointer; position: relative;
+  transition: background 150ms ease;
 }
-
-.defenses-box,
-.conditions-box {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.defenses-box:hover,
-.conditions-box:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--primary-red);
-}
-
-.dc-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-light);
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-xs);
-  letter-spacing: 0.5px;
-}
-
-.dc-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
-}
-
-.dc-item {
-  font-size: 12px;
-  color: var(--white);
-  padding: 2px var(--spacing-sm);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-}
-
-.dc-item.active {
-  background: var(--primary-red);
-}
-
-/* ============================================
-   STAT BOX IMPROVEMENTS
-   ============================================ */
-.stat-box.clickable {
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.stat-box.clickable:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(197, 49, 49, 0.3);
-}
-
-/* Shield shape for Armor Class */
-.stat-box.armor-class {
-  position: relative;
-  min-width: 70px;
-  min-height: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  clip-path: none;
-  border-radius: 50% 50% 50% 50% / 25% 25% 75% 75%;
-  padding: var(--spacing-md);
-}
-
-/* Hexagon for Initiative - consolidated with earlier definition */
+.defenses-box:hover, .conditions-box:hover { background: var(--panel); opacity: 1; }
+.defenses-box { flex: 1.4; }
+.conditions-box { flex: 1; }
+.dc-title { font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--label); margin: 0; }
+.dc-list { display: flex; gap: 6px; flex-wrap: wrap; }
+.defenses-box .dc-item { font: 500 11.5px var(--font-body); border: 1px solid var(--tile-border); background: var(--parchment); padding: 2px 10px; border-radius: 10px; }
+.conditions-box .dc-item.active { font: 600 11.5px var(--font-body); color: var(--gold-max); background: var(--oxblood); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 10px; }
+#note-conditions { right: -8px; top: 50%; transform: translateY(-50%); position: absolute; }
 
 /* ============================================
    SAVING THROWS CLICKABLE
@@ -1435,19 +1162,6 @@
 
 .save-item.clickable:hover {
   background: var(--light-bg);
-}
-
-/* ============================================
-   ALIGNMENT CLICKABLE
-   ============================================ */
-.alignment.clickable {
-  color: var(--accent-blue);
-  cursor: pointer;
-  transition: color var(--transition-fast);
-}
-
-.alignment.clickable:hover {
-  color: var(--primary-red);
 }
 
 /* ============================================
