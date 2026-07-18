@@ -171,8 +171,11 @@ function renderSpells() {
   groups.forEach(group => {
     (group.list || []).forEach(spell => {
       const badge = group.ordinal ? `${group.ordinal} ·${spell.slots}` : 'Cantrip';
+      // spell.featured (optional flag, data.js) → oxblood badge + name, matching the
+      // prototype's one highlighted spell ("Recruit"). .spell-item's own contract
+      // (clickable, data-spell) is unchanged; this only appends a modifier class.
       html += `
-        <div class="spell-item clickable" data-spell="${spell.name}">
+        <div class="spell-item clickable${spell.featured ? ' spell-item--featured' : ''}" data-spell="${spell.name}">
           <span class="spell-level-badge">${badge}</span>
           <span class="spell-name">${spell.name}</span>
           <span class="spell-meta">${spell.cvMeaning}</span>
@@ -313,7 +316,8 @@ function renderExtras() {
   // "✦ Current Campaign" highlighted block + two CTA buttons come BEFORE the Fun
   // Facts/Interests content (finding 7). Fun Facts/Interests keep their own explicit
   // modifier classes (not :nth-of-type) so inserting this block ahead of them can't
-  // shift which one gets bullets vs. chip styling.
+  // shift which one gets bullets vs. chip styling. Both sections are wrapped in
+  // .extras-columns, matching the prototype's 2-col grid DOM structure exactly.
   extrasContent.innerHTML = `
     <div class="extras-campaign">
       <div class="extras-title">✦ Current Campaign</div>
@@ -327,17 +331,19 @@ function renderExtras() {
       </div>
     </div>
 
-    <div class="extras-section extras-section--facts">
-      <div class="extras-title">Fun Facts</div>
-      <div class="extras-list">
-        ${extras.funFacts.map(f => `<span class="extras-item">${f}</span>`).join('')}
+    <div class="extras-columns">
+      <div class="extras-section extras-section--facts">
+        <div class="extras-title">Fun Facts</div>
+        <div class="extras-list">
+          ${extras.funFacts.map(f => `<span class="extras-item">${f}</span>`).join('')}
+        </div>
       </div>
-    </div>
 
-    <div class="extras-section extras-section--interests">
-      <div class="extras-title">Interests</div>
-      <div class="extras-list">
-        ${extras.interests.map(i => `<span class="extras-item">${i}</span>`).join('')}
+      <div class="extras-section extras-section--interests">
+        <div class="extras-title">Interests</div>
+        <div class="extras-list">
+          ${extras.interests.map(i => `<span class="extras-item">${i}</span>`).join('')}
+        </div>
       </div>
     </div>
   `;

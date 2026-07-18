@@ -484,6 +484,11 @@
 .spell-level-badge { font: 700 8.5px var(--font-sc); color: var(--gold); width: 58px; flex: none; }
 .spell-name { font: 600 13.5px var(--font-body); flex: none; }
 .spell-meta { margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+/* Prototype highlights its one featured spell ("Recruit") in oxblood — badge + name only,
+   guarded by the optional spell.featured flag (data.js). .spell-meta stays --label-colored
+   in the prototype even on the featured row, so it's deliberately excluded here. */
+.spell-item--featured .spell-level-badge,
+.spell-item--featured .spell-name { color: var(--oxblood); }
 
 /* Inventory List */
 .inventory-header {
@@ -578,6 +583,11 @@
 .extras-cta-btn--solid:hover { background: var(--oxblood-hi); }
 .extras-cta-btn--outline { color: var(--oxblood); background: none; }
 .extras-cta-btn--outline:hover { color: var(--red-hover); }
+
+/* Fun Facts / Interests render side-by-side (2-col grid), matching the prototype's own
+   grid wrapper div around those two sections specifically (not the Current Campaign
+   block above, which stays full-width). */
+.extras-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
 .extras-section { margin-bottom: 12px; }
 .extras-title {

@@ -450,24 +450,28 @@ const characterData = {
     level3: [
       { name: "Sending", slots: 2, castTime: "1 action", range: "Unlimited", description: "Communicate with anyone, anywhere. Perfect for cold outreach that actually gets responses.", dndEquivalent: "Sending", cvMeaning: "cold outreach that actually gets responses; unlimited range" },
       { name: "Tongues", slots: 2, castTime: "1 action", range: "Touch", description: "Speak any professional language fluently - startup, corporate, academic, government.", dndEquivalent: "Tongues", cvMeaning: "speak startup, corporate, academic and government fluently" },
-      { name: "Recruit", slots: 2, castTime: "1 action", range: "60 ft", description: "Recruit characters up to 7 levels higher to your party at will. Can convince senior leaders to join your cause.", dndEquivalent: "Hypnotic Pattern", cvMeaning: "recruit characters up to 7 levels higher to your party" }
+      // featured: OPTIONAL additive flag — this is the prototype's one highlighted spell
+      // (oxblood badge + name); renderSpells() checks it to add a guarded modifier class.
+      { name: "Recruit", slots: 2, castTime: "1 action", range: "60 ft", description: "Recruit characters up to 7 levels higher to your party at will. Can convince senior leaders to join your cause.", dndEquivalent: "Hypnotic Pattern", cvMeaning: "recruit characters up to 7 levels higher to your party", featured: true }
     ]
   },
 
   // ==========================================
   // INVENTORY TAB
   // ==========================================
+  // Order is sorted descending by gp value (matches the prototype's rendered row order,
+  // which is the only consumer of this array's order — see renderInventory()).
   inventory: [
-    { name: "AI/ML Frameworks", weight: "—", qty: 1, value: "20 gp", notes: "technical foundation", active: true },
-    { name: "Python Ecosystem", weight: "—", qty: 1, value: "15 gp", notes: "primary programming tool", active: true },
-    { name: "Google Sheets Mastery", weight: "—", qty: 1, value: "5 gp", notes: "\"animal in the sheets\"", active: true },
     { name: "Network of VCs", weight: "—", qty: 1, value: "100 gp", notes: "Thomas Wolf, LUMO Labs, Shamrock…", active: true },
     { name: "International Contacts", weight: "—", qty: 1, value: "80 gp", notes: "Stanford, ESA, Greenpeace level", active: true },
-    { name: "Pitch Deck Templates", weight: "—", qty: 1, value: "10 gp", notes: "battle-tested presentations", active: true },
     { name: "Customer Interview Notes", weight: "—", qty: 500, value: "50 gp", notes: "500+ interviews documented", active: true },
+    { name: "Challenge Design Framework", weight: "—", qty: 1, value: "40 gp", notes: "10-week AI challenge template", active: true },
     { name: "Experiment Backlog", weight: "—", qty: 1, value: "30 gp", notes: "validated learning archive", active: true },
     { name: "Product Roadmap", weight: "—", qty: 1, value: "25 gp", notes: "platform development history", active: true },
-    { name: "Challenge Design Framework", weight: "—", qty: 1, value: "40 gp", notes: "10-week AI challenge template", active: true }
+    { name: "AI/ML Frameworks", weight: "—", qty: 1, value: "20 gp", notes: "technical foundation", active: true },
+    { name: "Python Ecosystem", weight: "—", qty: 1, value: "15 gp", notes: "primary programming tool", active: true },
+    { name: "Pitch Deck Templates", weight: "—", qty: 1, value: "10 gp", notes: "battle-tested presentations", active: true },
+    { name: "Google Sheets Mastery", weight: "—", qty: 1, value: "5 gp", notes: "\"animal in the sheets\"", active: true }
   ],
 
   // ==========================================
@@ -566,7 +570,7 @@ const characterData = {
       role: "Chief Engineer, FruitPunch AI"
     },
     {
-      text: "Buster has the strong ability to translate high-level ideas into testable experiments. Using the data and analysis gathered to build a plan grounded in truth.",
+      text: "The strong ability to translate high-level ideas into testable experiments — a plan grounded in truth.",
       author: "Dorian Groen",
       role: "Challenge Manager, FruitPunch AI"
     },
