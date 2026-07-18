@@ -239,7 +239,12 @@ a:hover {
 
 /* Rotated-square proficiency pip (restyles existing .proficiency-marker) */
 .proficiency-marker { width: 7px; height: 7px; border: 1px solid var(--oxblood); border-radius: 0; transform: rotate(45deg); margin-right: 0; }
-.proficiency-marker.filled, .proficiency-marker.expertise { background: var(--oxblood); border-color: var(--oxblood); }
+.proficiency-marker.filled,
+.proficiency-marker.expertise,
+.skill-item.expertise .proficiency-marker.expertise {
+  background: var(--oxblood);
+  border-color: var(--oxblood);
+}
 
 /* Margin notes */
 .margin-note { position: absolute; font: 600 15px var(--font-note); color: var(--note-blue); white-space: nowrap; pointer-events: none; z-index: 5; }
