@@ -113,12 +113,15 @@
    stylesheet gets the same responsive behavior automatically.
    ============================================ */
 @media (max-width: 740px) {
+  .notable-page .page-head { display: none; }
+
   .notable-page .page-kicker { font-size: 8px; }
   .notable-page .page-title { font-size: 25px; }
   .notable-page .page-rule { margin-top: 6px; }
   .notable-page .page-rule::before, .notable-page .page-rule::after { width: 70px; }
   .notable-page .page-sub { display: none; }
 
+  .achievements .rule-title { display: none; }
   .rule-title { font-size: 9px; letter-spacing: .22em; gap: 8px; margin-bottom: 6px; }
   .rule-title::before { content: none; }
   .encounters-sub { display: none; }
