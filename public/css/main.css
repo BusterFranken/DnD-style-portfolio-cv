@@ -91,7 +91,7 @@ body {
   font-family: var(--font-body);
   background: radial-gradient(ellipse 100% 60% at 50% -10%, rgba(154,123,54,.18), transparent 60%), var(--desk);
   color: var(--ink);
-  padding: 26px 14px 44px;
+  padding: 14px 14px 44px;
   display: flex; flex-direction: column; align-items: center;
 }
 html[data-view="classic"] body.has-classic { background: var(--light-bg); display: block; padding: 0; }
