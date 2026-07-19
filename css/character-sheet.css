@@ -828,6 +828,9 @@
 
   /* ---------- Margin notes: hidden except the HP one ---------- */
   .margin-note { display: none; }
+  /* #note-alignment carries display:inline at ID specificity (desktop inline-aside), so it
+     needs its own ID-level hide here — .margin-note alone loses that specificity fight */
+  #note-alignment { display: none; }
   #note-hp { display: block; right: 8px; top: -13px; transform: rotate(4deg); font-size: 14px; }
 
   /* ---------- HP: full-width banner wrapping onto its own row ---------- */
