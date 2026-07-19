@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Buster Franken</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/campaigns.css">
+  <link rel="stylesheet" href="css/projects.css">
+  <link rel="stylesheet" href="css/classic-cv.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+  <!-- Admin Login Button -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
+
+  <div class="sheet">
+  <!-- Navigation Bar (shared across both views) -->
+  <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
+    <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <span class="navbar-page-title">Quest Board</span>
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-left">
+        <a href="index.html" class="nav-link">Character Sheet</a>
+        <a href="campaigns.html" class="nav-link">Campaigns</a>
+        <a href="notable.html" class="nav-link">Notable</a>
+        <a href="projects.html" class="nav-link active">Projects</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="media.html" class="nav-link">Media</a>
+        <a href="https://dnd-cv-maker.dpaft0pdvmuap.amplifyapp.com/creator.html" class="nav-link" target="_blank">Create Yours ↗</a>
+      </div>
+      <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">projects ·</span>
+          <span class="campaign-name">AI for Good</span>
+        </div>
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="projects-page">
+
+    <header class="page-head">
+      <div class="page-kicker">Posted at the Guild Hall</div>
+      <h1 class="page-title">Quest Board</h1>
+      <div class="page-rule">❖</div>
+      <p class="page-sub">AI for Good projects completed through FruitPunch AI.</p>
+    </header>
+
+    <main class="projects-container">
+
+      <!-- Category Filter -->
+      <div class="filter-rail">
+        <div class="category-filter">
+          <button class="filter-btn active" data-filter="all">All Quests</button>
+          <button class="filter-btn" data-filter="wildlife">Wildlife</button>
+          <button class="filter-btn" data-filter="earth">Earth</button>
+          <button class="filter-btn" data-filter="health">Health</button>
+          <button class="filter-btn" data-filter="autonomous">Autonomous</button>
+          <button class="filter-btn" data-filter="mlops">MLOps</button>
+          <button class="filter-btn" data-filter="safety">Safety</button>
+          <button class="filter-btn" data-filter="community">Community</button>
+        </div>
+      </div>
+
+      <!-- Impact Partners -->
+      <div class="partners-strip">
+        <span class="partners-label">Impact Partners</span>
+        <span class="partner-name">Stanford</span><span class="partner-sep">✦</span>
+        <span class="partner-name">ESA</span><span class="partner-sep">✦</span>
+        <span class="partner-name">Greenpeace</span><span class="partner-sep">✦</span>
+        <span class="partner-name">WWF</span><span class="partner-sep">✦</span>
+        <span class="partner-name">AWS</span><span class="partner-sep">✦</span>
+        <span class="partner-name">Huawei</span><span class="partner-sep">✦</span>
+        <span class="partner-name">NXP</span><span class="partner-sep">✦</span>
+        <span class="partner-name">Philips</span><span class="partner-sep">✦</span>
+        <span class="partner-name">TU/e</span><span class="partner-sep">✦</span>
+        <span class="partner-name">United Nations</span>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Projects will be rendered dynamically -->
+      </div>
+
+      <!-- Stats Summary -->
+      <div class="quest-stats">
+        <div class="stat-block">
+          <div class="stat-num">€45M</div>
+          <div class="stat-label">Impact Value</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">4500+</div>
+          <div class="stat-label">Engineers</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">80+</div>
+          <div class="stat-label">Partners</div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <footer class="contact-bar">
+    <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+    <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+    <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+    <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+    <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+  </footer>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/overlay.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Render projects on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof renderProjects === 'function') {
+        renderProjects();
+      } else {
+        console.error('renderProjects function not found');
+      }
+      
+      // Filter functionality - use event delegation since cards are dynamically created
+      document.querySelector('.category-filter').addEventListener('click', (e) => {
+        if (e.target.classList.contains('filter-btn')) {
+          const filter = e.target.dataset.filter;
+          
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          
+          document.querySelectorAll('.project-card').forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      });
+    });
+    
+    // Campaign Status click handler
+    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof getCampaignStatusOverlayContent === 'function') {
+          openOverlay(getCampaignStatusOverlayContent());
+        }
+      });
+    });
+    
+    // View toggle - redirect to character sheet for classic CV
+    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view === 'classic') {
+          localStorage.setItem('preferredView', 'classic');
+          window.location.href = 'index.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

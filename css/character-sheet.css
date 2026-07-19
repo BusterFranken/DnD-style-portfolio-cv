@@ -1,0 +1,982 @@
+/* ============================================
+   CHARACTER SHEET STYLES - D&D View
+   ============================================ */
+
+/* D&D View Container */
+.dnd-view {
+  min-height: 100vh;
+  /* No background here (was the old pre-redesign flat gray var(--light-bg))
+     — that flat gray showed through as a mismatched band below the footer
+     whenever content is shorter than the 100vh floor (any normal-height
+     browser window). Transparent lets .sheet's own layered
+     gradient+grain+parchment background (main.css) show through instead,
+     matching the prototype (sampled #efe1be at that same region). */
+}
+
+/* Classic View Container */
+.classic-view {
+  min-height: 100vh;
+  background: var(--light-bg);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+  background: var(--dark-bg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Hamburger toggle: hidden on desktop */
+.navbar-toggle {
+  display: none;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.navbar-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-toggle:focus {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* Hamburger icon (three lines) */
+.navbar-toggle-icon {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+  transition: background var(--transition-fast);
+}
+
+.navbar-toggle-icon::before,
+.navbar-toggle-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  transition: transform var(--transition-normal);
+}
+
+.navbar-toggle-icon::before {
+  top: -7px;
+}
+
+.navbar-toggle-icon::after {
+  top: 7px;
+}
+
+/* Open state: icon becomes X */
+.navbar.is-open .navbar-toggle-icon {
+  background: transparent;
+}
+
+.navbar.is-open .navbar-toggle-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.navbar.is-open .navbar-toggle-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* Menu wrapper: on desktop it's a flex row taking remaining space */
+.navbar-menu {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
+}
+
+.navbar-left {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: nowrap;
+}
+
+.nav-link {
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+  padding: var(--spacing-sm) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+  color: var(--white);
+  background: var(--primary-red);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: nowrap;
+}
+
+.rest-btn {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid currentColor;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.short-rest {
+  color: #FFD700;
+}
+
+.short-rest:hover {
+  background: #FFD700;
+  color: var(--dark-bg);
+}
+
+.long-rest {
+  color: #87CEEB;
+}
+
+.long-rest:hover {
+  background: #87CEEB;
+  color: var(--dark-bg);
+}
+
+.campaign-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.campaign-status.clickable {
+  cursor: pointer;
+}
+
+.campaign-status.clickable:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* .campaign-label/.campaign-name: old pre-redesign rules removed (T12) — they
+   forced text-transform:uppercase (defeats both the --font-sc small-caps
+   rendering and the prototype's lowercase "label · " source text, e.g.
+   "campaign · Energy Hardtech Exploration") and an oversized 13px name that
+   the prototype never uses (the value inherits the chip's 9px throughout).
+   Now both spans simply inherit main.css's .campaign-status font/color
+   (gold-dim) and .campaign-status .campaign-name (gold-max) rules. */
+
+/* Hide D&D-only elements in classic view */
+.classic-view .dnd-only {
+  display: none !important;
+}
+
+/* ============================================
+   CHARACTER HEADER
+   ============================================ */
+.character-header { padding: 22px 26px 8px; background: none; border: none; }
+
+.character-header-content { display: flex; gap: 20px; align-items: center; }
+
+/* Wrapper kept in the DOM (contract: no elements removed) but flattened out
+   of layout so .character-avatar / .character-name-block become direct flex
+   items of .character-header-content at ALL widths, matching the prototype's
+   flat row (avatar / name-block). T2's interim max-width:741px guard is gone:
+   the legacy mobile reflow it was protecting (old .character-info{flex-
+   direction:column} at ≤768px) is deleted below, replaced by Task 6's own
+   ≤740px header-card layout, which handles wrapping explicitly via
+   .character-header-content's flex-wrap — so display:contents is safe
+   unconditionally now. */
+.character-info { display: contents; }
+
+.character-avatar { position: relative; flex: none; }
+.character-avatar img {
+  width: 104px; height: 104px; border-radius: 50%; object-fit: cover;
+  filter: sepia(.28) contrast(1.04); border: 3px solid var(--oxblood);
+  box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--gold), 0 3px 8px rgba(60,35,10,.35);
+}
+/* onerror fallback for the avatar img: same circular frame, parchment fill */
+.avatar-placeholder {
+  width: 104px; height: 104px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--panel); color: var(--oxblood);
+  font: 700 28px var(--font-display);
+  border: 3px solid var(--oxblood);
+  box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--gold), 0 3px 8px rgba(60,35,10,.35);
+}
+.level-banner {
+  position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+  background: var(--oxblood); color: var(--gold-pale);
+  font: 700 8.5px var(--font-sc); letter-spacing: .16em; padding: 2px 9px;
+  border: 1px solid var(--gold); border-radius: 2px; white-space: nowrap;
+}
+
+.character-name-block { flex: 1; }
+.character-name { font: 700 34px/1 var(--font-display); color: var(--oxblood); text-shadow: 0 1px 0 rgba(255,248,224,.6); }
+.character-class { font: 500 14.5px var(--font-body); font-style: italic; color: var(--body-ink); margin-top: 5px; }
+.character-class:hover { color: var(--oxblood); }
+/* "/" between class levels — prototype colors these gold (#9a7b36 = var(--gold)) */
+.class-sep { color: var(--gold); }
+.character-details { font: 700 10px var(--font-sc); letter-spacing: .16em; color: var(--label); margin-top: 5px; position: relative; }
+.character-details .clickable { border-bottom: 1px dotted var(--gold); }
+.character-details .clickable:hover { color: var(--oxblood); opacity: 1; }
+/* #note-alignment: inline aside right after the details line, not an absolute-positioned note like the other three */
+#note-alignment { display: inline; position: static; margin-left: 8px; pointer-events: none; }
+
+.hit-points-container { position: relative; margin-left: auto; }
+.hit-points {
+  text-align: center; background: var(--panel); border: 1px solid var(--panel-border);
+  box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-border), 0 1px 3px rgba(60,35,10,.15);
+  padding: 12px 22px 10px; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.hit-points:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-border), 0 4px 10px rgba(60,35,10,.3); }
+.hp-labels { display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs); }
+.hp-label { font: 700 8px var(--font-sc); letter-spacing: .14em; color: var(--label); }
+.hp-values { font: 700 30px var(--font-display); color: var(--oxblood); }
+.hp-separator { color: var(--gold); font-size: 20px; margin: 0 2px; }
+/* color/border-top/margin-top/padding-top reconciled against the prototype's rendering (divider rule above "Hit Points") */
+.hp-title { font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--ink); border-top: 1px solid var(--panel-border); margin-top: 6px; padding-top: 5px; }
+.hp-meaning { font: 500 11px var(--font-body); font-style: italic; color: var(--oxblood); }
+/* right: -12px (not 8px) reconciled against the prototype: the note overhangs the box's top-right corner rather than sitting inside it */
+#note-hp { right: -12px; top: -16px; transform: rotate(5deg); font-size: 16px; }
+
+/* Core Stats Row */
+.core-stats-row { display: flex; gap: 10px; align-items: stretch; padding: 14px 26px 4px; }
+
+/* Ability Scores */
+.ability-scores { display: flex; gap: 8px; }
+.ability-score {
+  width: 92px; background: var(--panel); border: 1px solid var(--tile-border);
+  box-shadow: inset 0 1px 0 rgba(255,250,235,.8), 0 1px 2px rgba(60,35,10,.12);
+  text-align: center; padding: 9px 0 7px; position: relative; cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease; border-radius: 0;
+}
+.ability-score:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(60,35,10,.28); opacity: 1; }
+.ability-score::before { content: '✦'; position: absolute; top: 2px; left: 5px; color: var(--panel-border); font-size: 8px; }
+.ability-modifier { font: 700 24px var(--font-display); color: var(--oxblood); border-radius: 4px; }
+.ability-modifier:hover { background: var(--parchment); }
+.ability-value {
+  font: 600 13px var(--font-body); color: var(--body-ink); background: var(--parchment);
+  border: 1px solid var(--panel-border); border-radius: 9px; width: 34px; margin: 3px auto;
+}
+.ability-name { font: 700 9.5px var(--font-sc); letter-spacing: .2em; color: var(--label); margin-top: 4px; }
+#note-cha { bottom: -19px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+
+/* 1px vertical rule between the ability-scores group and combat-stats —
+   prototype's own core-stats-row divider (localhost:8098 Character
+   Sheet.dc.html: `width:1px;background:#c7af7e;margin:4px 2px`, #c7af7e =
+   var(--panel-border)). .core-stats-row's align-items:stretch gives it the
+   full row height with no explicit height needed. Hidden ≤740px, where the
+   two groups stack vertically instead (see mobile media query). */
+.core-divider { width: 1px; background: var(--panel-border); margin: 4px 2px; }
+
+.combat-stats { display: flex; gap: 8px; flex: 1; }
+.stat-box {
+  flex: 1; background: var(--panel); border: 1px solid var(--tile-border); text-align: center;
+  padding: 10px 4px 7px; cursor: pointer; position: relative; transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.stat-box:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(60,35,10,.28); opacity: 1; }
+.stat-value { font: 700 22px var(--font-display); color: var(--ink); }
+.stat-value .unit { font-size: 12px; color: var(--label); }
+.stat-label { font: 700 8.5px var(--font-sc); letter-spacing: .12em; color: var(--label); margin-top: 4px; }
+/* Initiative: gold hexagon, two stacked clip-path layers */
+.stat-box.initiative { background: none; border: none; }
+.stat-box.initiative::before { content: ''; position: absolute; inset: 0; clip-path: polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%); background: var(--gold); }
+.stat-box.initiative::after { content: ''; position: absolute; inset: 2px; clip-path: polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%); background: var(--panel); }
+.stat-box.initiative > * { position: relative; z-index: 1; }
+.stat-box.initiative .stat-value { color: var(--oxblood); }
+/* Armor Class: oxblood shield */
+.stat-box.armor-class { background: none; border: none; }
+.stat-box.armor-class::before { content: ''; position: absolute; inset: 0; clip-path: polygon(50% 0,100% 14%,93% 62%,50% 100%,7% 62%,0 14%); background: var(--oxblood); }
+.stat-box.armor-class::after { content: ''; position: absolute; inset: 2.5px; clip-path: polygon(50% 0,100% 14%,93% 62%,50% 100%,7% 62%,0 14%); background: var(--panel); }
+.stat-box.armor-class > * { position: relative; z-index: 1; }
+.stat-box.armor-class .stat-value { color: var(--oxblood); padding-top: 1px; }
+.stat-box.heroic-inspiration .stat-value { color: var(--gold); font-weight: 400; font-family: serif; line-height: 1; }
+
+/* ============================================
+   MAIN CONTENT GRID
+   ============================================ */
+.main-content {
+  display: grid;
+  grid-template-columns: 300px 330px 1fr;
+  gap: 14px;
+  padding: 2px 26px 20px;
+}
+
+/* ============================================
+   LEFT COLUMN
+   ============================================ */
+.left-column { display: flex; flex-direction: column; gap: 12px; }
+
+/* Saving Throws */
+.saves-list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; }
+.save-item { display: flex; align-items: center; gap: 7px; border-bottom: 1px dotted var(--panel-border); padding: 3px 0; }
+.save-abbr { font: 700 10px var(--font-sc); letter-spacing: .1em; color: var(--label); }
+.save-mod { margin-left: auto; font: 700 13px var(--font-display); color: var(--ink); }
+.save-item.proficient .save-mod { color: var(--oxblood); }
+
+/* Passive Skills */
+.passive-skills { display: flex; flex-direction: column; gap: 6px; }
+.passive-skill { display: flex; align-items: center; gap: 9px; position: relative; }
+.passive-value {
+  font: 700 16px var(--font-display); color: var(--ink);
+  background: var(--parchment); border: 1px solid var(--tile-border);
+  width: 32px; text-align: center; padding: 2px 0;
+}
+.passive-skill.proficient .passive-value { color: var(--oxblood); }
+.passive-label { font: 700 9.5px var(--font-sc); letter-spacing: .14em; color: var(--body-ink); }
+/* note-passives: absolutely positioned per the design system's floating-margin-note
+   convention (Task 1's .margin-note), right-aligned within the Passive Insight row;
+   font-size 14px reconciled against the prototype's rendering */
+#note-passives { right: 4px; top: 50%; transform: translateY(-50%) rotate(-2deg); font-size: 14px; }
+
+.senses { border-top: 1px dotted var(--panel-border); padding-top: 6px; font: 500 11.5px var(--font-body); font-style: italic; color: var(--body-ink); }
+.senses-label { font: 700 9px var(--font-sc); letter-spacing: .16em; color: var(--label); font-style: normal; }
+.senses-value { font-style: italic; }
+
+/* Proficiencies */
+.prof-category { position: relative; margin-bottom: 7px; }
+.prof-category:last-child { margin-bottom: 0; }
+.prof-label { display: block; font: 700 9px var(--font-sc); letter-spacing: .16em; color: var(--label); }
+.prof-value { font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink); margin-top: 1px; }
+/* note-languages: exact placement per brief (overhangs the LANGUAGES row's top-right corner);
+   font-size 14px (not the .margin-note default 15px) reconciled against the prototype's rendering */
+#note-languages { right: 0; top: -4px; transform: rotate(-2deg); font-size: 14px; }
+
+/* ============================================
+   MIDDLE COLUMN - SKILLS
+   ============================================ */
+.middle-column { display: flex; flex-direction: column; }
+.skills-section { position: relative; }
+
+.skills-list { display: block; }
+.skill-item { display: grid; grid-template-columns: 14px 32px 1fr auto; align-items: center; gap: 0 9px; padding: 0; cursor: pointer; }
+.skill-item:hover { background: none; opacity: .8; }
+.skill-abbr { font: 700 8.5px var(--font-sc); color: var(--gold); }
+.skill-name { font: 500 12.5px var(--font-body); border-bottom: 1px dotted var(--dot-rule); padding: 2.5px 0; }
+.skill-item.proficient .skill-name { font-weight: 600; }
+.skill-mod { font: 700 12.5px var(--font-display); color: var(--ink); text-align: right; }
+.skill-item.proficient .skill-mod { color: var(--oxblood); }
+/* note-skills: exact placement per brief (hangs off the Skills box's bottom-right corner) */
+#note-skills { right: 10px; bottom: -6px; transform: rotate(-2deg); }
+
+/* ============================================
+   RIGHT COLUMN - TABBED CONTENT
+   ============================================ */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  height: fit-content;
+}
+
+.right-column .section-box {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box; /* Ensure padding and border are included in height */
+  /* Height will be set by JavaScript to match left column - fixed value, not dynamic */
+}
+
+.tabbed-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1 1 0; /* flex-grow: 1, flex-shrink: 1, flex-basis: 0 */
+  min-height: 0;
+  height: 100%; /* Fill parent container */
+}
+
+/* Tab Navigation */
+.tab-nav { display: flex; gap: 2px; border-bottom: 2px solid var(--oxblood); margin-bottom: 10px; flex-wrap: wrap; background: none; }
+.tab-btn { font: 700 9.5px var(--font-sc); letter-spacing: .1em; color: var(--label); padding: 5px 10px 4px; background: none; border: none; border-radius: 0; cursor: pointer; }
+.tab-btn:hover { color: var(--oxblood); background: none; opacity: 1; }
+.tab-btn.active { background: var(--oxblood); color: var(--gold-max); }
+
+/* Tab Content */
+.tab-content {
+  flex: 1 1 0; /* flex-grow: 1, flex-shrink: 1, flex-basis: 0 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0; /* Critical: Allows flex child to shrink below content size and enable scrolling */
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Sub Tabs (JS behavior owned by main.js; restyle only) */
+.sub-tabs { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-bottom: 0; border-bottom: none; position: relative; }
+.sub-tab { font: 700 8.5px var(--font-sc); letter-spacing: .12em; color: var(--label); background: none; border: 1px solid var(--panel-border); border-radius: 10px; padding: 2px 10px; cursor: pointer; }
+.sub-tab:hover { border-color: var(--gold); }
+.sub-tab.active { background: var(--oxblood); color: var(--gold-max); border-color: var(--gold); }
+
+/* Actions List */
+.actions-list { display: flex; flex-direction: column; }
+.action-category:first-child .action-category-title { margin-top: 0; }
+.action-category-title {
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
+}
+/* Divider + "click to-hit to roll" hint are explicit DOM children (render.js), not a
+   ::after, so the hint can sit after the divider on the Attacks header specifically
+   (finding 8) — other category headers (Actions/Bonus Actions/Reactions) only emit
+   the divider span, no hint. */
+.action-category-title .category-divider { flex: 1; height: 1px; background: var(--panel-border); }
+.action-category-title .category-hint { font: 500 10px var(--font-body); font-style: italic; color: var(--gold); letter-spacing: normal; }
+
+.action-item {
+  display: flex; align-items: baseline; gap: 8px; padding: 4px 0;
+  border-bottom: 1px dotted var(--dot-rule); cursor: pointer;
+}
+/* Attack rows get slightly taller padding than Action/Bonus Action/Reaction rows, per prototype (Minor-1). */
+.action-item.attack { padding: 5px 0; }
+.action-item:hover { background: var(--parchment); opacity: 1; }
+.action-name { font: 600 13.5px var(--font-body); }
+.action-tags { font: 500 10.5px var(--font-body); font-style: italic; color: var(--label); }
+.action-effect { font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.action-attack { margin-left: auto; font: 700 12px var(--font-display); color: var(--oxblood); }
+.action-damage { font: 500 11.5px var(--font-body); color: var(--body-ink); }
+.action-type { margin-left: auto; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+
+/* Spells List */
+.spell-header {
+  display: flex; flex-wrap: wrap; gap: 14px;
+  font: 700 9.5px var(--font-sc); letter-spacing: .12em; color: var(--label);
+  border: 1px solid var(--panel-border); background: var(--parchment);
+  padding: 6px 10px; margin-bottom: 10px; border-radius: 0;
+}
+.spell-header > span > span { color: var(--oxblood); }
+
+/* Flat list, no level-group headers (finding 3) — the level-badge column carries the
+   "Cantrip" / "1st ·4" label per row instead. */
+.spell-item { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
+.spell-item:hover { background: var(--parchment); opacity: 1; }
+.spell-level-badge { font: 700 8.5px var(--font-sc); color: var(--gold); width: 58px; flex: none; }
+.spell-name { font: 600 13.5px var(--font-body); flex: none; }
+.spell-meta { margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+/* Prototype highlights its one featured spell ("Recruit") in oxblood — badge + name only,
+   guarded by the optional spell.featured flag (data.js). .spell-meta stays --label-colored
+   in the prototype even on the featured row, so it's deliberately excluded here. */
+.spell-item--featured .spell-level-badge,
+.spell-item--featured .spell-name { color: var(--oxblood); }
+
+/* Inventory List */
+.inventory-header {
+  font: 700 9.5px var(--font-sc); letter-spacing: .12em; color: var(--label);
+  border: 1px solid var(--panel-border); background: var(--parchment);
+  padding: 6px 10px; margin-bottom: 10px; border-radius: 0;
+}
+.inventory-header > span > span { color: var(--oxblood); font-style: normal; }
+
+.inventory-list { display: flex; flex-direction: column; }
+.inventory-item { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); }
+.inventory-active { display: none; }
+/* qty fuses into the name string in render.js — no separate qty element (finding 4). */
+.inventory-name { font: 600 13.5px var(--font-body); }
+.inventory-notes { margin-left: auto; text-align: right; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.inventory-value { font: 700 11px var(--font-display); color: var(--gold); }
+
+/* Features List */
+.features-list { display: flex; flex-direction: column; }
+.feature-category:first-child .feature-category-title { margin-top: 0; }
+.feature-category-title {
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
+}
+.feature-category-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+
+.feature-item { padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); cursor: pointer; }
+.feature-item:hover { background: var(--parchment); opacity: 1; }
+.feature-name { display: inline; font: 600 13.5px var(--font-body); }
+/* Background Feature (folded into the Class Features list) is distinguished only by an
+   oxblood name color — no second category header (finding 2). */
+.feature-name--highlight { color: var(--oxblood); }
+.feature-source { display: inline; font: 500 11px var(--font-body); font-style: italic; color: var(--label); margin-left: 6px; }
+.feature-source::before { content: '— '; }
+/* .feature-desc is inline too, matching .feature-source's technique, so the whole row
+   reads as ONE line: "Name — Source · Description" (finding 2). Also reused as-is for
+   achievements' optional trailing description (e.g. "— acquired by Zindi, 2025"). */
+.feature-desc { display: inline; font: 500 11px var(--font-body); font-style: italic; color: var(--label); }
+.feature-desc::before { content: ' · '; }
+/* Achievement rarity badge pill (additive `rarity` field: Legendary/Epic). */
+.feature-badge {
+  font: 700 9px var(--font-sc); letter-spacing: .1em; padding: 1px 7px; border-radius: 8px;
+  background: var(--parchment);
+}
+.feature-badge--legendary { color: var(--gold); border: 1px solid var(--gold-bright); }
+.feature-badge--epic { color: var(--oxblood); border: 1px solid var(--tile-border); }
+
+/* Background Content (background-section-title shared with Notes tab) */
+.background-content { display: flex; flex-direction: column; }
+.background-section:first-child .background-section-title { margin-top: 0; }
+.background-section-title {
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
+}
+.background-section-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+
+.trait-item { padding: 4px 0; border-bottom: 1px dotted var(--dot-rule); font: 500 12.5px/1.5 var(--font-body); color: var(--body-ink); }
+.trait-item:last-child { border-bottom: none; }
+.trait-label { font: 700 9px var(--font-sc); letter-spacing: .14em; color: var(--label); }
+/* Origin Story: one flowing non-italic narrative paragraph (finding 5) — not a
+   dotted-border trait row, and not italic (unlike the Characteristics trait values). */
+.trait-item.origin-story { font: 500 13px/1.55 var(--font-body); font-style: normal; border-left: none; border-bottom: none; padding: 0; }
+
+/* Notes Content (Vouches & Organizations) */
+.notes-content { display: flex; flex-direction: column; }
+.vouch-item { border-left: 3px solid var(--gold); padding: 2px 0 2px 10px; margin: 6px 0; }
+.vouch-text { font: 500 12.5px var(--font-body); font-style: italic; color: var(--body-ink); }
+/* "Author — Role, Org" on one line: vouch-author carries no leading dash (render.js),
+   vouch-role's ::before supplies the em-dash join (finding 6). */
+.vouch-author { display: inline; font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label); margin-top: 2px; }
+.vouch-role { display: inline; font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label); }
+.vouch-role::before { content: ' — '; }
+/* Orgs render as name-only chips (finding 6), reusing the site-wide .chip-tag class
+   (defined in main.css) — no per-org card/link markup. */
+.org-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Extras Content */
+.extras-content { display: flex; flex-direction: column; }
+
+/* "✦ Current Campaign" highlighted block + CTAs (finding 7) — reuses .extras-title for
+   its header (same SC-label + gold-divider look already used elsewhere on this tab). */
+.extras-campaign { margin-bottom: 12px; }
+.campaign-card { border: 1px solid var(--panel-border); background: var(--parchment); padding: 10px 14px; }
+.campaign-card-name { font: 700 16px var(--font-display); color: var(--oxblood); }
+.campaign-card-desc { font: 500 12.5px var(--font-body); font-style: italic; color: var(--body-ink); margin-top: 3px; }
+.campaign-card-status { color: var(--oxblood); font-weight: 600; }
+.extras-cta-row { display: flex; gap: 10px; margin-top: 12px; }
+.extras-cta-btn { display: inline-block; font: 700 10px var(--font-sc); letter-spacing: .12em; padding: 8px 14px; border-radius: 2px; border: 1px solid var(--gold); }
+.extras-cta-btn--solid { color: var(--gold-max); background: var(--oxblood); }
+.extras-cta-btn--solid:hover { background: var(--oxblood-hi); }
+.extras-cta-btn--outline { color: var(--oxblood); background: none; }
+.extras-cta-btn--outline:hover { color: var(--red-hover); }
+
+/* Fun Facts / Interests render side-by-side (2-col grid), matching the prototype's own
+   grid wrapper div around those two sections specifically (not the Current Campaign
+   block above, which stays full-width). */
+.extras-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.extras-section { margin-bottom: 12px; }
+.extras-title {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  text-transform: none;
+}
+.extras-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+
+.extras-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.extras-item { width: 100%; font: 500 12.5px var(--font-body); padding: 3px 0; border-bottom: 1px dotted var(--dot-rule); }
+/* Fun Facts / Interests get explicit modifier classes (render.js) rather than
+   :nth-of-type, so inserting .extras-campaign ahead of them can't shift which one gets
+   bulleted rows vs. chip-tag styling. */
+.extras-section--facts .extras-item::before { content: '◆ '; color: var(--gold); }
+.extras-section--interests .extras-item { width: auto; border: 1px solid var(--tile-border); background: var(--parchment); padding: 2px 10px; border-radius: 10px; }
+
+.extras-cta, .tab-footer-link { margin-top: 12px; font: 500 12px var(--font-body); font-style: italic; color: var(--label); }
+.extras-cta a, .tab-footer-link a { color: var(--oxblood); border-bottom: 1px dotted var(--gold); }
+
+/* ============================================
+   CONTACT BAR
+   ============================================ */
+.contact-bar {
+  background: var(--dark-bg);
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-light);
+  font-size: 14px;
+  transition: color var(--transition-fast);
+}
+
+.contact-item:hover {
+  color: var(--white);
+}
+
+.contact-bar .contact-icon {
+  font-size: 18px;
+}
+
+/* ============================================
+   DEFENSES & CONDITIONS ROW
+   ============================================ */
+.defenses-conditions-row { display: flex; gap: 10px; padding: 16px 26px 16px; }
+/* border/background/padding + hover, and the 1.4:1 flex split, reconciled against
+   the prototype's rendering (a bordered, tinted box — not a bare/borderless row) */
+.defenses-box, .conditions-box {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--panel-border); background: rgba(247,238,216,.6);
+  padding: 8px 12px; cursor: pointer; position: relative;
+  transition: background 150ms ease;
+}
+.defenses-box:hover, .conditions-box:hover { background: var(--panel); opacity: 1; }
+.defenses-box { flex: 1.4; }
+.conditions-box { flex: 1; }
+.dc-title { font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--label); margin: 0; }
+.dc-list { display: flex; gap: 6px; flex-wrap: wrap; }
+.defenses-box .dc-item { font: 500 11.5px var(--font-body); border: 1px solid var(--tile-border); background: var(--panel); padding: 2px 10px; border-radius: 10px; }
+.conditions-box .dc-item.active { font: 600 11.5px var(--font-body); color: var(--gold-max); background: var(--oxblood); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 10px; }
+/* Inline-flow (not absolutely positioned) — matches the prototype, which
+   renders this note as a plain 3rd child of the .conditions-box flex row,
+   right after the chip list, no offset needed. font-size 14px reconciled
+   against the prototype's rendering (.margin-note default is 15px). */
+#note-conditions { position: static; font-size: 14px; }
+
+/* Saving throws / org / action-category / origin-story / inventory-qty are
+   fully (re)defined above in the LEFT COLUMN and RIGHT COLUMN - TABBED CONTENT
+   sections; the old dark-theme duplicates that used to live here (and would
+   otherwise win the cascade by appearing later in the file) have been removed.
+   .org-link/.feature-date/.feature-link (per-item "Read more"/date/"Visit website"
+   markup) are no longer emitted by render.js — orgs are name-only chips and
+   achievements are a badge + name + optional inline description now (T3 review
+   fixes) — so those three rules have been removed rather than left dead. */
+
+/* ============================================
+   CONTACT OPTIONS IN OVERLAY
+   ============================================ */
+.contact-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.contact-option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--light-bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.contact-option-btn:hover {
+  background: var(--primary-red);
+  color: var(--white);
+  border-color: var(--primary-red);
+}
+
+/* .tab-content / .tabbed-content sizing is fully defined once, in the
+   RIGHT COLUMN - TABBED CONTENT section above; the old duplicate redefinition
+   that used to live here (min-height:500px could flash before main.js sets the
+   matched fixed height) has been removed. */
+
+/* ============================================
+   DEFENSE/CONDITION OVERLAY ITEMS
+   ============================================ */
+.defense-item,
+.condition-item {
+  padding: var(--spacing-md);
+  background: var(--light-bg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.defense-header,
+.condition-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.defense-icon,
+.condition-icon {
+  font-size: 18px;
+}
+
+.defense-name,
+.condition-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.defense-desc,
+.condition-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.defense-cv,
+.condition-cv {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.condition-item.active {
+  border-left: 3px solid var(--primary-red);
+}
+
+.condition-active-badge {
+  font-size: 10px;
+  background: var(--primary-red);
+  color: var(--white);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-left: auto;
+}
+
+/* ============================================
+   MOBILE LAYER (≤740px) — Task 6
+   Replaces the entire old dark-theme reflow that used to sit here (three
+   ad-hoc breakpoints at 1200/992/768/480px reshuffling a grid that no longer
+   exists) with one deliberate ≤740px block: vitals stack, swipeable ability
+   strip, section-accordions, sticky quick bar. Nav-dropdown mobile CSS lives
+   in css/main.css instead (Task 6 Step 1) — this file owns the sheet itself.
+
+   Deliberately placed at the very END of the file (not where the old
+   responsive section used to live, earlier up): several rules below share a
+   bare-class selector with an EARLIER, unconditional (non-media) desktop rule
+   elsewhere in this file (e.g. .defenses-box/.conditions-box/.dc-title in the
+   DEFENSES & CONDITIONS ROW section above). Media queries add no specificity,
+   so an equal-specificity tie is broken purely by source order — being last
+   in the file guarantees every override below wins at a matching viewport,
+   without needing to hunt down and out-specify each one individually.
+
+   .sheet/body overrides also sit in here (not main.css, where those selectors
+   are "structurally" defined) so this later-loaded stylesheet wins the
+   cascade at matching viewports without !important — the same later-file-
+   wins pattern Task 1 already established (see main.css's own #mainNavbar-
+   prefix comment) applied in the other direction.
+   ============================================ */
+
+/* New mobile-only component classes: inert/flattened by default so their
+   markup (real elements, not JS-injected) has zero effect above 740px. */
+.acc-head { display: none; }
+.acc-group { display: contents; }
+.ability-strip-wrap { display: contents; }
+.abilities-caption { display: none; }
+.quick-bar { display: none; }
+
+@media (max-width: 740px) {
+  body { padding: 0; }
+  .sheet { width: 100%; min-width: 0; border-width: 2px; }
+
+  /* ---------- Header card ---------- */
+  .character-header { padding: 18px 16px 0; }
+  .character-header-content { flex-wrap: wrap; gap: 12px 14px; }
+  .character-avatar img, .avatar-placeholder {
+    width: 72px; height: 72px; border-width: 2.5px;
+    box-shadow: 0 0 0 2px var(--parchment), 0 0 0 3.5px var(--gold);
+  }
+  .avatar-placeholder { font-size: 19px; }
+  .level-banner { bottom: -6px; font-size: 7.5px; letter-spacing: .14em; padding: 1px 7px; }
+  .character-name { font: 700 23px/1.05 var(--font-display); }
+  .character-class { font-size: 11.5px; margin-top: 3px; }
+  .character-details { font-size: 8px; margin-top: 3px; }
+
+  /* ---------- Margin notes: hidden except the HP one ---------- */
+  .margin-note { display: none; }
+  #note-hp { display: block; right: 8px; top: -13px; transform: rotate(4deg); font-size: 14px; }
+
+  /* ---------- HP: full-width banner wrapping onto its own row ---------- */
+  .hit-points-container { flex: 0 0 100%; margin: 0; }
+  .hit-points { display: flex; align-items: center; gap: 12px; text-align: left; padding: 10px 14px; }
+  .hp-labels { display: none; }
+  .hp-title {
+    order: -1; flex: none; width: 34px; white-space: normal; line-height: 1.15;
+    border-top: none; margin-top: 0; padding-top: 0; font-size: 8.5px;
+    color: var(--label);
+  }
+  .hp-values { font-size: 26px; }
+  .hp-separator { font-size: 17px; }
+  .hp-meaning { margin-left: auto; text-align: right; }
+
+  /* ---------- Vitals + ability strip: vitals first, strip below (order) ---------- */
+  .core-stats-row { display: flex; flex-direction: column; position: relative; padding: 0; }
+  .core-divider { display: none; } /* vertical rule only makes sense in the desktop side-by-side row */
+
+  .combat-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; padding: 10px 16px 0; order: 1; }
+  .stat-box { padding: 10px 2px 8px; }
+  .stat-box.heroic-inspiration { display: none; } /* frame shows 4 tiles; inspiration stays desktop-only */
+  .stat-box.armor-class {
+    order: 1; background: var(--panel); border: 1px solid var(--oxblood);
+    box-shadow: inset 0 0 0 2px var(--panel), inset 0 0 0 3px var(--panel-border);
+  }
+  .stat-box.armor-class::before, .stat-box.armor-class::after { content: none; }
+  .stat-box.initiative { order: 2; }
+  .stat-box.speed { order: 3; }
+  .stat-box.proficiency { order: 4; }
+  .stat-value { font-size: 17px; }
+  .stat-value .unit { font-size: 10px; }
+  .stat-label { font-size: 6.5px; letter-spacing: .1em; }
+
+  .ability-strip-wrap { display: block; order: 2; position: relative; margin-top: 12px; }
+  .ability-scores { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; padding: 0 16px; }
+  .ability-score { flex: none; width: 84px; scroll-snap-align: start; }
+  .ability-score::before { content: none; }
+  .ability-modifier { font-size: 22px; }
+  .ability-value { font-size: 12px; width: 32px; }
+  .ability-name { font-size: 8.5px; margin-top: 3px; }
+  /* Fade lives on the non-scrolling wrapper, not .ability-scores itself — a
+     position:absolute child of the scrolling element would scroll away with
+     the content instead of staying pinned to the visible right edge. */
+  .ability-strip-wrap::after {
+    content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 44px;
+    background: linear-gradient(90deg, transparent, var(--parchment)); pointer-events: none;
+  }
+  .abilities-caption { display: block; font: 500 10px var(--font-body); font-style: italic; color: var(--label); padding: 6px 16px 0; }
+
+  /* ---------- Defenses & Conditions ----------
+     Defenses box is absent from the mobile frame entirely (deliberate, like
+     heroic-inspiration) — conditions becomes a bare wrapping chip row. */
+  .defenses-conditions-row { display: block; padding: 10px 16px 0; }
+  .defenses-box { display: none; }
+  .conditions-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; border: none; background: none; padding: 0; }
+  .dc-title { font-size: 8px; }
+  .conditions-box .dc-item.active { font-size: 11px; padding: 2px 9px; border-radius: 9px; }
+
+  /* ---------- Main content: flatten the 3-column grid into one accordion stack ----------
+     .right-column .section-box is a real compound selector earlier in this
+     file (higher specificity than a bare .tabbed-content), so it's repeated
+     here verbatim to win the cascade rather than silently losing to it. */
+  .main-content { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 76px; }
+  .left-column, .middle-column, .right-column,
+  .tabbed-content, .tab-content, .right-column .section-box { display: contents; }
+  .tab-nav { display: none; }
+  .section-box > .section-title { display: none; }
+
+  .section-box, .tab-panel, .acc-group {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-ring);
+    padding: 12px 14px;
+  }
+  /* Every wrapped tab-panel becomes its own always-rendered accordion bar,
+     regardless of which one desktop's (now-hidden) tab-nav last marked
+     .active — mobile visibility is driven entirely by .collapsed/.acc-open. */
+  .tab-panel { display: block; }
+  /* .acc-group defaults to display:contents (desktop-safe no-op); it must
+     become a real box here so #profSensesGroup/#miscGroup actually render
+     the parchment panel + border set above instead of leaving their .acc-head
+     as a bare, unboxed row with the two/four wrapped panels floating below it. */
+  .acc-group { display: block; }
+
+  /* Proficiencies & Senses: the two wrapped section-boxes lose their own
+     border/box (the shared .acc-group rule above already draws one) and are
+     separated by a plain dotted rule instead of double-nested panels. */
+  #profSensesGroup .passive-skills, #profSensesGroup .proficiencies {
+    background: none; border: none; box-shadow: none; padding: 0;
+  }
+  #profSensesGroup .proficiencies { margin-top: 10px; padding-top: 10px; border-top: 1px dotted var(--dot-rule); }
+
+  /* Features, Background & Notes: all four panels render at once when open
+     (no data lost); a dotted rule separates them since there's no tab-nav
+     left to mark where one ends and the next begins. */
+  .acc-group .tab-panel + .tab-panel { border-top: 1px dotted var(--dot-rule); margin-top: 14px; padding-top: 14px; }
+
+  /* ---------- Accordion mechanics ---------- */
+  .acc-head {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    min-height: 44px; background: none; border: none; padding: 0 0 4px; cursor: pointer;
+  }
+  .acc-title { font: 700 10px var(--font-sc); letter-spacing: .2em; color: var(--oxblood); }
+  .acc-preview {
+    font: 500 10.5px var(--font-body); font-style: italic; color: var(--label);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; text-align: left;
+  }
+  .acc-chevron { font: 700 12px var(--font-display); color: var(--gold); }
+  .acc-hint { display: none; font: 500 10px var(--font-body); font-style: italic; color: var(--gold); flex: 1; text-align: left; }
+
+  .collapsed > :not(.acc-head) { display: none; }
+  .acc-open { padding-bottom: 8px; }
+  .acc-open > :not(.acc-head) { animation: pi-fadeup .25s; }
+  .acc-open > .acc-head { border-bottom: 1px solid var(--panel-border); padding-bottom: 9px; }
+  .acc-open .acc-preview { display: none; }
+  .acc-open .acc-hint { display: inline; }
+
+  /* Skill rows: 44px tap-to-roll pills */
+  .skill-item { grid-template-columns: 14px 32px 1fr auto; }
+  .skill-name { font-size: 13.5px; padding: 9px 0; }
+  .skill-item:last-child .skill-name { border-bottom: none; }
+  .skill-mod {
+    font: 700 14px var(--font-display); background: var(--parchment);
+    border: 1px solid var(--panel-border); border-radius: 9px; padding: 6px 13px;
+    min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box;
+  }
+  .sub-tabs { flex-wrap: wrap; }
+  /* Sub-tab chips measure well under 44px with only the desktop padding
+     (2px 10px @ 8.5px font) — bump the tap target the same way as
+     .skill-mod: keep the visual padding/font, let min-height do the rest. */
+  .sub-tab { min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box; }
+
+  /* ---------- Sticky quick bar ---------- */
+  .quick-bar {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, var(--oxblood-hi), var(--oxblood-lo));
+    border-top: 2px solid var(--gold); z-index: 900;
+  }
+  .quick-bar button {
+    flex: 1; min-height: 48px; padding: 15px 0; font: 700 9.5px var(--font-sc); letter-spacing: .14em;
+    color: var(--gold-chip); background: none; border: none; cursor: pointer;
+    box-shadow: 1px 0 0 rgba(201,168,92,.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .quick-bar button:last-child { box-shadow: none; }
+  .quick-bar button:first-child { color: var(--gold-max); }
+}
+
+/* Above 740px: every rule above is inert (.acc-head/.quick-bar/.abilities-
+   caption default to display:none, .acc-group/.ability-strip-wrap default to
+   display:contents) — desktop is byte-for-byte the same layout as before
+   this task. */

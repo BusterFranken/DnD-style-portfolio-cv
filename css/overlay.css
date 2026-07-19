@@ -1,0 +1,152 @@
+/* ============================================
+   OVERLAY STYLES — Parchment & Ink
+   Red header band + parchment body, art plate for
+   ability overlays, dotted-row "Key Evidence" pattern.
+   Structure/values transcribed from the prototype's
+   generic overlay renderer (Character Sheet.dc.html,
+   `ovOpen` block) — see task-5-report.md.
+   ============================================ */
+
+/* Backdrop: overrides the shared rgba(0,0,0,.7) from main.css's
+   `.overlay-modal, .dice-modal, .admin-modal` rule — same targeted-override
+   pattern css/dice.css already used for `.dice-modal` in Task 4. */
+.overlay-modal { background: rgba(20,12,6,.74); cursor: pointer; }
+
+/* Hide the legacy #overlayClose corner button (kept in index.html/JS per the
+   brief — openOverlay()/closeOverlay() and the click handler are unchanged);
+   the gold ✕ in the header band (.ov-close-x) is the visible control now. */
+.overlay-close { display: none; }
+
+.overlay-content {
+  width: 640px; max-width: 94vw;
+  background: var(--grain), var(--parchment);
+  border: 3px double var(--gold);
+  box-shadow: inset 0 0 50px rgba(120,84,30,.22), 0 24px 70px rgba(0,0,0,.65);
+  animation: pi-fadeup .25s;
+  padding: 0;
+  cursor: default;
+  max-height: 88vh;
+  overflow-y: auto;
+}
+
+/* @keyframes pi-fadeup/pi-slideup: shared, defined once in css/main.css
+   (T12 dedup) — main.css loads ahead of this file on all 6 pages. */
+@media (prefers-reduced-motion: reduce) {
+  .overlay-content { animation: none; }
+}
+
+/* ============================================
+   HEADER BAND
+   ============================================ */
+.ov-head {
+  display: flex; align-items: baseline; gap: 10px;
+  background: linear-gradient(180deg, var(--oxblood-hi), var(--oxblood-lo));
+  padding: 11px 18px;
+  border-bottom: 2px solid var(--gold);
+}
+.ov-title { font: 700 19px var(--font-display); color: var(--gold-max); }
+.ov-sub { font: 500 11px var(--font-sc); letter-spacing: .14em; color: var(--gold-dim); }
+.ov-badge {
+  font: 800 17px var(--font-display); color: var(--gold-pale);
+  border: 1px solid var(--gold); padding: 1px 10px; margin-left: auto;
+}
+.ov-close-x { font: 400 18px/1 serif; color: var(--gold-dim); cursor: pointer; margin-left: 6px; }
+.ov-close-x:hover { color: var(--gold-max); }
+/* When an overlay has no badge (e.g. a non-attack Action, a spell whose level
+   label failed to resolve, the dead unleveled-class fallback), .ov-badge's
+   margin-left:auto never fires — the close-x takes over the same job so it
+   still lands flush against the band's right edge instead of hugging the
+   subtitle. */
+.ov-head:not(:has(.ov-badge)) .ov-close-x { margin-left: auto; }
+
+/* ============================================
+   BODY: art/photo plate (ability overlays only) + main column
+   ============================================ */
+.ov-body { display: flex; gap: 16px; padding: 16px 18px; }
+.ov-main { flex: 1; min-width: 0; }
+
+.ov-plate { flex: none; width: 150px; }
+.ov-plate img {
+  width: 150px; height: 180px; object-fit: cover;
+  filter: sepia(.55) contrast(1.05);
+  border: 1px solid var(--tile-border);
+  box-shadow: 0 0 0 4px var(--parchment), 0 0 0 5px var(--gold);
+  display: block;
+}
+.ov-plate-art {
+  width: 150px; height: 180px;
+  border: 1px dashed var(--gold);
+  background: repeating-linear-gradient(45deg, rgba(154,123,54,.1) 0 8px, transparent 8px 16px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px; box-sizing: border-box;
+}
+.ov-plate-art span { font: 10px/1.6 ui-monospace, monospace; color: var(--label); text-align: center; }
+.ov-plate-caption {
+  text-align: center; font: 500 10.5px var(--font-body); font-style: italic;
+  color: var(--label); margin-top: 6px;
+}
+
+/* ============================================
+   BLURB + KEY EVIDENCE (shared idiom: also reused, with different titles,
+   for Vouch / Calculation / Spell Details / Attack Details — Step 1 of the
+   brief calls for those to reuse "the same SC titles + dotted rows")
+   ============================================ */
+.ov-blurb {
+  font: 500 13.5px/1.5 var(--font-body); font-style: italic;
+  border-left: 3px solid var(--gold); padding-left: 10px;
+  color: var(--body-ink);
+  text-wrap: pretty;
+}
+.ov-blurb + .ov-blurb { margin-top: 10px; }
+
+.ov-evidence-title {
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  margin: 12px 0 4px;
+}
+.ov-evidence-row {
+  font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink);
+  padding: 4px 0; border-bottom: 1px dotted var(--dot-rule);
+}
+.ov-evidence-row strong { color: var(--ink); font-weight: 700; }
+
+/* ============================================
+   BUTTONS — solid (roll / primary CTA) + outline (secondary CTA)
+   Unwrapped by design (the canonical ability template places the roll
+   button directly after the evidence rows with no extra wrapper div), so
+   both variants carry their own top/right spacing rather than relying on
+   a container class.
+   ============================================ */
+.ov-roll-btn, .ov-outline-btn {
+  display: inline-block;
+  font: 700 10.5px var(--font-sc); letter-spacing: .14em;
+  padding: 9px 18px; border-radius: 2px; border: 1px solid var(--gold);
+  cursor: pointer; text-decoration: none;
+  margin-top: 14px; margin-right: 8px;
+}
+.ov-roll-btn { color: var(--gold-max); background: var(--oxblood); }
+.ov-roll-btn:hover { background: #6b2413; }
+.ov-outline-btn { color: var(--gold-dim); background: transparent; }
+.ov-outline-btn:hover { color: var(--gold-max); border-color: var(--gold-bright); }
+
+/* ============================================
+   MOBILE BOTTOM SHEET (≤740px) — same pattern as css/dice.css (Task 4)
+   ============================================ */
+@media (max-width: 740px) {
+  .overlay-modal { align-items: flex-end; }
+  .overlay-content {
+    width: 100%; max-width: 100%; border: none; border-top: 3px double var(--gold);
+    border-radius: 22px 22px 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,.5);
+    animation: pi-slideup .3s;
+    padding-top: 14px;
+    max-height: 82vh;
+  }
+  /* No literal grabber element exists in index.html's #overlayModal markup
+     (out of this task's file list) — a ::before pseudo-element reproduces
+     the same affordance without an HTML change. */
+  .overlay-content::before {
+    content: ''; display: block; width: 42px; height: 4px; border-radius: 2px;
+    background: var(--panel-border); margin: 0 auto 10px;
+  }
+  .ov-plate, .ov-plate img, .ov-plate-art { width: 110px; }
+  .ov-plate img, .ov-plate-art { height: 132px; }
+}

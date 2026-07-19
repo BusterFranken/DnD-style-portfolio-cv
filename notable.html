@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-view="dnd">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notable Achievements | Buster Franken</title>
+  <meta name="description" content="Notable achievements, key encounters, and career highlights from Buster Franken's journey.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/campaigns.css">
+  <link rel="stylesheet" href="css/notable.css">
+  <link rel="stylesheet" href="css/classic-cv.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+  <!-- Admin Login Button -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
+
+  <div class="sheet">
+  <!-- Navigation Bar (shared across both views) -->
+  <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
+    <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <span class="navbar-page-title">Hall of Fame</span>
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-left">
+        <a href="index.html" class="nav-link">Character Sheet</a>
+        <a href="campaigns.html" class="nav-link">Campaigns</a>
+        <a href="notable.html" class="nav-link active">Notable</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="media.html" class="nav-link">Media</a>
+        <a href="https://dnd-cv-maker.dpaft0pdvmuap.amplifyapp.com/creator.html" class="nav-link" target="_blank">Create Yours ↗</a>
+      </div>
+      <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">achievements ·</span>
+          <span class="campaign-name">Hall of Fame</span>
+        </div>
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="notable-page">
+
+      <header class="page-head">
+        <div class="page-kicker">Deeds Worthy of the Bards</div>
+        <h1 class="page-title">Hall of Fame</h1>
+        <div class="page-rule">❖</div>
+        <p class="page-sub">Notable adventures and key encounters that shaped this character's journey.</p>
+      </header>
+
+      <main class="notable-container">
+
+        <!-- Notable Adventures Section -->
+        <section class="achievements">
+          <h2 class="rule-title">Notable Adventures</h2>
+
+          <div class="achievement-grid">
+            <article class="section-box achievement-card achievement-card--legendary">
+              <span class="ribbon ribbon--legendary">Legendary</span>
+              <h3 class="achievement-title">The €45M Crowdsource</h3>
+              <p class="achievement-desc">Mobilized €45M worth of AI engineering for impact organizations including Stanford, ESA, Greenpeace, WWF and major corporations.</p>
+              <div class="achievement-stats">
+                <span>Duration · <span class="achievement-stat-value">7 years</span></span>
+                <span>Impact · <span class="achievement-stat-value">€45M+</span></span>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card achievement-card--legendary">
+              <span class="ribbon ribbon--legendary">Legendary</span>
+              <h3 class="achievement-title">The Tata Steel Victory</h3>
+              <p class="achievement-desc">AI against Toxic Clouds with Greenpeace caused €4.1M in fines for Tata Steel. The Dutch ministry started external monitoring of factories.</p>
+              <div class="achievement-stats achievement-stats--linked">
+                <span>Fines · <span class="achievement-stat-value">€4.1M</span></span>
+                <span>Impact · <span class="achievement-stat-value">Policy Change</span></span>
+                <a href="https://siliconcanals.com/fruitpunch-ai-to-monitor-illegal-air-pollution/" target="_blank" class="achievement-link">coverage →</a>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card achievement-card--legendary">
+              <span class="ribbon ribbon--legendary">Legendary</span>
+              <h3 class="achievement-title">The Stanford Partnership</h3>
+              <p class="achievement-desc">Collaboration with the world's top research university, bringing academic prestige to impact-focused AI work.</p>
+              <div class="achievement-stats">
+                <span>Partner · <span class="achievement-stat-value">Stanford</span></span>
+                <span>Type · <span class="achievement-stat-value">Research</span></span>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card">
+              <span class="ribbon ribbon--epic">Epic</span>
+              <h3 class="achievement-title">The ESA Partnership</h3>
+              <p class="achievement-desc">European Space Agency partnership for AI for Earth projects using Sentinel-2 satellite data for environmental monitoring.</p>
+              <div class="achievement-stats">
+                <span>Partner · <span class="achievement-stat-value">ESA</span></span>
+                <span>Data · <span class="achievement-stat-value">Satellite Imagery</span></span>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card">
+              <span class="ribbon ribbon--epic">Epic</span>
+              <h3 class="achievement-title">The €1M Fundraise</h3>
+              <p class="achievement-desc">Raised €1M in VC funding from Thomas Wolf (Hugging Face) and LUMO Labs to scale the platform and its impact.</p>
+              <div class="achievement-stats achievement-stats--linked">
+                <span>Raised · <span class="achievement-stat-value">€1M</span></span>
+                <span>Investors · <span class="achievement-stat-value">Wolf, LUMO</span></span>
+                <a href="https://eu-startups.com/2021/01/dutch-startup-fruitpunch-ai-lands-six-figure-investment-to-create-future-ai-and-data-talent-for-good" target="_blank" class="achievement-link">coverage →</a>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card">
+              <span class="ribbon ribbon--epic">Epic</span>
+              <h3 class="achievement-title">The Successful Exit</h3>
+              <p class="achievement-desc">FruitPunch AI acquired by Zindi in 2025, completing a full startup lifecycle from founding to exit.</p>
+              <div class="achievement-stats">
+                <span>Outcome · <span class="achievement-stat-value">Acquisition</span></span>
+                <span>Buyer · <span class="achievement-stat-value">Zindi</span></span>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card">
+              <span class="ribbon ribbon--epic">Epic</span>
+              <h3 class="achievement-title">The Platform Launch</h3>
+              <p class="achievement-desc">Built the platform matching AI engineers with impact projects — 500+ user interviews, experience design, experiments.</p>
+              <div class="achievement-stats">
+                <span>Users · <span class="achievement-stat-value">4500+</span></span>
+                <span>Type · <span class="achievement-stat-value">Product</span></span>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card">
+              <span class="ribbon ribbon--epic">Epic</span>
+              <h3 class="achievement-title">The Brain Breakthrough</h3>
+              <p class="achievement-desc">10/10 research on Brain-Computer Interfacing, demonstrating functional brain organoids can be grown on a chip.</p>
+              <div class="achievement-stats">
+                <span>Score · <span class="achievement-stat-value">10/10</span></span>
+                <span>Institution · <span class="achievement-stat-value">TU/e</span></span>
+              </div>
+            </article>
+
+            <article class="section-box achievement-card">
+              <span class="ribbon ribbon--rare">Rare</span>
+              <h3 class="achievement-title">The Community of 4500</h3>
+              <p class="achievement-desc">A global AI engineer community built from zero to 4500+ members — one of the largest AI for Good communities.</p>
+              <div class="achievement-stats">
+                <span>Members · <span class="achievement-stat-value">4500+</span></span>
+                <span>Reach · <span class="achievement-stat-value">Global</span></span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Key Encounters Section -->
+        <section class="encounters">
+          <h2 class="rule-title encounters-rule">Key Encounters</h2>
+          <p class="encounters-sub">Pivotal moments that changed the trajectory.</p>
+
+          <div class="ledger">
+            <div class="ledger-row">
+              <span class="ledger-year">2025</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Acquisition Signing</strong> — deal closed with Zindi, a successful exit after 7 years.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2024</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The 4500th Engineer</strong> — the global AI community reaches massive scale.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2023</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Tata Steel Fines</strong> — €4.1M issued after AI detected illegal emissions.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2022</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Government Advisory</strong> — appointed to the provincial AI advisory board.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2022</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Greenpeace Alliance</strong> — the environmental giant joins forces.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2021</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Stanford Deal</strong> — the world's top research university signs on.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2021</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The ESA Launch</strong> — AI talent brought to space-related environmental challenges.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2020</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Thomas Wolf Investment</strong> — the Hugging Face founder backs the vision.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2020</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The €1M Close</strong> — the VC round completes; resources to scale.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2019</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The First 100</strong> — the first hundred engineers prove the concept has legs.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2018</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The Perfect Score</strong> — 10/10 on the BCI thesis.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2018</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The AI for Wildlife Launch</strong> — thermal-camera drones vs. poachers in South Africa.</span>
+            </div>
+            <div class="ledger-row">
+              <span class="ledger-year">2010</span>
+              <span class="ledger-mark">◆</span>
+              <span class="ledger-text"><strong>The First IKEA Gig</strong> — first paid acting job at 14; the origin of Performance +10.</span>
+              <span class="margin-note margin-note--ledger">where it all began</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+    <footer class="contact-bar">
+      <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+      <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+      <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+    </footer>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/overlay.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Campaign Status click handler
+    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof getCampaignStatusOverlayContent === 'function') {
+          openOverlay(getCampaignStatusOverlayContent());
+        }
+      });
+    });
+    
+    // View toggle - redirect to character sheet for classic CV
+    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view === 'classic') {
+          localStorage.setItem('preferredView', 'classic');
+          window.location.href = 'index.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

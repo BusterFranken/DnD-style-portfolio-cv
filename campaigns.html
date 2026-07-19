@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" data-view="dnd">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaigns | Buster Franken</title>
+  <meta name="description" content="Work history presented as D&D Campaigns - Adventures and Encounters from Buster Franken's career.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/character-sheet.css">
+  <link rel="stylesheet" href="css/campaigns.css">
+  <link rel="stylesheet" href="css/classic-cv.css">
+  <link rel="stylesheet" href="css/overlay.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+  <!-- Admin Login Button -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
+
+  <div class="sheet">
+  <!-- Navigation Bar (shared across both views) -->
+  <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
+    <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
+      <span class="navbar-toggle-icon"></span>
+    </button>
+    <span class="navbar-page-title">Campaign Journal</span>
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-left">
+        <a href="index.html" class="nav-link">Character Sheet</a>
+        <a href="campaigns.html" class="nav-link active">Campaigns</a>
+        <a href="notable.html" class="nav-link">Notable</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="media.html" class="nav-link">Media</a>
+        <a href="https://dnd-cv-maker.dpaft0pdvmuap.amplifyapp.com/creator.html" class="nav-link" target="_blank">Create Yours ↗</a>
+      </div>
+      <div class="navbar-right">
+        <div class="campaign-status dnd-only clickable" data-element="campaign-status">
+          <span class="campaign-label">total level ·</span>
+          <span class="campaign-name">7</span>
+        </div>
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="campaigns-page">
+
+    <!-- Page Header -->
+    <header class="page-head">
+      <div class="page-kicker">The Chronicles of a Founder</div>
+      <h1 class="page-title">Campaign Journal</h1>
+      <div class="page-rule">❖</div>
+      <p class="page-sub">Professional adventures, from early quests to epic boss battles. Click a campaign to unfold it.</p>
+    </header>
+
+    <!-- Campaigns Container -->
+    <main class="campaigns-container">
+
+      <!-- Campaign 1: The FruitPunch Saga -->
+      <section class="campaign-card expanded" data-campaign="fruitpunch-saga">
+        <div class="campaign-header">
+          <div class="campaign-initial">F</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The FruitPunch Saga</h2>
+            <div class="campaign-meta">Sep 2018 – May 2025 · 7 years · Founder &amp; CEO</div>
+          </div>
+          <span class="campaign-status-chip success">✓ Acquired by Zindi</span>
+          <button class="campaign-toggle">▾</button>
+        </div>
+
+        <div class="campaign-body">
+          <p class="campaign-summary">A platform for AI engineers to train their skills by crowdsourcing solutions for impact organizations. From humble NGO beginnings to a global community of 4500+ engineers.</p>
+
+          <div class="chip-row">
+            <span class="chip-row-label">Party Members</span>
+            <span class="chip-tag">Stanford</span>
+            <span class="chip-tag">ESA</span>
+            <span class="chip-tag">Greenpeace</span>
+            <span class="chip-tag">WWF</span>
+            <span class="chip-tag">NXP</span>
+            <span class="chip-tag">Huawei</span>
+            <span class="chip-tag">Philips</span>
+          </div>
+
+          <div class="adventures-list">
+
+            <!-- Adventure: The Founding -->
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">Adventure: The Founding</span>
+                <span class="adventure-dates">2018–2020</span>
+              </div>
+              <div class="adventure-summary">Started as an NGO, bootstrapped through passion and determination. First AI for Wildlife challenge in South Africa.</div>
+              <div class="milestones">
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">AI for Wildlife Launch</span> — autonomous drone with thermal cameras to detect poachers in South Africa's Pilanesberg reserve</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">First 100 Engineers</span> — recruited the first 100 AI engineers to the platform</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Platform Design</span> — matching platform built through 500+ user &amp; customer interviews and experiments</div>
+              </div>
+            </div>
+
+            <!-- Adventure: Building the Platform -->
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">Adventure: Building the Platform</span>
+                <span class="adventure-dates">2019–2020</span>
+              </div>
+              <div class="adventure-summary">Designed and built the matchmaking platform — every key product decision made in-house.</div>
+              <div class="milestones">
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">First User Interviews</span> — the first of 500+ conversations that shaped the product</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Challenge Design</span> — the 10-week challenge-based learning experience, built from first principles</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Iteration Cycles</span> — dozens of experiments to learn which engagement models work</div>
+              </div>
+            </div>
+
+            <!-- Adventure: The Fundraise -->
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">Adventure: The Fundraise</span>
+                <span class="adventure-dates">2020</span>
+              </div>
+              <div class="adventure-summary">Raised €1M in VC funding to scale the platform — two hundred doors knocked, the right ones opened.</div>
+              <div class="milestones">
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">Thomas Wolf Investment</span> — the Hugging Face founder believed in the vision</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">LUMO Labs Partnership</span> — accelerator partnership secured</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">The 200+ Pitches</span> — pitched to over 200 VCs; resilience forged, skin thickened</div>
+              </div>
+            </div>
+
+            <!-- Adventure: The Giants -->
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">Adventure: The Giants</span>
+                <span class="adventure-dates">2021–2023</span>
+              </div>
+              <div class="adventure-summary">Partnerships with major organizations and massive impact.</div>
+              <div class="milestones">
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">Tata Steel Victory</span> — AI against Toxic Clouds with Greenpeace caused €4.1M in fines; Dutch ministry began external monitoring</div>
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">Stanford Collaboration</span> — the world's top research university joins forces</div>
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">ESA Project Launch</span> — European Space Agency partnership for AI for Earth</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Greenpeace Alliance</span> — environmental giant joins the mission</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Corporate Deals</span> — NXP, Huawei and Philips partnerships closed</div>
+              </div>
+
+              <!-- Featured Quests -->
+              <div class="chip-row adventure-links">
+                <span class="chip-row-label">Featured Quests</span>
+                <a href="fruitpunch/blog/ai-powered-wildlife-conservation-in-africa/index.html" class="chip-tag">Wildlife Conservation in Africa</a>
+                <a href="fruitpunch/challenges/ai-for-coral-reefs/index.html" class="chip-tag">AI for Coral Reefs</a>
+                <a href="fruitpunch/blog/how-we-detect-oil-spills/index.html" class="chip-tag">AI against Oil Spills</a>
+                <a href="fruitpunch/blog/can-ai-detect-heart-failure-from-electrocardiograms/index.html" class="chip-tag">Heart Failure Detection</a>
+              </div>
+            </div>
+
+            <!-- Adventure: The Growth -->
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">Adventure: The Growth</span>
+                <span class="adventure-dates">2023–2024</span>
+              </div>
+              <div class="milestones">
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">4000th Engineer</span> — major community milestone reached</div>
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">€45M Milestone</span> — crowdsourced value reaches €45M</div>
+              </div>
+            </div>
+
+            <!-- Adventure: The Exit -->
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">Adventure: The Exit</span>
+                <span class="adventure-dates">2025</span>
+              </div>
+              <div class="milestones">
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">Acquisition Signing</span> — deal with Zindi closed. Campaign complete!</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Campaign 2: The Academic Archives -->
+      <section class="campaign-card" data-campaign="academic-archives">
+        <div class="campaign-header">
+          <div class="campaign-initial">A</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The Academic Archives</h2>
+            <div class="campaign-meta">2014 – 2022 · 8 years · TU/e</div>
+          </div>
+          <span class="campaign-status-chip">Brain-Computer Interfaces</span>
+          <button class="campaign-toggle">▸</button>
+        </div>
+
+        <div class="campaign-body" style="display: none;">
+          <p class="campaign-summary">Building AI research infrastructure and pioneering brain-computer interfaces.</p>
+
+          <div class="adventures-list">
+
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">The Engineering Foundation</span>
+                <span class="adventure-dates">2014–2018 · TU/e</span>
+              </div>
+              <div class="adventure-summary">BSc Mechanical Engineering &amp; Neuroscience with Data Science extension.</div>
+              <div class="milestones">
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">10/10 BCI Research</span> — perfect score on Brain-Computer Interfacing thesis</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Brain Organoid Discovery</span> — showed functional brain organoids can be grown on a chip</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">The Dropout Decision</span> — left the MSc for real-world impact. No regrets.</div>
+              </div>
+            </div>
+
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">The Institute Builders</span>
+                <span class="adventure-dates">2019–2022 · EAISI @ TU/e</span>
+              </div>
+              <div class="adventure-summary">Founding team of the university's AI institute.</div>
+              <div class="milestones">
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">AI Experience Room</span> — built a room with 6 physical AI demos for visitors</div>
+                <div class="milestone milestone--notable"><span class="milestone-icon">✦</span> <span class="milestone-name">Professor Recruitment</span> — helped recruit AI professors to build the institute</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">TU/e AI Course</span> — launched accredited AI for Coral Reefs course for 135 CS students with Prof. Dirk Fahland</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Campaign 3: The Zindi Transition -->
+      <section class="campaign-card" data-campaign="zindi-transition">
+        <div class="campaign-header">
+          <div class="campaign-initial">Z</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The Zindi Transition</h2>
+            <div class="campaign-meta">May 2025 – Oct 2025 · 6 months · Delaware, United States</div>
+          </div>
+          <span class="campaign-status-chip">VP of Partnerships</span>
+          <button class="campaign-toggle">▸</button>
+        </div>
+
+        <div class="campaign-body" style="display: none;">
+          <p class="campaign-summary">Ensuring a smooth transition post-acquisition.</p>
+
+          <div class="adventures-list">
+            <div class="adventure">
+              <div class="adventure-head">
+                <span class="adventure-title">The Handover</span>
+              </div>
+              <div class="milestones">
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Partnership Transfers</span> — all 80+ partnerships handed over intact</div>
+                <div class="milestone"><span class="milestone-icon">◆</span> <span class="milestone-name">Community Migration</span> — migrated 4500+ community members to their new home</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Campaign 4: The Early Years -->
+      <section class="campaign-card" data-campaign="early-years">
+        <div class="campaign-header">
+          <div class="campaign-initial">O</div>
+          <div class="campaign-info">
+            <h2 class="campaign-title">The Early Years</h2>
+            <div class="campaign-meta">2010 – 2018 · 8 years</div>
+          </div>
+          <span class="campaign-status-chip">Origin Story</span>
+          <button class="campaign-toggle">▸</button>
+        </div>
+
+        <div class="campaign-body" style="display: none;">
+          <p class="campaign-summary">Building diverse experience across acting, security, teaching, and coding — every odd job became a class feature.</p>
+
+          <div class="early-years-grid">
+            <div class="early-years-card">
+              <div class="ey-title">The Stage</div>
+              <div class="ey-dates">2010–2015 · Groen Casting</div>
+              <div class="ey-desc">Professional teen actor in Amsterdam</div>
+            </div>
+            <div class="early-years-card">
+              <div class="ey-title">The Watch</div>
+              <div class="ey-dates">2014–2016 · Crowd Support</div>
+              <div class="ey-desc">Event security at hardstyle festivals — graveyard shifts included</div>
+            </div>
+            <div class="early-years-card">
+              <div class="ey-title">The Classroom</div>
+              <div class="ey-dates">2016–2018 · Lyceo</div>
+              <div class="ey-desc">Teaching physics and chemistry</div>
+            </div>
+            <div class="early-years-card">
+              <div class="ey-title">The Code</div>
+              <div class="ey-dates">2018–2019 · Webholders</div>
+              <div class="ey-desc">Co-founded a web development agency</div>
+            </div>
+          </div>
+
+          <span class="margin-note margin-note--ey">character creation took a while</span>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Side Quests -->
+    <section class="side-quests">
+      <h2 class="section-title">Side Quests</h2>
+      <p class="side-quests-sub">Volunteer &amp; board positions<span class="side-quests-hint"> — swipe</span></p>
+
+      <div class="side-quests-rail">
+        <div class="side-quests-grid">
+          <div class="section-box">
+            <div class="sq-name">Open Edge HPC Initiative</div>
+            <div class="sq-meta">Board Member · Jun 2023 – Oct 2025</div>
+            <p class="sq-desc">Built consortia with Arm, Huawei and Fraunhofer for an open HPC ecosystem</p>
+          </div>
+          <div class="section-box">
+            <div class="sq-name">Founder Space Utrecht</div>
+            <div class="sq-meta">Co-Founder · Apr 2024 – Oct 2025</div>
+            <p class="sq-desc">Nonprofit coworking for impact startups — 10 hosted, sold for profit</p>
+          </div>
+          <div class="section-box">
+            <div class="sq-name">Nationale Coalitie Duurzame Digitalisering</div>
+            <div class="sq-meta">Strategic Board · Jul 2024 – May 2025</div>
+            <p class="sq-desc">Shaped the Dutch coalition for sustainable digitization</p>
+          </div>
+          <div class="section-box">
+            <div class="sq-name">Sigma Squared Society</div>
+            <div class="sq-meta">Executive, Dutch Chapter · Oct 2022 – Mar 2024</div>
+            <p class="sq-desc">14 events, 50% female founders</p>
+          </div>
+          <div class="section-box">
+            <div class="sq-name">Provincie Noord-Brabant</div>
+            <div class="sq-meta">AI Advisory Board · Sep 2022 – Apr 2024</div>
+            <p class="sq-desc">Advised the Dutch government on AI policy</p>
+          </div>
+          <div class="section-box">
+            <div class="sq-name">KICKOFF EHV</div>
+            <div class="sq-meta">External Affairs · Sep 2018 – Jul 2019</div>
+            <p class="sq-desc">Revived the student entrepreneur community at TU/e</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="contact-bar">
+    <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+    <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+    <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+    <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+    <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+  </footer>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/overlay.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Campaign toggle functionality
+    document.querySelectorAll('.campaign-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.campaign-card');
+        const body = card.querySelector('.campaign-body');
+        const isExpanded = body.style.display !== 'none';
+
+        body.style.display = isExpanded ? 'none' : 'block';
+        btn.textContent = isExpanded ? '▸' : '▾';
+        card.classList.toggle('expanded', !isExpanded);
+      });
+    });
+
+    // Make entire campaign header clickable
+    document.querySelectorAll('.campaign-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('campaign-toggle')) {
+          header.querySelector('.campaign-toggle').click();
+        }
+      });
+      header.style.cursor = 'pointer';
+    });
+
+    // Campaign Status click handler
+    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof getCampaignStatusOverlayContent === 'function') {
+          openOverlay(getCampaignStatusOverlayContent());
+        }
+      });
+    });
+
+    // View toggle - redirect to character sheet for classic CV
+    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view === 'classic') {
+          localStorage.setItem('preferredView', 'classic');
+          window.location.href = 'index.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

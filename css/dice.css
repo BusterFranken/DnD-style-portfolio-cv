@@ -1,0 +1,68 @@
+/* ============================================
+   DICE ROLLING ANIMATION STYLES
+   Parchment & Ink — wax-seal choreography
+   ============================================ */
+
+.dice-modal { background: rgba(20,12,6,.74); }
+.dice-content { cursor: pointer; }
+.dice-card {
+  width: 480px; max-width: 92vw; cursor: default; text-align: center;
+  background: var(--grain), var(--parchment);
+  border: 3px double var(--gold);
+  box-shadow: inset 0 0 50px rgba(120,84,30,.22), 0 24px 70px rgba(0,0,0,.65);
+  padding: 22px 26px 18px;
+}
+.dice-modal.done .dice-card { animation: pi-shake .5s; }
+.dice-grabber { display: none; }
+.dice-kicker { font: 700 9.5px var(--font-sc); letter-spacing: .26em; color: var(--label); }
+.dice-title { font: 700 21px var(--font-display); color: var(--oxblood); margin-top: 2px; text-transform: none; }
+.dice-container { width: 130px; height: 130px; margin: 16px auto 6px; position: relative; }
+.dice { position: relative; width: 130px; height: 130px; transition: transform .09s linear; }
+.die-hex-outer { position: absolute; inset: 0; clip-path: polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%); background: radial-gradient(circle at 38% 30%, #8a2a17, #58180d 60%, #3d0e07); box-shadow: 0 6px 16px rgba(60,20,5,.5); }
+.die-hex-inner { position: absolute; inset: 3px; clip-path: polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%); background: radial-gradient(circle at 40% 32%, #7e2413, #4a130a 65%); }
+.die-hex-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.dice-face { font: 800 52px var(--font-display); color: var(--gold-pale); text-shadow: 0 2px 2px #3d0e07; background: none; }
+.die-d20-label { font: 700 8px var(--font-sc); letter-spacing: .32em; color: var(--gold-dim); margin-top: -4px; }
+.dice-tumble-hint { font: 500 14px var(--font-body); font-style: italic; color: var(--label); padding: 8px 0 6px; }
+.dice-modal.done .dice-tumble-hint { display: none; }
+.dice-result { display: none; }
+.dice-result.visible { display: block; animation: pi-fadeup .3s; }
+.result-row { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--panel-border); padding: 5px 2px; font: 500 13.5px var(--font-body); color: var(--body-ink); }
+.result-row .result-value { font: 700 15px var(--font-display); color: var(--ink); }
+.result-total { display: flex; justify-content: space-between; align-items: center; padding: 8px 2px 2px; }
+.total-label { font: 700 11px var(--font-sc); letter-spacing: .22em; color: var(--oxblood); }
+.total-stamp {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, #8a2a17, #58180d 65%);
+  color: var(--gold-pale); font: 800 26px var(--font-display);
+  box-shadow: 0 3px 8px rgba(60,20,5,.4), inset 0 2px 5px rgba(255,220,160,.3);
+  animation: pi-stamp .45s;
+}
+.dice-banner--crit { font: 700 12px var(--font-sc); letter-spacing: .2em; color: var(--oxblood-lo); background: linear-gradient(90deg, transparent, var(--gold-chip), transparent); padding: 5px 0; margin-top: 10px; }
+.dice-banner--fumble { font: 700 12px var(--font-sc); letter-spacing: .2em; color: var(--gold-max); background: linear-gradient(90deg, transparent, var(--oxblood), transparent); padding: 5px 0; margin-top: 10px; }
+.dice-message { font: 500 14px var(--font-body); font-style: italic; color: var(--body-ink); border-top: 1px solid var(--panel-border); margin-top: 10px; padding-top: 9px; display: none; }
+.dice-message.visible { display: block; }
+.dice-hint { font: 500 10.5px var(--font-body); font-style: italic; color: var(--gold); margin-top: 10px; }
+@keyframes pi-shake { 0%,100%{transform:translate(0,0) rotate(0)} 15%{transform:translate(-8px,4px) rotate(-.7deg)} 35%{transform:translate(7px,-5px) rotate(.6deg)} 55%{transform:translate(-5px,3px) rotate(-.3deg)} 75%{transform:translate(4px,-2px) rotate(.2deg)} }
+@keyframes pi-stamp { 0%{transform:scale(2.4) rotate(-16deg);opacity:0} 55%{transform:scale(.92) rotate(2deg);opacity:1} 100%{transform:scale(1) rotate(0)} }
+/* @keyframes pi-fadeup: shared, defined once in css/main.css (T12 dedup) */
+@media (prefers-reduced-motion: reduce) {
+  .dice { transition: none; }
+  .dice-modal.done .dice-card, .total-stamp, .dice-result.visible { animation: none; }
+}
+/* Mobile bottom sheet (pattern shared with overlays) */
+@media (max-width: 740px) {
+  .dice-modal { align-items: flex-end; }
+  .dice-content { width: 100%; }
+  .dice-card {
+    width: 100%; max-width: 100%; border: none; border-top: 3px double var(--gold);
+    border-radius: 22px 22px 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,.5);
+    padding: 10px 22px 22px; animation: pi-slideup .3s;
+  }
+  .dice-grabber { display: block; width: 42px; height: 4px; border-radius: 2px; background: var(--panel-border); margin: 0 auto 12px; }
+  .dice-container, .dice { width: 110px; height: 110px; }
+  .dice-face { font-size: 44px; }
+  .dice-hint { display: none; }
+  /* @keyframes pi-slideup: shared, defined once in css/main.css (T12 dedup) */
+}
