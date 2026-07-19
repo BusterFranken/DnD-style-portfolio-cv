@@ -106,6 +106,11 @@ html[data-view="classic"] body.has-classic { background: var(--light-bg); displa
   box-shadow: inset 0 0 70px rgba(120,84,30,.22), 0 10px 40px rgba(0,0,0,.5);
   color: var(--ink);
 }
+/* Fixed 1.1× "charmed" zoom (spec 2026-07-19): JS sets --sheet-zoom to
+   clamp(1, clientWidth/1248, 1.1); default 1 keeps today's look without JS.
+   Scoped to D&D view so Classic CV stays unzoomed. */
+html[data-view="dnd"] body { zoom: var(--sheet-zoom, 1); }
+
 html[data-view="classic"] body.has-classic .sheet {
   width: auto; min-width: 0; background: none; border: none; box-shadow: none;
 }

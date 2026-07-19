@@ -34,7 +34,9 @@ function init() {
   setupRollableElements();
   setupRestButtons();
   setupMobileAccordions();
-  
+  updateSheetZoom();
+  window.addEventListener('resize', debounce(updateSheetZoom, 150));
+
   // Set fixed height for right column to match left column (one-time calculation)
   // Only runs on character sheet page (index.html) where .left-column exists
   // Height is set once and never recalculated to prevent issues when switching pages
@@ -897,6 +899,14 @@ function printClassicCV() {
 // ============================================
 // UTILITY FUNCTIONS
 // ============================================
+
+// Fixed 1.1× sheet zoom with desk margins kept (spec 2026-07-19).
+// clientWidth excludes the scrollbar, so the ease-down clamp between
+// 1248-1373px never introduces horizontal scroll; ≤1248px → 1 (unchanged).
+function updateSheetZoom() {
+  const z = Math.min(1.1, Math.max(1, document.documentElement.clientWidth / 1248));
+  document.documentElement.style.setProperty('--sheet-zoom', z);
+}
 
 // Debounce function
 function debounce(func, wait) {
