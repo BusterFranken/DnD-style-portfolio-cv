@@ -5,7 +5,12 @@
 /* D&D View Container */
 .dnd-view {
   min-height: 100vh;
-  background: var(--light-bg);
+  /* No background here (was the old pre-redesign flat gray var(--light-bg))
+     — that flat gray showed through as a mismatched band below the footer
+     whenever content is shorter than the 100vh floor (any normal-height
+     browser window). Transparent lets .sheet's own layered
+     gradient+grain+parchment background (main.css) show through instead,
+     matching the prototype (sampled #efe1be at that same region). */
 }
 
 /* Classic View Container */
@@ -192,17 +197,13 @@
   transform: translateY(-1px);
 }
 
-.campaign-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-}
-
-.campaign-name {
-  font-size: 13px;
-  color: var(--white);
-}
+/* .campaign-label/.campaign-name: old pre-redesign rules removed (T12) — they
+   forced text-transform:uppercase (defeats both the --font-sc small-caps
+   rendering and the prototype's lowercase "label · " source text, e.g.
+   "campaign · Energy Hardtech Exploration") and an oversized 13px name that
+   the prototype never uses (the value inherits the chip's 9px throughout).
+   Now both spans simply inherit main.css's .campaign-status font/color
+   (gold-dim) and .campaign-status .campaign-name (gold-max) rules. */
 
 /* Hide D&D-only elements in classic view */
 .classic-view .dnd-only {
@@ -253,6 +254,8 @@
 .character-name { font: 700 34px/1 var(--font-display); color: var(--oxblood); text-shadow: 0 1px 0 rgba(255,248,224,.6); }
 .character-class { font: 500 14.5px var(--font-body); font-style: italic; color: var(--body-ink); margin-top: 5px; }
 .character-class:hover { color: var(--oxblood); }
+/* "/" between class levels — prototype colors these gold (#9a7b36 = var(--gold)) */
+.class-sep { color: var(--gold); }
 .character-details { font: 700 10px var(--font-sc); letter-spacing: .16em; color: var(--label); margin-top: 5px; position: relative; }
 .character-details .clickable { border-bottom: 1px dotted var(--gold); }
 .character-details .clickable:hover { color: var(--oxblood); opacity: 1; }
@@ -297,6 +300,14 @@
 }
 .ability-name { font: 700 9.5px var(--font-sc); letter-spacing: .2em; color: var(--label); margin-top: 4px; }
 #note-cha { bottom: -19px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+
+/* 1px vertical rule between the ability-scores group and combat-stats —
+   prototype's own core-stats-row divider (localhost:8098 Character
+   Sheet.dc.html: `width:1px;background:#c7af7e;margin:4px 2px`, #c7af7e =
+   var(--panel-border)). .core-stats-row's align-items:stretch gives it the
+   full row height with no explicit height needed. Hidden ≤740px, where the
+   two groups stack vertically instead (see mobile media query). */
+.core-divider { width: 1px; background: var(--panel-border); margin: 4px 2px; }
 
 .combat-stats { display: flex; gap: 8px; flex: 1; }
 .stat-box {
@@ -656,7 +667,11 @@
 .dc-list { display: flex; gap: 6px; flex-wrap: wrap; }
 .defenses-box .dc-item { font: 500 11.5px var(--font-body); border: 1px solid var(--tile-border); background: var(--panel); padding: 2px 10px; border-radius: 10px; }
 .conditions-box .dc-item.active { font: 600 11.5px var(--font-body); color: var(--gold-max); background: var(--oxblood); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 10px; }
-#note-conditions { right: -8px; top: 50%; transform: translateY(-50%); position: absolute; }
+/* Inline-flow (not absolutely positioned) — matches the prototype, which
+   renders this note as a plain 3rd child of the .conditions-box flex row,
+   right after the chip list, no offset needed. font-size 14px reconciled
+   against the prototype's rendering (.margin-note default is 15px). */
+#note-conditions { position: static; font-size: 14px; }
 
 /* Saving throws / org / action-category / origin-story / inventory-qty are
    fully (re)defined above in the LEFT COLUMN and RIGHT COLUMN - TABBED CONTENT
@@ -830,6 +845,7 @@
 
   /* ---------- Vitals + ability strip: vitals first, strip below (order) ---------- */
   .core-stats-row { display: flex; flex-direction: column; position: relative; padding: 0; }
+  .core-divider { display: none; } /* vertical rule only makes sense in the desktop side-by-side row */
 
   .combat-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; padding: 10px 16px 0; order: 1; }
   .stat-box { padding: 10px 2px 8px; }

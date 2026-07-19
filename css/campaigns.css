@@ -62,7 +62,7 @@
 }
 
 .campaign-body { border-top: 1px solid var(--panel-border); padding: 14px 18px 16px; animation: pi-fadeup .25s; }
-@keyframes pi-fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+/* @keyframes pi-fadeup: shared, defined once in css/main.css (T12 dedup) */
 @media (prefers-reduced-motion: reduce) { .campaign-body { animation: none; } }
 
 .campaign-summary { font: 500 13.5px/1.55 var(--font-body); color: var(--body-ink); text-wrap: pretty; }

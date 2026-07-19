@@ -8,6 +8,7 @@ const diceFace = diceElement?.querySelector('.dice-face');
 const diceResult = document.getElementById('diceResult');
 const diceMessage = document.getElementById('diceMessage');
 const diceTitle = diceModal?.querySelector('.dice-title');
+const diceCard = diceModal?.querySelector('.dice-card');
 
 let isRolling = false;
 
@@ -23,7 +24,7 @@ function rollDice(checkName, modifier) {
   diceModal.classList.add('active');
   diceModal.classList.remove('done');
   diceResult.classList.remove('visible');
-  diceMessage.classList.remove('visible', 'crit-success', 'crit-fail');
+  diceMessage.classList.remove('visible');
   diceTitle.textContent = checkName;
   document.body.style.overflow = 'hidden';
 
@@ -58,8 +59,6 @@ function showResult(roll, modifier, total, checkName) {
     ${roll === 1 ? '<div class="dice-banner--fumble">✕ &nbsp;FUMBLE&nbsp; ✕</div>' : ''}`;
   setTimeout(() => diceResult.classList.add('visible'), 60);
   diceMessage.textContent = getDiceMessage(roll, total, checkName);
-  if (roll === 20) diceMessage.classList.add('crit-success');
-  if (roll === 1) diceMessage.classList.add('crit-fail');
   setTimeout(() => { diceMessage.classList.add('visible'); isRolling = false; }, 500);
 }
 
@@ -82,7 +81,8 @@ function closeDiceModal() {
   document.body.style.overflow = '';
 }
 
-// Click to dismiss
+// Click to dismiss (backdrop only — clicking inside the card must not close it)
+diceCard?.addEventListener('click', (e) => e.stopPropagation());
 diceModal?.addEventListener('click', (e) => {
   if (diceModal.classList.contains('done')) {
     closeDiceModal();

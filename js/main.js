@@ -53,7 +53,7 @@ function init() {
     }
   }, 100);
   
-  console.log('🎲 Character sheet initialized!');
+  console.log('✦ Character sheet initialized!');
 }
 
 // ============================================
@@ -606,10 +606,12 @@ function setupRollableElements() {
 function setupRestButtons() {
   // Short Rest = Daily/Weekly Activities. Content text unchanged from the
   // pre-redesign version — only the wrapper/bullet markup is restyled to the
-  // ov-head/ov-body template, and emoji bullets swapped to glyphs (brief's
-  // Step 5 mapping covers 🎨→✦; the other Short Rest bullets aren't in that
-  // mapping, so they reuse the same small glyph set already established for
-  // Long Rest's mapped bullets: 💪→✦, 🍳→❖, ☕→◇, 📚→◆, 👥→❖).
+  // ov-head/ov-body template, and the old pre-redesign emoji bullets were
+  // swapped to glyphs (brief's Step 5 mapping covers the art/palette bullet
+  // -> ✦; the other Short Rest bullets aren't in that mapping, so they reuse
+  // the same small glyph set already established for Long Rest's mapped
+  // bullets: fitness -> ✦, cooking -> ❖, coffee/foodie -> ◇, reading -> ◆,
+  // people -> ❖).
   const shortRestBtn = document.getElementById('shortRestBtn') || document.querySelector('.short-rest');
   shortRestBtn?.addEventListener('click', () => {
     openOverlay(`
@@ -638,10 +640,12 @@ function setupRestButtons() {
   });
 
   // Long Rest = Day Off Activities. Same treatment; glyph swap follows the
-  // brief's Step 5 mapping exactly (🎉→✦, 🧖→❖, 🏔️→◆, 🎵→◇, 🎨→✦, 🧘→☾,
-  // 📧→✉, 💼→❖, 📄→❖, 🌙→☾). Contact CTAs use .ov-roll-btn (solid, Email)
-  // and .ov-outline-btn (gold outline, LinkedIn/Download CV) instead of the
-  // old inline var(--primary-red)/var(--accent-blue) styles.
+  // brief's Step 5 mapping exactly (party/community -> ✦, sauna/spa -> ❖,
+  // nature -> ◆, nightlife/culture -> ◇, art/passion projects -> ✦,
+  // psychedelics -> ☾, email -> ✉, LinkedIn -> ❖, download CV -> ❖).
+  // Contact CTAs use .ov-roll-btn (solid, Email) and .ov-outline-btn (gold
+  // outline, LinkedIn/Download CV) instead of the old inline
+  // var(--primary-red)/var(--accent-blue) styles.
   const longRestBtn = document.getElementById('longRestBtn') || document.querySelector('.long-rest');
   longRestBtn?.addEventListener('click', () => {
     openOverlay(`

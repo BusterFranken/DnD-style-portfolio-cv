@@ -16,7 +16,7 @@
    are restyled below only, never renamed.
    ============================================ */
 
-@keyframes pi-fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+/* @keyframes pi-fadeup: shared, defined once in css/main.css (T12 dedup) */
 
 .projects-container { padding: 0 26px; }
 

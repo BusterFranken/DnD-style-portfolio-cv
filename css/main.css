@@ -434,6 +434,15 @@ body.admin-mode::before {
   to { transform: rotate(360deg); }
 }
 
+/* Shared modal/overlay entrance keyframes (T12 dedup): previously redefined
+   identically in css/dice.css, css/overlay.css, css/campaigns.css and
+   css/projects.css. main.css loads on all 6 pages ahead of every other
+   stylesheet, so a single definition here now serves every caller
+   (.admin-content here, .overlay-content/.campaign-body/.project-card in
+   their own files, .dice-result/.dice-card/.total-stamp in dice.css). */
+@keyframes pi-fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+@keyframes pi-slideup { from{transform:translateY(100%)} to{transform:none} }
+
 /* Responsive Breakpoints */
 @media (max-width: 1200px) {
   :root {

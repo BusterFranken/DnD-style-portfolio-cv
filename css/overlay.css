@@ -29,13 +29,8 @@
   overflow-y: auto;
 }
 
-/* pi-fadeup/pi-slideup: also defined in css/dice.css (Task 4), but that
-   stylesheet only loads on index.html. overlay.css (and main.css's
-   .admin-content, which reuses pi-fadeup) load on all 6 pages, so both
-   keyframes are redefined here — identically — to keep every page
-   self-sufficient rather than depending on another page's stylesheet set. */
-@keyframes pi-fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
-@keyframes pi-slideup { from{transform:translateY(100%)} to{transform:none} }
+/* @keyframes pi-fadeup/pi-slideup: shared, defined once in css/main.css
+   (T12 dedup) — main.css loads ahead of this file on all 6 pages. */
 @media (prefers-reduced-motion: reduce) {
   .overlay-content { animation: none; }
 }

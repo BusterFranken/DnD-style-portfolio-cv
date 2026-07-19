@@ -212,9 +212,9 @@ const characterData = {
       cvDescription: "Community building, reading situations, understanding what motivates people.",
       evidence: [
         "Built a community of 4500+ AI engineers",
-        "50% female founder representation in Sigma Squared",
-        "Understanding what makes engineers engage with impact work",
         "500+ user & customer interviews conducted",
+        "Understanding what makes engineers engage with impact work",
+        "50% female founder representation in Sigma Squared",
         "Designed challenge-based learning from first principles"
       ]
     },
@@ -608,9 +608,8 @@ const characterData = {
   extras: {
     funFacts: [
       "Grew up in a pawn shop (parents' business)",
-      "Professional teen actor (Groen Casting) - first paid gig for IKEA at 14",
-      "Part of Tim Draper's network state",
-      "Loves bodybuilding, rollerblading, climbing, ocean",
+      "Teen actor — first paid gig for IKEA at 14",
+      "Bodybuilding, rollerblading, climbing, the ocean",
       "Philosophy & politics nerd",
       "Dreams of building a coliving community / network state"
     ],
