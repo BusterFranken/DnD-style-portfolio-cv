@@ -11,10 +11,10 @@
    for notable/projects/contact/media.html (none of which have their own
    `.page-head`-based header yet): `.page-header`/`.page-subtitle` and the
    old dark-theme `.page-title` size. Both are kept byte-identical below,
-   with `.page-title` rescoped to `.page-header .page-title` so it no longer
-   collides with main.css's new `.page-head .page-title` (36px) that this
-   page's own header now uses — same targeted-rescope pattern Task 1 already
-   used for #mainNavbar in main.css.
+   with `.page-title` rescoped to `.page-header .page-title` so the old-page
+   rule wins by specificity over main.css's bare `.page-title`; campaigns.html
+   itself uses the `.page-head` wrapper, so the `.page-header` rule never
+   matches there — same targeted-rescope pattern Task 1 already used for #mainNavbar.
    ============================================ */
 
 /* .campaigns-page itself needs no rule: Task 1's .sheet already supplies the
@@ -109,7 +109,7 @@
 .milestone-icon { color: var(--oxblood); }
 .milestone-name { font-weight: 600; }
 .milestone--notable { background: var(--parchment); border-left: 3px solid var(--gold-bright); padding: 5px 10px; }
-.milestone--notable .milestone-icon { color: var(--gold-bright); }
+.milestone--notable .milestone-icon { color: var(--gold); }
 
 /* ---- Early Years: 2-col activity grid + margin note (reuses main.css's .margin-note) ---- */
 .early-years-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
