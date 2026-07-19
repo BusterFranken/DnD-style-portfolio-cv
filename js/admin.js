@@ -54,7 +54,7 @@ function enableAdminMode() {
   showSaveButton();
   
   // Update admin button
-  adminLoginBtn.textContent = '✓';
+  adminLoginBtn.textContent = '✦';
   adminLoginBtn.title = 'Admin Mode Active';
   adminLoginBtn.onclick = disableAdminMode;
 }
@@ -73,8 +73,8 @@ function disableAdminMode() {
   // Hide save button
   hideSaveButton();
   
-  // Reset admin button
-  adminLoginBtn.textContent = '⚙️';
+  // Reset admin button (matches the static default markup in *.html exactly)
+  adminLoginBtn.textContent = '◆';
   adminLoginBtn.title = 'Admin Login';
   adminLoginBtn.onclick = openAdminModal;
 }
@@ -104,7 +104,7 @@ function showSaveButton() {
   if (!saveBtn) {
     saveBtn = document.createElement('button');
     saveBtn.id = 'adminSaveBtn';
-    saveBtn.textContent = '💾 Save Changes';
+    saveBtn.textContent = '❖ Save Changes';
     saveBtn.style.cssText = `
       position: fixed;
       bottom: 60px;
@@ -143,7 +143,7 @@ function saveData() {
     const saveBtn = document.getElementById('adminSaveBtn');
     if (saveBtn) {
       const originalText = saveBtn.textContent;
-      saveBtn.textContent = '✓ Saved!';
+      saveBtn.textContent = '✦ Saved!';
       saveBtn.style.background = '#2E7D32';
       setTimeout(() => {
         saveBtn.textContent = originalText;

@@ -8,27 +8,30 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/character-sheet.css">
   <link rel="stylesheet" href="css/campaigns.css">
-  <link rel="stylesheet" href="css/network.css">
   <link rel="stylesheet" href="css/classic-cv.css">
   <link rel="stylesheet" href="css/overlay.css">
-  
+  <link rel="stylesheet" href="css/contact.css">
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
 </head>
 <body>
   <!-- Admin Login Button -->
-  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
 
+  <div class="sheet">
   <!-- Navigation Bar (shared across both views) -->
   <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
     <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
       <span class="navbar-toggle-icon"></span>
     </button>
+    <span class="navbar-page-title">Adventurer's Guild</span>
     <div class="navbar-menu" id="navbarMenu">
       <div class="navbar-left">
         <a href="index.html" class="nav-link">Character Sheet</a>
@@ -37,232 +40,177 @@
         <a href="projects.html" class="nav-link">Projects</a>
         <a href="contact.html" class="nav-link active">Contact</a>
         <a href="media.html" class="nav-link">Media</a>
+        <a href="https://dnd-cv-maker.dpaft0pdvmuap.amplifyapp.com/creator.html" class="nav-link" target="_blank">Create Yours ↗</a>
       </div>
       <div class="navbar-right">
         <div class="campaign-status dnd-only clickable" data-element="campaign-status">
-          <span class="campaign-label">STATUS:</span>
+          <span class="campaign-label">status ·</span>
           <span class="campaign-name">Open to Adventures</span>
         </div>
         <!-- View Toggle -->
         <div class="view-toggle">
-          <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
-          <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="network-page">
+  <div class="contact-page">
 
-      <header class="page-header">
-        <h1 class="page-title">🌐 Adventurer's Guild</h1>
-        <p class="page-subtitle">Connect with me through various channels or join my network of allies.</p>
+      <header class="page-head">
+        <div class="page-kicker">Allies, Guilds &amp; Ravens</div>
+        <h1 class="page-title">Adventurer's Guild</h1>
+        <div class="page-rule">❖</div>
+        <p class="page-sub">Connect through various channels, or join the network of allies.</p>
       </header>
 
-      <main class="network-container">
-        
-        <!-- Contact Methods -->
-        <section class="contact-section">
-          <h2 class="section-title">📬 Contact Scrolls</h2>
-          <p class="section-desc">Ways to reach me for new quests and collaborations.</p>
-          
-          <div class="contact-grid">
-            <a href="mailto:busterfranken@gmail.com" class="contact-card primary">
-              <span class="contact-icon">📧</span>
-              <div class="contact-info">
-                <h3>Email</h3>
-                <p>busterfranken@gmail.com</p>
-                <span class="contact-note">Best for detailed inquiries</span>
-              </div>
+      <main class="contact-container">
+
+        <!-- Contact Scrolls -->
+        <section class="contact-scrolls">
+          <h2 class="rule-title">Contact Scrolls</h2>
+
+          <div class="scroll-grid">
+            <a href="mailto:busterfranken@gmail.com" class="section-box scroll-card scroll-card--email">
+              <span class="scroll-glyph-lg">✉</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">✉</span> Email</span>
+                <span class="scroll-value">busterfranken@gmail.com</span>
+                <span class="scroll-note">Best for detailed inquiries</span>
+              </span>
+              <span class="scroll-arrow">→</span>
             </a>
-            
-            <a href="tel:+31624877967" class="contact-card">
-              <span class="contact-icon">📱</span>
-              <div class="contact-info">
-                <h3>Phone</h3>
-                <p>+31 6 2487 7967</p>
-                <span class="contact-note">Netherlands / WhatsApp</span>
-              </div>
+
+            <a href="tel:+31624877967" class="section-box scroll-card">
+              <span class="scroll-glyph-lg">❖</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">❖</span> Phone</span>
+                <span class="scroll-value">+31 6 2487 7967</span>
+                <span class="scroll-note">Netherlands / WhatsApp</span>
+              </span>
+              <span class="scroll-arrow">→</span>
             </a>
-            
-            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-card">
-              <span class="contact-icon">💼</span>
-              <div class="contact-info">
-                <h3>LinkedIn</h3>
-                <p>linkedin.com/in/buster-franken</p>
-                <span class="contact-note">Professional network</span>
-              </div>
+
+            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="section-box scroll-card">
+              <span class="scroll-glyph-lg">❖</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">❖</span> LinkedIn</span>
+                <span class="scroll-value">linkedin.com/in/buster-franken</span>
+                <span class="scroll-note">Professional network</span>
+              </span>
+              <span class="scroll-arrow">→</span>
             </a>
-            
-            <a href="https://github.com/BusterFranken" target="_blank" class="contact-card">
-              <span class="contact-icon">💻</span>
-              <div class="contact-info">
-                <h3>GitHub</h3>
-                <p>github.com/BusterFranken</p>
-                <span class="contact-note">Code & projects</span>
-              </div>
+
+            <a href="https://github.com/BusterFranken" target="_blank" class="section-box scroll-card">
+              <span class="scroll-glyph-lg">❖</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">❖</span> GitHub</span>
+                <span class="scroll-value">github.com/BusterFranken</span>
+                <span class="scroll-note">Code &amp; projects</span>
+              </span>
+              <span class="scroll-arrow">→</span>
             </a>
           </div>
         </section>
-        
-        <!-- Location -->
-        <section class="location-section">
-          <h2 class="section-title">📍 Home Base</h2>
-          <div class="location-card">
-            <div class="location-main">
-              <h3>Amsterdam, Netherlands</h3>
-              <p>Nieuwegrachtje 5-3, 1011 VP</p>
-            </div>
-            <div class="location-status">
-              <span class="status-badge open">Open to Adventures</span>
-              <p>Willing to relocate for the right quest (SF, anywhere interesting)</p>
-            </div>
+
+        <!-- Home Base + Guilds / Letters of Recommendation -->
+        <div class="contact-columns">
+          <div class="contact-col-left">
+            <section class="home-base">
+              <h2 class="rule-title">Home Base</h2>
+              <div class="section-box location-card">
+                <h3 class="location-city">Amsterdam, Netherlands</h3>
+                <p class="location-address">Nieuwegrachtje 5-3, 1011 VP</p>
+                <div class="location-status-row">
+                  <span class="status-chip">✦ Open to Adventures</span>
+                </div>
+                <p class="location-note">Willing to relocate for the right quest (SF, anywhere interesting).</p>
+                <span class="margin-note margin-note--ravens">ravens accepted</span>
+              </div>
+            </section>
+
+            <section class="guilds">
+              <h2 class="rule-title guilds-rule">Guilds &amp; Factions</h2>
+              <div class="guild-list">
+                <a href="https://openedgehpc.org" target="_blank" class="guild-row">
+                  <span class="guild-name">Open Edge HPC Initiative</span>
+                  <span class="guild-role">Board Member</span>
+                </a>
+                <div class="guild-row">
+                  <span class="guild-name">Founder Space Utrecht</span>
+                  <span class="guild-role">Co-Founder</span>
+                </div>
+                <a href="https://sigma-squared.org" target="_blank" class="guild-row">
+                  <span class="guild-name">Sigma Squared Society</span>
+                  <span class="guild-role">Former Executive, NL</span>
+                </a>
+                <a href="https://nlaic.com" target="_blank" class="guild-row">
+                  <span class="guild-name">NL AI Coalitie</span>
+                  <span class="guild-role">Member</span>
+                </a>
+                <a href="https://tue.nl" target="_blank" class="guild-row">
+                  <span class="guild-name">TU/e Alumni</span>
+                  <span class="guild-role">Active Alumnus</span>
+                </a>
+                <div class="guild-row">
+                  <span class="guild-name">Tim Draper's Network State</span>
+                  <span class="guild-role">Member</span>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
-        
-        <!-- Guilds & Organizations -->
-        <section class="guilds-section">
-          <h2 class="section-title">🏰 Guilds & Factions</h2>
-          <p class="section-desc">Organizations and communities I'm affiliated with.</p>
-          
-          <div class="guilds-grid">
-            <a href="https://openedgehpc.org" target="_blank" class="guild-card clickable">
-              <span class="guild-icon">🖥️</span>
-              <div class="guild-info">
-                <h4>Open Edge HPC Initiative</h4>
-                <span class="guild-role">Board Member</span>
-                <p>Building consortia with Arm, Huawei, Fraunhofer</p>
+
+          <div class="contact-col-right">
+            <section class="letters">
+              <h2 class="rule-title">Letters of Recommendation</h2>
+              <div class="vouch-list">
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Getting people excited for collaboration and new endeavors, from founders to senior leaders."</p>
+                  <footer class="vouch-cite">— Sako Arts · Cofounder &amp; CTO, FruitPunch AI</footer>
+                </blockquote>
+
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Inspiring people to stay true to their goals and ideals, regardless of what others think, or where the money may push him to go."</p>
+                  <footer class="vouch-cite">— Daan Streng · Chief Engineer, FruitPunch AI</footer>
+                </blockquote>
+
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Buster has the strong ability to translate high-level ideas into testable experiments. Using the data and analysis gathered to build a plan grounded in truth."</p>
+                  <footer class="vouch-cite">— Dorian Groen · Challenge Manager, FruitPunch AI</footer>
+                </blockquote>
+
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Galvanizing AI engineers to apply their skills towards global challenges and the greater good."</p>
+                  <footer class="vouch-cite">— Arjé Cahn · Investor, Shamrock Ventures</footer>
+                </blockquote>
               </div>
-            </a>
-            
-            <div class="guild-card">
-              <span class="guild-icon">🏢</span>
-              <div class="guild-info">
-                <h4>Founder Space Utrecht</h4>
-                <span class="guild-role">Co-Founder</span>
-                <p>Impact startup coworking community</p>
-              </div>
-            </div>
-            
-            <a href="https://sigma-squared.org" target="_blank" class="guild-card clickable">
-              <span class="guild-icon">🌍</span>
-              <div class="guild-info">
-                <h4>Sigma Squared Society</h4>
-                <span class="guild-role">Former Executive, Dutch Chapter</span>
-                <p>Young founder network, 50% female representation</p>
-              </div>
-            </a>
-            
-            <a href="https://nlaic.com" target="_blank" class="guild-card clickable">
-              <span class="guild-icon">🇳🇱</span>
-              <div class="guild-info">
-                <h4>NL AI Coalitie</h4>
-                <span class="guild-role">Member</span>
-                <p>Dutch national AI coalition</p>
-              </div>
-            </a>
-            
-            <a href="https://tue.nl" target="_blank" class="guild-card clickable">
-              <span class="guild-icon">🎓</span>
-              <div class="guild-info">
-                <h4>TU/e Alumni</h4>
-                <span class="guild-role">Active Alumnus</span>
-                <p>Eindhoven University of Technology</p>
-              </div>
-            </a>
-            
-            <div class="guild-card">
-              <span class="guild-icon">🌐</span>
-              <div class="guild-info">
-                <h4>Tim Draper's Network State</h4>
-                <span class="guild-role">Member</span>
-                <p>Part of the global founder network</p>
-              </div>
-            </div>
+            </section>
           </div>
-        </section>
-        
-        <!-- Testimonials / Vouches -->
-        <section class="vouches-section">
-          <h2 class="section-title">📜 Letters of Recommendation</h2>
-          <p class="section-desc">What allies say about adventuring together.</p>
-          
-          <div class="vouches-grid">
-            <blockquote class="vouch-card">
-              <p class="vouch-text">"Getting people excited for collaboration and new endeavors, from founders to senior leaders."</p>
-              <footer class="vouch-author">
-                <strong>Sako Arts</strong>
-                <span>Cofounder & CTO of FruitPunch AI</span>
-              </footer>
-            </blockquote>
-            
-            <blockquote class="vouch-card">
-              <p class="vouch-text">"Inspiring people to stay true to their goals and ideals, regardless of what others think, or where the money may push him to go."</p>
-              <footer class="vouch-author">
-                <strong>Daan Streng</strong>
-                <span>Chief Engineer of FruitPunch AI</span>
-              </footer>
-            </blockquote>
-            
-            <blockquote class="vouch-card">
-              <p class="vouch-text">"Buster has the strong ability to translate high-level ideas into testable experiments. Using the data and analysis gathered to build a plan grounded in truth."</p>
-              <footer class="vouch-author">
-                <strong>Dorian Groen</strong>
-                <span>Challenge Manager of FruitPunch AI</span>
-              </footer>
-            </blockquote>
-            
-            <blockquote class="vouch-card">
-              <p class="vouch-text">"Galvanizing AI engineers to apply their skills towards global challenges and the greater good."</p>
-              <footer class="vouch-author">
-                <strong>Arjé Cahn</strong>
-                <span>Investor at Shamrock Ventures</span>
-              </footer>
-            </blockquote>
-          </div>
-        </section>
-        
+        </div>
+
         <!-- CTA -->
-        <section class="cta-section">
-          <div class="cta-card">
-            <h2>Ready to Start a New Quest?</h2>
-            <p>I'm currently exploring new adventures in energy hardtech, but open to other impact-focused ventures.</p>
-            <div class="cta-buttons">
-              <a href="mailto:busterfranken@gmail.com?subject=New Quest Inquiry" class="cta-btn primary">
-                ⚔️ Start a Quest
-              </a>
-              <a href="Resume-Buster-short.pdf" download class="cta-btn secondary">
-                📜 Download CV
-              </a>
-            </div>
+        <section class="cta-panel">
+          <h2 class="cta-title">Ready to Start a New Quest?</h2>
+          <p class="cta-subtitle">Currently exploring new adventures in energy hardtech — open to other impact-focused ventures.</p>
+          <div class="cta-buttons">
+            <a href="mailto:busterfranken@gmail.com?subject=New Quest Inquiry" class="ov-roll-btn">✦ Start a Quest</a>
+            <a href="Resume-Buster-short.pdf" download class="ov-outline-btn">❖ Download CV</a>
           </div>
         </section>
-        
+
       </main>
 
-    <!-- Footer -->
-    <footer class="contact-bar">
-      <a href="mailto:busterfranken@gmail.com" class="contact-item">
-        <span class="contact-icon">📧</span>
-        <span class="contact-text">busterfranken@gmail.com</span>
-      </a>
-      <a href="tel:+31624877967" class="contact-item">
-        <span class="contact-icon">📱</span>
-        <span class="contact-text">+31 6 2487 7967</span>
-      </a>
-      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
-        <span class="contact-icon">💼</span>
-        <span class="contact-text">LinkedIn</span>
-      </a>
-      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
-        <span class="contact-icon">💻</span>
-        <span class="contact-text">GitHub</span>
-      </a>
-      <span class="contact-item location">
-        <span class="contact-icon">📍</span>
-        <span class="contact-text">Amsterdam, Netherlands</span>
-      </span>
-    </footer>
+  </div>
+
+  <!-- Footer -->
+  <footer class="contact-bar">
+    <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+    <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+    <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+    <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+    <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+  </footer>
   </div>
 
   <!-- Overlay Modal -->

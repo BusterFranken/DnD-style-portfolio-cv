@@ -2,11 +2,51 @@
    RENDER - Dynamic Content Rendering
    ============================================ */
 
+// Short quest blurbs, keyed by project.link (stable across the occasional
+// title rewording — a couple of prototype card titles are shortened
+// versions of data.js's `name`, so matching on link is unambiguous).
+// Verbatim from the prototype (localhost:8098 .../Projects.dc.html) for the
+// handful of projects it explicitly mocks up; condensed from that project's
+// own real page's <meta name="description"> for the rest (the prototype
+// only shows 7 of the 24 real projects, captioned "...and 40+ more quests in
+// the guild archive" — a partial preview, not the full data set). One
+// deviation from the prototype's own text: its "AI Against Oil Spills" card
+// (matched here by link) says "satellite imagery"; the real post it links to
+// is about drone-based cleanup, not satellite detection, so that one line
+// was re-derived from the real source instead of copied verbatim. See
+// task-9-report.md.
+const projectBlurbs = {
+  '/fruitpunch/blog/ai-powered-wildlife-conservation-in-africa/': "Autonomous drones with thermal cameras detecting poachers in South Africa's reserves.",
+  '/fruitpunch/blog/listening-to-the-giants-protecting-forest-elephants-through-audio-monitoring/': 'Acoustic monitoring models that hear forest elephants — and poachers — in rainforest audio.',
+  '/fruitpunch/blog/tracking-turtles-how-ai-helps-conservationists-to-re-identify-sea-turtles/': 'Computer vision that identifies and tracks sea turtles across survey footage.',
+  '/fruitpunch/blog/the-bear-necessity-of-ai-in-conservation/': 'Advanced computer vision for monitoring and identifying bears in the wild.',
+  '/fruitpunch/blog/flying-high-with-ai-counting-pelican-breeding-pairs-in-the-danube-delta/': 'Computer vision models count pelican breeding pairs from aerial photographs of the Danube Delta.',
+  '/fruitpunch/blog/from-pixels-to-preservation-how-ai-gives-rise-to-a-birdwatching-revolution/': 'A machine-learning pipeline built with SLU to assess eagle behavior, species and age.',
+  '/fruitpunch/blog/understanding-seals-with-ai/': 'Improving the SealNet facial-recognition model for studying and monitoring marine mammals.',
+  '/fruitpunch/blog/solving-automated-wildlife-taxonomy-with-ai/': 'An AI solution to analyze the flood of data captured by camera traps across European wildlife reserves.',
+  '/fruitpunch/blog/model-optimization-and-pruning-of-poacher-detecting-yolov5/': 'Optimizing a YOLOv5 model for NVIDIA Jetson Nano to boost inference speed and cut memory footprint.',
+  '/fruitpunch/challenges/ai-for-coral-reefs/': 'Reef-health mapping with Indonesian marine biologists — later an accredited TU/e course.',
+  '/fruitpunch/blog/how-we-detect-oil-spills/': 'Computer vision and segmentation help response-team drones clean up oil spills faster, using fewer chemicals.',
+  '/fruitpunch/blog/ai-against-oil-spills-going-inland-to-clean-oil-spills-with-ai/': 'Calculating oil-spill volume with segmentation models like SAM and Mask-RCNN.',
+  '/fruitpunch/blog/ai-based-early-warning-system-for-river-floods/': 'Forecasting flash floods with LSTM, ARIMA and Prophet on hydrological sensor data from French rivers.',
+  '/fruitpunch/blog/the-pains-of-classifying-flooded-forests-in-satellite-data/': 'Training CNNs on satellite infrared bands to detect flooded forests — a deceptively tricky use case.',
+  '/fruitpunch/blog/can-ai-track-reforestation-projects-using-drone-and-satellite-data/': 'Satellite and drone data monitor tree coverage of re-greening projects in Tanzania and Kenya.',
+  '/fruitpunch/blog/how-to-use-vehicle-sensors-to-make-cities-more-sustainable/': 'Vegetation monitoring and traffic-density detection to help make cities greener.',
+  '/fruitpunch/blog/leveraging-large-language-models-to-make-businesses-around-the-world-more-sustainable/': 'NLP models classify product descriptions to estimate their environmental impact.',
+  '/fruitpunch/blog/can-ai-detect-heart-failure-from-electrocardiograms/': 'Can AI detect heart failure from electrocardiograms? With European medical centers.',
+  '/fruitpunch/blog/how-we-applied-ai-to-prevent-sepsis-in-preterm-babies/': 'XGBoost time-series forecasting predicts sepsis onset in preterm infants up to 12 hours early.',
+  '/fruitpunch/blog/prioritizing-essential-care-with-ai/': 'Advancing neonatal care: how IMPALA and AI improve early diagnosis and treatment.',
+  '/fruitpunch/blog/autonomous-flight-and-the-landing-of-a-fixed-wing-uav/': 'Autonomous UAV landing compared across GPS-beacon guidance and reinforcement learning.',
+  '/fruitpunch/blog/user-friendly-wilderness-proof-mlops/': 'A CI/CD pipeline that auto-retrains and redeploys the poacher-detecting model straight to the drone.',
+  '/fruitpunch/blog/ai-and-visualisations-a-data-driven-all-rounded-approach-for-road-safety/': 'Uncovering accident triggers through exploratory data analysis of a collision-avoidance dataset.',
+  '/fruitpunch/blog/fruitpunch-ai-2-0-community-driven/': "The next step toward a community of 1M people willing and able to solve humanity's greatest challenges by 2030."
+};
+
 // Render Projects Grid
 function renderProjects() {
   const projectsGrid = document.getElementById('projectsGrid');
   if (!projectsGrid || typeof aiForGoodProjects === 'undefined') return;
-  
+
   // Map category names to filter categories
   const categoryMap = {
     'Wildlife': 'wildlife',
@@ -17,14 +57,15 @@ function renderProjects() {
     'Safety': 'safety',
     'Community': 'community'
   };
-  
+
   projectsGrid.innerHTML = aiForGoodProjects.map(project => {
     const filterCategory = categoryMap[project.category] || 'other';
     const linkPath = project.link.startsWith('/') ? project.link.substring(1) : project.link;
     const fullLink = linkPath.endsWith('/') ? linkPath + 'index.html' : linkPath;
-    
+    const blurb = projectBlurbs[project.link] || 'An AI for Good initiative delivered through FruitPunch AI.';
+
     return `
-      <article class="project-card" data-category="${filterCategory}">
+      <article class="section-box project-card" data-category="${filterCategory}">
         <div class="project-image">
           <img src="${project.image}" alt="${project.name}" class="project-banner" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <div class="project-emoji" style="display:none;">${getCategoryEmoji(project.category)}</div>
@@ -32,48 +73,43 @@ function renderProjects() {
         <div class="project-content">
           <span class="project-category">${project.category}</span>
           <h3 class="project-title">${project.name}</h3>
-          <div class="project-meta">
-            <span class="project-tech">AI for Good</span>
-          </div>
-          <a href="${fullLink}" class="project-link">View Quest Details →</a>
+          <p class="project-desc">${blurb}</p>
+          <a href="${fullLink}" class="project-link">View quest details →</a>
         </div>
       </article>
     `;
   }).join('');
 }
 
-// Helper function to get emoji for category (fallback)
+// Helper function to get glyph for category (image onerror fallback)
 function getCategoryEmoji(category) {
-  const emojiMap = {
-    'Wildlife': '🦁',
-    'Earth': '🌍',
-    'Health': '❤️',
-    'Autonomous': '🚁',
-    'MLOps': '⚙️',
-    'Safety': '🛡️',
-    'Community': '👥'
+  const glyphMap = {
+    'Wildlife': '✦',
+    'Earth': '❖',
+    'Health': '◆',
+    'Autonomous': '◇',
+    'MLOps': '✦',
+    'Safety': '❖',
+    'Community': '◆'
   };
-  return emojiMap[category] || '🎯';
+  return glyphMap[category] || '❖';
 }
 
 // Render Skills List
 function renderSkills() {
   const skillsList = document.getElementById('skillsList');
   if (!skillsList) return;
-  
+
   skillsList.innerHTML = characterData.skills.map(skill => {
-    const profClass = skill.expertise ? 'expertise' : (skill.proficient ? 'proficient' : '');
-    const markerClass = skill.expertise ? 'expertise' : (skill.proficient ? 'filled' : '');
-    const modSign = skill.modifier >= 0 ? '+' : '';
-    
+    const skillKey = skill.name.toLowerCase().replace(/\s+/g, '');
+
     return `
-      <div class="skill-item ${profClass} clickable" data-skill="${skill.name.toLowerCase().replace(/\s+/g, '')}">
-        <span class="proficiency-marker ${markerClass}"></span>
-        <span class="skill-ability">${skill.ability.toUpperCase()}</span>
+      <div class="skill-item ${skill.proficient ? 'proficient' : ''} clickable" data-skill="${skillKey}">
+        <span class="proficiency-marker ${skill.expertise ? 'expertise' : skill.proficient ? 'filled' : ''}"></span>
+        <span class="skill-abbr">${skill.ability.toUpperCase()}</span>
         <span class="skill-name">${skill.name}</span>
-        <span class="skill-mod rollable" data-mod="${skill.modifier}" data-skill="${skill.name}">${modSign}${skill.modifier}</span>
-      </div>
-    `;
+        <span class="skill-mod rollable" data-mod="${skill.modifier}" data-skill="${skill.name}">${skill.modifier >= 0 ? '+' : ''}${skill.modifier}</span>
+      </div>`;
   }).join('');
 }
 
@@ -96,58 +132,59 @@ function renderActions() {
     }
   });
   
+  // Category header: "✦ Label" text, a flexible gold divider, and (Attacks only) the
+  // "click to-hit to roll" hint — all as explicit DOM children so the hint can sit after
+  // the divider, matching the prototype's structure (finding 8: hint attaches to the
+  // Attacks header specifically, not the whole tab).
+  const categoryTitle = (label, hint) =>
+    `<div class="action-category-title">✦ ${label}<span class="category-divider"></span>${hint ? `<span class="category-hint">${hint}</span>` : ''}</div>`;
+
   let html = '';
-  
+
   // Attacks first
   if (actionsByType['Attack'].length) {
-    html += '<div class="action-category"><div class="action-category-title">⚔️ Attacks</div>';
+    html += `<div class="action-category">${categoryTitle('Attacks', 'click to-hit to roll')}`;
     html += actionsByType['Attack'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   // Actions
   if (actionsByType['Action'].length) {
-    html += '<div class="action-category"><div class="action-category-title">🎬 Actions</div>';
+    html += `<div class="action-category">${categoryTitle('Actions')}`;
     html += actionsByType['Action'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   // Bonus Actions
   if (actionsByType['Bonus Action'].length) {
-    html += '<div class="action-category"><div class="action-category-title">⚡ Bonus Actions</div>';
+    html += `<div class="action-category">${categoryTitle('Bonus Actions')}`;
     html += actionsByType['Bonus Action'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   // Reactions
   if (actionsByType['Reaction'].length) {
-    html += '<div class="action-category"><div class="action-category-title">🔄 Reactions</div>';
+    html += `<div class="action-category">${categoryTitle('Reactions')}`;
     html += actionsByType['Reaction'].map(action => renderActionItem(action)).join('');
     html += '</div>';
   }
-  
+
   actionsList.innerHTML = html;
 }
 
 function renderActionItem(action) {
   const hasAttack = action.attackBonus !== undefined;
-  const icon = action.type === 'Attack' ? '⚔️' : 
-               action.type === 'Bonus Action' ? '⚡' : 
-               action.type === 'Reaction' ? '🔄' : '🎬';
-  
+  const tags = (action.properties || []).map(p => p.toLowerCase()).join(' · ');
+
   return `
-    <div class="action-item clickable" data-action="${action.name}">
-      <span class="action-icon">${icon}</span>
-      <div class="action-details">
-        <div class="action-name">${action.name}</div>
-        <div class="action-type">${action.type}${action.uses ? ` • ${action.uses}` : ''}</div>
-      </div>
+    <div class="action-item clickable${hasAttack ? ' attack' : ''}" data-action="${action.name}">
+      <span class="action-name">${action.name}</span>
+      ${tags ? `<span class="action-tags">${tags}</span>` : ''}
+      ${!hasAttack ? `<div class="action-effect">${action.effect || action.description || ''}</div>` : ''}
       ${hasAttack ? `
-        <div class="action-stats">
-          <div class="action-attack rollable" data-mod="${action.attackBonus}">+${action.attackBonus} to hit</div>
-          <div class="action-damage">${action.damage} ${action.damageType}</div>
-        </div>
-      ` : ''}
+        <span class="action-attack rollable" data-mod="${action.attackBonus}" data-skill="${action.name}">+${action.attackBonus} to hit</span>
+        <span class="action-damage">${action.damage} ${action.damageType}</span>
+      ` : `<span class="action-type">${action.uses || ''}</span>`}
     </div>
   `;
 }
@@ -156,63 +193,36 @@ function renderActionItem(action) {
 function renderSpells() {
   const spellsList = document.getElementById('spellsList');
   if (!spellsList) return;
-  
+
   const spells = characterData.spells;
-  
-  let html = `
-    <div class="spell-level-group">
-      <div class="spell-level-title">Cantrips (At Will)</div>
-      ${spells.cantrips.map(spell => `
-        <div class="spell-item clickable" data-spell="${spell.name}">
+
+  // Flat list, no level-group headers (finding 3): each row is name + a descriptive
+  // blurb (existing cvMeaning field, copy-synced to the prototype) + a level-badge
+  // column ("Cantrip" / "1st ·4" style). ordinal labels are structural, not copy.
+  const groups = [
+    { ordinal: null, list: spells.cantrips },
+    { ordinal: '1st', list: spells.level1 },
+    { ordinal: '2nd', list: spells.level2 },
+    { ordinal: '3rd', list: spells.level3 }
+  ];
+
+  let html = '';
+  groups.forEach(group => {
+    (group.list || []).forEach(spell => {
+      const badge = group.ordinal ? `${group.ordinal} ·${spell.slots}` : 'Cantrip';
+      // spell.featured (optional flag, data.js) → oxblood badge + name, matching the
+      // prototype's one highlighted spell ("Recruit"). .spell-item's own contract
+      // (clickable, data-spell) is unchanged; this only appends a modifier class.
+      html += `
+        <div class="spell-item clickable${spell.featured ? ' spell-item--featured' : ''}" data-spell="${spell.name}">
+          <span class="spell-level-badge">${badge}</span>
           <span class="spell-name">${spell.name}</span>
-          <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
+          <span class="spell-meta">${spell.cvMeaning}</span>
         </div>
-      `).join('')}
-    </div>
-  `;
-  
-  if (spells.level1) {
-    html += `
-      <div class="spell-level-group">
-        <div class="spell-level-title">1st Level (${spells.level1[0]?.slots || 4} slots)</div>
-        ${spells.level1.map(spell => `
-          <div class="spell-item clickable" data-spell="${spell.name}">
-            <span class="spell-name">${spell.name}</span>
-            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
-  if (spells.level2) {
-    html += `
-      <div class="spell-level-group">
-        <div class="spell-level-title">2nd Level (${spells.level2[0]?.slots || 3} slots)</div>
-        ${spells.level2.map(spell => `
-          <div class="spell-item clickable" data-spell="${spell.name}">
-            <span class="spell-name">${spell.name}</span>
-            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
-  if (spells.level3) {
-    html += `
-      <div class="spell-level-group">
-        <div class="spell-level-title">3rd Level (${spells.level3[0]?.slots || 2} slots)</div>
-        ${spells.level3.map(spell => `
-          <div class="spell-item clickable" data-spell="${spell.name}">
-            <span class="spell-name">${spell.name}</span>
-            <span class="spell-meta">${spell.castTime} • ${spell.range}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
+      `;
+    });
+  });
+
   spellsList.innerHTML = html;
 }
 
@@ -221,13 +231,14 @@ function renderInventory() {
   const inventoryList = document.getElementById('inventoryList');
   if (!inventoryList) return;
   
+  // qty fuses into the name string (e.g. "Customer Interview Notes ×500") — no separate
+  // flex-ordered qty element (finding 4); row order is name, notes, value, per prototype.
   inventoryList.innerHTML = characterData.inventory.map(item => `
     <div class="inventory-item clickable" data-item="${item.name}">
       <span class="inventory-active ${item.active ? 'equipped' : ''}"></span>
-      <span class="inventory-name">${item.name}</span>
-      <span class="inventory-qty">${item.qty > 1 ? `×${item.qty}` : ''}</span>
-      <span class="inventory-value">${item.value}</span>
+      <span class="inventory-name">${item.name}${item.qty > 1 ? ` ×${item.qty}` : ''}</span>
       <span class="inventory-notes">${item.notes}</span>
+      <span class="inventory-value">${item.value}</span>
     </div>
   `).join('');
 }
@@ -236,107 +247,74 @@ function renderInventory() {
 function renderFeatures() {
   const featuresList = document.getElementById('featuresList');
   if (!featuresList) return;
-  
+
   const features = characterData.features;
-  
-  let html = `
+  // Background Feature folds into the SAME "Class Features" list (no second header),
+  // distinguished only by its oxblood name color (finding 2). Identity (`===`) picks
+  // out that one entry after the arrays are combined.
+  const allClassFeatures = [...features.classFeatures, features.backgroundFeature];
+
+  // Each feature is ONE inline line: "Name — Source · Description" (.feature-source and
+  // .feature-desc are both `display:inline` and CSS-prepend their own "— "/" · " glyphs).
+  const classFeaturesHtml = allClassFeatures.map(f => {
+    const isBackgroundFeature = f === features.backgroundFeature;
+    return `
+        <div class="feature-item clickable" data-feature="${f.name}"><span class="feature-name${isBackgroundFeature ? ' feature-name--highlight' : ''}">${f.name}</span><span class="feature-source">${f.source}</span>${f.description ? `<span class="feature-desc">${f.description}</span>` : ''}</div>
+      `;
+  }).join('');
+
+  // Achievements: curated to the items carrying the optional `rarity` field (Legendary/
+  // Epic tier), rendered as a badge pill + name + optional short description — matches
+  // the prototype's 3-item curated subset while the full 8-item list stays in data.js.
+  const achievementsHtml = features.achievements.filter(a => a.rarity).map(a => `
+        <div class="feature-item clickable" data-feature="${a.name}">${a.rarity ? `<span class="feature-badge feature-badge--${a.rarity.toLowerCase()}">${a.rarity}</span>` : ''} <span class="feature-name">${a.name}</span>${a.description ? `<span class="feature-source">${a.description}</span>` : ''}</div>
+      `).join('');
+
+  featuresList.innerHTML = `
     <div class="feature-category">
-      <div class="feature-category-title">Class Features & Feats</div>
-      ${features.classFeatures.map(f => `
-        <div class="feature-item clickable" data-feature="${f.name}">
-          <div class="feature-name">${f.name}</div>
-          <div class="feature-source">${f.source}</div>
-          <div class="feature-desc">${f.description}</div>
-        </div>
-      `).join('')}
+      <div class="feature-category-title">✦ Class Features</div>
+      ${classFeaturesHtml}
     </div>
-    
+
     <div class="feature-category">
-      <div class="feature-category-title">Background Feature</div>
-      <div class="feature-item clickable" data-feature="${features.backgroundFeature.name}">
-        <div class="feature-name">${features.backgroundFeature.name}</div>
-        <div class="feature-source">${features.backgroundFeature.source}</div>
-        <div class="feature-desc">${features.backgroundFeature.description}</div>
-      </div>
-    </div>
-    
-    <div class="feature-category">
-      <div class="feature-category-title">Achievements</div>
-      ${features.achievements.map(a => `
-        <div class="feature-item clickable" data-feature="${a.name}">
-          <div class="feature-name">🏆 ${a.name}${a.date ? ` <span class="feature-date">(${a.date})</span>` : ''}</div>
-          <div class="feature-desc">${a.description}</div>
-          ${a.link ? `<a href="${a.link}" target="_blank" class="feature-link">Read more →</a>` : ''}
-        </div>
-      `).join('')}
+      <div class="feature-category-title">✦ Achievements</div>
+      ${achievementsHtml}
     </div>
   `;
-  
-  featuresList.innerHTML = html;
 }
 
 // Render Background
 function renderBackground() {
   const backgroundContent = document.getElementById('backgroundContent');
   if (!backgroundContent) return;
-  
+
   const bg = characterData.background;
-  
+
+  // Ideals: only the entries carrying the optional `featured` rank are joined into the
+  // single "Ideals" characteristics line (curated + ordered per the prototype); the
+  // un-featured Interdependence ideal stays in data.js, untouched.
+  const featuredIdeals = bg.ideals
+    .filter(i => i.featured)
+    .sort((a, b) => a.featured - b.featured)
+    .map(i => `${i.name} — ${i.description.charAt(0).toLowerCase()}${i.description.slice(1)}`)
+    .join(' ');
+
+  // Exactly 2 sections (finding 5): "Origin Story" (one flowing narrative paragraph —
+  // backgroundStory, now the merged prototype copy) and "Characteristics" (5 single
+  // curated label:value lines — first entry of each traits array, per existing order).
   backgroundContent.innerHTML = `
     <div class="background-section">
-      <div class="background-section-title">Background: ${bg.name}</div>
-      <div class="trait-item">
-        <span class="trait-label">Skill Proficiencies:</span> ${bg.skillProficiencies.join(', ')}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">Tool Proficiencies:</span> ${bg.toolProficiencies.join(', ')}
-      </div>
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Origin Story</div>
+      <div class="background-section-title">✦ Origin Story</div>
       <div class="trait-item origin-story">${bg.characteristics.backgroundStory}</div>
-      <div class="trait-item">
-        <span class="trait-label">Origin:</span> ${bg.characteristics.origin}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">Former Life:</span> ${bg.characteristics.formerLife}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">First Gig:</span> ${bg.characteristics.firstGig}
-      </div>
-      <div class="trait-item">
-        <span class="trait-label">Transition:</span> ${bg.characteristics.artToEngineering}
-      </div>
     </div>
-    
+
     <div class="background-section">
-      <div class="background-section-title">Personality Traits</div>
-      ${bg.personalityTraits.map(t => `<div class="trait-item">"${t}"</div>`).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Ideals</div>
-      ${bg.ideals.map(i => `
-        <div class="trait-item">
-          <span class="trait-label">${i.name}:</span> ${i.description} <em>(${i.alignment})</em>
-        </div>
-      `).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Bonds</div>
-      ${bg.bonds.map(b => `<div class="trait-item">${b}</div>`).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Flaws</div>
-      ${bg.flaws.map(f => `<div class="trait-item">${f}</div>`).join('')}
-    </div>
-    
-    <div class="background-section">
-      <div class="background-section-title">Faith & Philosophy</div>
-      <div class="trait-item"><span class="trait-label">Faith:</span> ${bg.characteristics.faith}</div>
+      <div class="background-section-title">✦ Characteristics</div>
+      <div class="trait-item"><span class="trait-label">Personality </span><em>"${bg.personalityTraits[0]}"</em></div>
+      <div class="trait-item"><span class="trait-label">Ideals </span><em>${featuredIdeals}</em></div>
+      <div class="trait-item"><span class="trait-label">Bond </span><em>${bg.bonds[0]}</em></div>
+      <div class="trait-item"><span class="trait-label">Flaw </span><em>${bg.flaws[0]}</em></div>
+      <div class="trait-item"><span class="trait-label">Faith </span><em>${bg.characteristics.faith}</em></div>
     </div>
   `;
 }
@@ -345,32 +323,23 @@ function renderBackground() {
 function renderNotes() {
   const notesContent = document.getElementById('notesContent');
   if (!notesContent) return;
-  
+
   notesContent.innerHTML = `
     <div class="background-section">
-      <div class="background-section-title">Vouches (Testimonials)</div>
+      <div class="background-section-title">✦ Vouches</div>
       ${characterData.vouches.map(v => `
         <div class="vouch-item">
           <div class="vouch-text">"${v.text}"</div>
-          <div class="vouch-author">– ${v.author}</div>
-          <div class="vouch-role">${v.role}</div>
+          <div class="vouch-author">${v.author}</div><div class="vouch-role">${v.role}</div>
         </div>
       `).join('')}
     </div>
-    
+
     <div class="background-section">
-      <div class="background-section-title">Organizations</div>
-      ${characterData.organizations.map(o => `
-        <div class="org-item clickable" data-org="${o.name}">
-          <div class="org-header">
-            <span class="org-name">${o.name}</span>
-            <span class="org-role">${o.role}</span>
-          </div>
-          <div class="org-dates">${o.dates}</div>
-          <div class="org-description">${o.description}</div>
-          ${o.url ? `<a href="${o.url}" target="_blank" class="org-link">Visit website →</a>` : ''}
-        </div>
-      `).join('')}
+      <div class="background-section-title">✦ Guilds & Orgs</div>
+      <div class="org-chips">
+        ${characterData.organizations.filter(o => o.featured).map(o => `<span class="chip-tag">${o.name}</span>`).join('')}
+      </div>
     </div>
   `;
 }
@@ -379,21 +348,41 @@ function renderNotes() {
 function renderExtras() {
   const extrasContent = document.getElementById('extrasContent');
   if (!extrasContent) return;
-  
+
   const extras = characterData.extras;
-  
+  const personal = characterData.personal;
+
+  // "✦ Current Campaign" highlighted block + two CTA buttons come BEFORE the Fun
+  // Facts/Interests content (finding 7). Fun Facts/Interests keep their own explicit
+  // modifier classes (not :nth-of-type) so inserting this block ahead of them can't
+  // shift which one gets bullets vs. chip styling. Both sections are wrapped in
+  // .extras-columns, matching the prototype's 2-col grid DOM structure exactly.
   extrasContent.innerHTML = `
-    <div class="extras-section">
-      <div class="extras-title">Fun Facts</div>
-      <div class="extras-list">
-        ${extras.funFacts.map(f => `<span class="extras-item">${f}</span>`).join('')}
+    <div class="extras-campaign">
+      <div class="extras-title">✦ Current Campaign</div>
+      <div class="campaign-card">
+        <div class="campaign-card-name">${personal.currentCampaignName}</div>
+        <div class="campaign-card-desc">${personal.currentCampaign} Status: <span class="campaign-card-status">${personal.currentStatus}</span></div>
+      </div>
+      <div class="extras-cta-row">
+        <a href="mailto:${personal.email}?subject=New Quest Inquiry" class="extras-cta-btn extras-cta-btn--solid">✦ Start a Quest</a>
+        <a href="Resume-Buster-short.pdf" target="_blank" class="extras-cta-btn extras-cta-btn--outline">❖ Download Classic CV</a>
       </div>
     </div>
-    
-    <div class="extras-section">
-      <div class="extras-title">Interests</div>
-      <div class="extras-list">
-        ${extras.interests.map(i => `<span class="extras-item">${i}</span>`).join('')}
+
+    <div class="extras-columns">
+      <div class="extras-section extras-section--facts">
+        <div class="extras-title">Fun Facts</div>
+        <div class="extras-list">
+          ${extras.funFacts.map(f => `<span class="extras-item">${f}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="extras-section extras-section--interests">
+        <div class="extras-title">Interests</div>
+        <div class="extras-list">
+          ${extras.interests.map(i => `<span class="extras-item">${i}</span>`).join('')}
+        </div>
       </div>
     </div>
   `;

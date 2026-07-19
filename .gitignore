@@ -16,3 +16,7 @@ node_modules/
 .env
 .env.local
 *.pem
+
+# Design handoff prototypes (untracked reference material)
+design_handoff_dnd_cv_redesign/
+design_handoff_dnd_cv_mobile/

@@ -1,219 +1,146 @@
 /* ============================================
-   NOTABLE PAGE STYLES
+   NOTABLE PAGE STYLES — Parchment & Ink
+   Structure/values transcribed from the prototype's Hall of Fame component
+   (localhost:8098 .../Notable.dc.html; mobile frame 1f in
+   .../Mobile Views.dc.html) — see task-8-report.md.
+
+   NOTE ON SCOPE: unlike campaigns.css, this file is currently <link>ed only
+   on notable.html (confirmed via repo-wide grep before this rewrite) — so
+   this is a full rewrite, no legacy selectors to preserve for other pages.
+   `.ribbon`/`.ribbon--*` and `.ledger`/`.ledger-row` (+ children) are kept
+   deliberately UNSCOPED/global (base rules AND their ≤740px overrides) since
+   the task brief flags them as reused by future Media/Contact tasks, which
+   may link this stylesheet the same way campaigns.css is already shared
+   across all 6 pages. Everything else below that's specific to this page's
+   own layout (`.achievements`/`.achievement-grid`/`.achievement-card`/
+   `.encounters`/`.encounters-sub`, and the mobile `.page-head` resize) is
+   defensively scoped under `.notable-page` in the mobile block, same
+   pattern campaigns.css/character-sheet.css/main.css already use.
    ============================================ */
 
-.notable-page {
-  min-height: 100vh;
-  background: var(--light-bg);
+/* ---- Rule-title: big labelled divider ("Notable Adventures" / "Key
+   Encounters"). Same dual-rule idea as main.css's `.section-title` but at
+   the larger 12px/.26em the prototype uses for these two page-level
+   dividers (vs. main.css's 10px/.2em default used e.g. for Side Quests) —
+   kept as its own class to avoid a specificity fight with that shared
+   default rather than overriding it in place. ---- */
+.rule-title {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  font: 700 12px var(--font-sc); letter-spacing: .26em; color: var(--oxblood);
+}
+.rule-title::before, .rule-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+.encounters-rule { margin-bottom: 4px; }
+
+/* ============================================
+   NOTABLE ADVENTURES — 3-col ribboned achievement cards
+   ============================================ */
+.achievements { padding: 18px 26px 8px; }
+
+.achievement-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+/* Composes with main.css's `.section-box` (panel bg/border/inset ring); this
+   just adds the tighter padding + positioning context the ribbon needs. */
+.achievement-card { position: relative; padding: 14px 16px 12px; }
+.achievement-card--legendary { border-color: var(--gold-bright); }
+
+.achievement-title {
+  font: 700 16px var(--font-display); color: var(--oxblood);
+  padding-right: 50px; /* clears the "Epic"/"Rare" ribbon */
+}
+.achievement-card--legendary .achievement-title { padding-right: 70px; } /* "Legendary" is wider */
+
+.achievement-desc {
+  font: 500 12.5px/1.5 var(--font-body); color: var(--body-ink);
+  margin-top: 5px; text-wrap: pretty;
 }
 
-.notable-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
+.achievement-stats {
+  display: flex; gap: 14px;
+  border-top: 1px dotted var(--panel-border); margin-top: 9px; padding-top: 7px;
+  font: 700 9px var(--font-sc); letter-spacing: .12em; color: var(--label);
 }
+.achievement-stats--linked { align-items: baseline; }
+.achievement-stat-value { color: var(--oxblood); }
 
-/* Notable Section */
-.notable-section {
-  margin-bottom: var(--spacing-xl);
+.achievement-link {
+  margin-left: auto;
+  font: 500 11px var(--font-body); font-style: italic; letter-spacing: 0;
+  border-bottom: 1px dotted var(--gold);
 }
+.achievement-link:hover { color: var(--red-hover); }
 
-.section-header {
-  font-size: 24px;
-  margin-bottom: var(--spacing-xs);
+/* ============================================
+   RIBBON — pennant badge, top-right of a card
+   Global/reusable: no `.notable-page` scoping (see file-top note).
+   ============================================ */
+.ribbon {
+  position: absolute; top: -1px; right: 12px;
+  font: 700 8.5px var(--font-sc); letter-spacing: .2em;
+  padding: 3px 10px 4px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
 }
+.ribbon--legendary { background: linear-gradient(180deg, var(--gold-pale), var(--gold-bright)); color: var(--oxblood-lo); }
+.ribbon--epic { background: linear-gradient(180deg, var(--red-hover), var(--oxblood)); color: var(--gold-max); }
+/* #4a6aa0: one-off lighter tint of --note-blue used only as this gradient's
+   start stop — no existing token matches it. */
+.ribbon--rare { background: linear-gradient(180deg, #4a6aa0, var(--note-blue)); color: var(--gold-max); }
 
-.section-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-lg);
-}
+/* ============================================
+   KEY ENCOUNTERS — 2-col year ledger
+   `.ledger`/`.ledger-row` (+ children) kept global/reusable, same rationale
+   as `.ribbon` above.
+   ============================================ */
+.encounters { padding: 16px 26px 24px; }
+.encounters-sub { text-align: center; font: 500 12.5px var(--font-body); font-style: italic; color: var(--label); margin-bottom: 14px; }
 
-/* Notable Grid */
-.notable-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--spacing-lg);
-}
+.ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; }
 
-/* Notable Card */
-.notable-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  position: relative;
-  overflow: hidden;
-  transition: all var(--transition-normal);
-  border: 2px solid var(--border-color);
-}
+.ledger-row { position: relative; display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px dotted var(--dot-rule); }
+.ledger-year { flex: none; font: 700 13px var(--font-display); color: var(--gold); width: 42px; text-align: right; }
+.ledger-mark { flex: none; color: var(--oxblood); margin-top: 1px; }
+.ledger-text { font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink); }
+.ledger-text strong { font-weight: 700; color: var(--ink); }
 
-.notable-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-}
+/* Reuses main.css's `.margin-note` (Caveat hand-note) for the "where it all
+   began" annotation on the origin (2010) row. */
+.margin-note--ledger { right: 0; bottom: -13px; transform: rotate(-2deg); }
 
-.notable-card.legendary {
-  border-color: #FFD700;
-  background: linear-gradient(135deg, #FFFDE7 0%, #FFF8E1 100%);
-}
+/* ============================================
+   MOBILE (≤740px)
+   Page-specific selectors scoped under `.notable-page` (this page's unique
+   wrapper) per the codebase-wide convention (see file-top note); `.ribbon`/
+   `.ledger*` overrides stay unscoped so a future page linking this
+   stylesheet gets the same responsive behavior automatically.
+   ============================================ */
+@media (max-width: 740px) {
+  .notable-page .page-head { display: none; }
 
-.notable-card.legendary .card-badge {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
-}
+  .notable-page .page-kicker { font-size: 8px; }
+  .notable-page .page-title { font-size: 25px; }
+  .notable-page .page-rule { margin-top: 6px; }
+  .notable-page .page-rule::before, .notable-page .page-rule::after { width: 70px; }
+  .notable-page .page-sub { display: none; }
 
-.notable-card.epic {
-  border-color: #9C27B0;
-  background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
-}
+  .achievements .rule-title { display: none; }
+  .rule-title { font-size: 9px; letter-spacing: .22em; gap: 8px; margin-bottom: 6px; }
+  .rule-title::before { content: none; }
+  .encounters-sub { display: none; }
 
-.notable-card.epic .card-badge {
-  background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
-}
+  .notable-page .achievements { padding: 16px 16px 6px; }
+  .notable-page .achievement-grid { grid-template-columns: 1fr; gap: 10px; }
+  .achievement-card { padding: 13px 14px 11px; }
+  .achievement-title { font-size: 15.5px; padding-right: 44px; }
+  .achievement-card--legendary .achievement-title { padding-right: 64px; }
+  .achievement-desc { margin-top: 4px; line-height: 1.45; }
+  .achievement-stats { flex-wrap: wrap; gap: 2px 12px; margin-top: 8px; padding-top: 6px; font-size: 8.5px; letter-spacing: .1em; }
+  .achievement-stats span { white-space: nowrap; }
 
-.notable-card.rare {
-  border-color: #2196F3;
-  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-}
+  .ribbon { font-size: 8px; padding: 3px 9px 4px; }
 
-.notable-card.rare .card-badge {
-  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-}
-
-.card-badge {
-  position: absolute;
-  top: var(--spacing-md);
-  right: var(--spacing-md);
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--white);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.card-icon {
-  font-size: 40px;
-  margin-bottom: var(--spacing-md);
-}
-
-.card-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-sm);
-}
-
-.card-desc {
-  font-size: 14px;
-  color: var(--text-primary);
-  line-height: 1.6;
-  margin-bottom: var(--spacing-md);
-}
-
-.card-stats {
-  display: flex;
-  gap: var(--spacing-md);
-  font-size: 12px;
-  color: var(--text-secondary);
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
-}
-
-/* Timeline */
-.encounters-timeline {
-  position: relative;
-  padding-left: var(--spacing-xl);
-}
-
-.encounters-timeline::before {
-  content: '';
-  position: absolute;
-  left: 15px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--border-color);
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: var(--spacing-lg);
-  padding-left: var(--spacing-lg);
-}
-
-.timeline-marker {
-  position: absolute;
-  left: -40px;
-  top: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--white);
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
-  font-size: 14px;
-}
-
-.timeline-item.legendary .timeline-marker {
-  border-color: #FFD700;
-  background: #FFFDE7;
-}
-
-.timeline-item.epic .timeline-marker {
-  border-color: #9C27B0;
-  background: #F3E5F5;
-}
-
-.timeline-item.rare .timeline-marker {
-  border-color: #2196F3;
-  background: #E3F2FD;
-}
-
-.timeline-content {
-  background: var(--white);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-}
-
-.timeline-content h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-}
-
-.timeline-content p {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.timeline-date {
-  font-size: 12px;
-  color: var(--text-light);
-  font-weight: 600;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .notable-container {
-    padding: var(--spacing-md);
-  }
-  
-  .notable-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .encounters-timeline {
-    padding-left: var(--spacing-lg);
-  }
-  
-  .timeline-marker {
-    left: -32px;
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-  }
+  .notable-page .encounters { padding: 8px 16px 18px; }
+  .ledger { grid-template-columns: 1fr; }
+  .ledger-row { gap: 10px; }
+  .ledger-year { font-size: 12px; width: 36px; }
+  .ledger-mark { margin-top: 0; }
+  .ledger-text { font-size: 12px; line-height: 1.4; }
 }
