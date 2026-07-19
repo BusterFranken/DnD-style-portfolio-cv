@@ -241,8 +241,11 @@ function fillAccordionPreviews() {
   const d = typeof characterData !== 'undefined' ? characterData : null;
   if (!d) return;
 
+  // Query once and reuse for every set() call below, instead of re-querying
+  // the whole document on each of the 5 calls.
+  const heads = document.querySelectorAll('.acc-head');
   const set = (title, text) => {
-    document.querySelectorAll('.acc-head').forEach(h => {
+    heads.forEach(h => {
       if (h.querySelector('.acc-title').textContent === title) {
         const preview = h.querySelector('.acc-preview');
         if (preview) preview.textContent = text;
