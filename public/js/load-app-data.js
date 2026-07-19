@@ -1,6 +1,6 @@
 /* ============================================
    LOAD-APP-DATA — Unified data loading layer
-   Checks URL ?slug= → API → localStorage → fallback to data.js
+   Checks URL ?slug= → API fetch → fallback to data.js on failure
    Must be loaded AFTER data.js and BEFORE main.js
    ============================================ */
 
@@ -142,7 +142,7 @@ async function loadAppData() {
         applyAppData(data);
         window.__appDataSlug = slug;
         window.__appDataSource = 'api';
-        console.log('📜 Loaded sheet from API:', slug);
+        console.log('❖ Loaded sheet from API:', slug);
         window.__appDataLoading = false;
         return;
       }
@@ -161,7 +161,7 @@ async function loadAppData() {
     notableEncounters: typeof notableEncounters !== 'undefined' ? notableEncounters : [],
     mediaMentions: typeof mediaMentions !== 'undefined' ? mediaMentions : {},
   };
-  console.log('🎲 Using default data.js');
+  console.log('❖ Using default data.js');
   window.__appDataLoading = false;
 }
 
