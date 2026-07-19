@@ -299,6 +299,7 @@
      min-height bump. */
   .file-item { padding: 4px 4px 4px 14px; }
   .file-item-remove { width: 44px; height: 44px; }
+  .copy-btn { min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center; }
 
   .success-actions { flex-direction: column; }
   .success-actions .ov-roll-btn, .success-actions .ov-outline-btn {
