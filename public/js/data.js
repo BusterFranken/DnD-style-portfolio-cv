@@ -20,8 +20,9 @@ const characterData = {
     github: "https://github.com/BusterFranken",
     location: "Amsterdam, Netherlands",
     address: "Nieuwegrachtje 5-3, 1011 VP",
-    currentStatus: "Open to Adventures",
-    currentCampaign: "Exploring new startup ideas in energy hardtech, but open to other adventures as well",
+    currentStatus: "Open to Adventures.",
+    currentCampaignName: "Energy Hardtech Exploration",
+    currentCampaign: "Exploring new adventures in energy hardtech — open to other impact-focused ventures. Party applications welcome via Short Rest.",
     summary: "With my past startup FruitPunch AI we crowdsourced €45M in AI engineering for impact organizations. Through our platform >4500 AI engineers built AI solutions for: Stanford, ESA, Greenpeace, WWF, Philips, NXP, Huawei, etc.",
     avatar: "assets/images/buster.jpg"
   },
@@ -146,10 +147,10 @@ const characterData = {
       saveProficient: false,
       dndMeaning: "Measures physical power, athletic training, and the extent to which you can exert raw physical force.",
       cvMeaning: "Impact Force",
-      cvDescription: "The ability to move big things - closing major deals, moving organizations, physical endurance for events.",
+      cvDescription: "The ability to move big things — closing major deals, moving whole organizations, endurance for events.",
       evidence: [
         "Closed €45M in deals with major organizations",
-        "Moved organizations like Stanford, ESA, Greenpeace to action",
+        "Moved Stanford, ESA and Greenpeace to action",
         "Physical endurance for conferences and events worldwide"
       ]
     },
@@ -161,10 +162,10 @@ const characterData = {
       saveProficient: true,
       dndMeaning: "Measures agility, reflexes, balance, and coordination.",
       cvMeaning: "Adaptability",
-      cvDescription: "Quick pivots, handling multiple things at once, operational agility - essential for the startup lifestyle.",
+      cvDescription: "Quick pivots, handling many things at once, operational agility — essential for the startup lifestyle.",
       evidence: [
-        "Pivoted FruitPunch AI multiple times based on market feedback",
-        "Managed multiple roles simultaneously (CEO + AI Program Manager)",
+        "Pivoted FruitPunch AI multiple times on market feedback",
+        "Managed multiple roles at once (CEO + AI Program Manager)",
         "Quick decision-making in uncertain startup environments",
         "Rapid iteration cycles on product features"
       ]
@@ -179,9 +180,9 @@ const characterData = {
       cvMeaning: "Resilience",
       cvDescription: "Surviving startup hardships, persistence through failures, never giving up.",
       evidence: [
-        "7 years of startup grind (2018-2025)",
-        "Survived NGO phase, pivot to startup, COVID, and eventual acquisition",
-        "Continued building through countless rejections and setbacks"
+        "7 years of startup grind (2018–2025)",
+        "Survived the NGO phase, the pivot, COVID and the acquisition",
+        "Kept building through countless rejections and setbacks"
       ]
     },
     int: {
@@ -196,8 +197,8 @@ const characterData = {
       evidence: [
         "BSc Mechanical Engineering & Neuroscience (TU/e)",
         "60 ECTS in Data Science courses",
-        "10/10 Brain Computer Interfacing research",
-        "Built AI platform used by 4500+ engineers"
+        "10/10 Brain-Computer Interfacing research",
+        "Built the AI platform used by 4500+ engineers"
       ]
     },
     wis: {
@@ -208,13 +209,13 @@ const characterData = {
       saveProficient: true,
       dndMeaning: "Measures awareness, intuition, and insight.",
       cvMeaning: "People Understanding",
-      cvDescription: "Community building, reading situations, understanding what motivates people. Experience gained from all past adventures.",
+      cvDescription: "Community building, reading situations, understanding what motivates people.",
       evidence: [
-        "Built communities of 4500+ AI engineers",
-        "50% female founder representation in Sigma Squared",
+        "Built a community of 4500+ AI engineers",
+        "500+ user & customer interviews conducted",
         "Understanding what makes engineers engage with impact work",
-        "500+ user and customer interviews conducted",
-        "Designed challenge-based learning experience from first principles"
+        "50% female founder representation in Sigma Squared",
+        "Designed challenge-based learning from first principles"
       ]
     },
     cha: {
@@ -225,9 +226,9 @@ const characterData = {
       saveProficient: true,
       dndMeaning: "Measures force of personality, persuasiveness, and leadership.",
       cvMeaning: "Influence",
-      cvDescription: "Sales, presenting, inspiring others - rooted in professional acting background.",
+      cvDescription: "Sales, presenting, inspiring others — rooted in a professional acting background.",
       evidence: [
-        "Professional teen actor (Groen Casting, 2010-2015)",
+        "Professional teen actor (Groen Casting, 2010–2015)",
         "€45M in deals closed through persuasion",
         "Public speaking at major events",
         "Inspiring engineers to work on impact projects"
@@ -265,15 +266,21 @@ const characterData = {
   // ==========================================
   // DEFENSES & CONDITIONS
   // ==========================================
+  // description: the row text rendered after "Name — " in the Defenses overlay
+  // (js/overlay.js getDefensesOverlayContent) — synced verbatim to the
+  // prototype's OV.defenses bullets.
   defenses: [
-    { name: "Resilient Network", description: "Allies provide backup support - 4500+ engineers and 80+ partner organizations" },
-    { name: "Pivot Ready", description: "Can quickly adapt to changing situations - multiple successful pivots in startup journey" },
-    { name: "Community Shield", description: "Strong community relationships provide protection against market uncertainties" }
+    { name: "Resilient Network", description: "4500+ engineers and 80+ partner organizations to fall back on." },
+    { name: "Pivot Ready", description: "halves damage from sudden market shifts." },
+    { name: "Community Shield", description: "allies interpose themselves when the going gets rough." }
   ],
+  // description: same "Name — description" row pattern, consumed by
+  // getConditionsOverlayContent — synced verbatim to the prototype's
+  // OV.conditions bullets.
   conditions: [
-    { name: "Inspired", active: true, description: "Advantage on Charisma checks when pursuing impact-driven goals" },
-    { name: "Alert", active: true, description: "Cannot be surprised while conscious, +4 to initiative (Alertness feat)" },
-    { name: "Mission-Driven", active: true, description: "Resistance to distractions that don't align with core values" }
+    { name: "Inspired", active: true, description: "advantage on Charisma checks when pursuing impact-driven goals. The mission to create AI for Good provides constant motivation." },
+    { name: "Alert", active: true, description: "cannot be surprised while conscious; +4 to initiative. Always aware of market changes and opportunities." },
+    { name: "Mission-Driven", active: true, description: "resistance to distractions that do not align with core values. Technology should serve humanity." }
   ],
   senses: "Market Awareness 60 ft.",
 
@@ -347,7 +354,7 @@ const characterData = {
       damageType: "connection",
       description: "Leverage your network to create new opportunities. Each connection can cascade into more.",
       range: "Unlimited (email/LinkedIn)",
-      properties: ["Ranged"]
+      properties: ["Ranged", "Unlimited"]
     },
     {
       name: "Cold Outreach",
@@ -364,67 +371,67 @@ const characterData = {
       name: "Strategic Pivot",
       type: "Action",
       description: "Completely change direction based on new information. Requires wisdom and courage.",
-      uses: "1/long rest",
-      effect: "Redirect all resources to a new approach. Previous investments are not lost, they become lessons."
+      uses: "1 / long rest",
+      effect: "investments become lessons, not losses"
     },
     {
       name: "Community Rally",
       type: "Action",
       description: "Call upon your community for support. 4500+ engineers respond to meaningful challenges.",
-      uses: "At will",
-      effect: "Summon 10-100 allied engineers to work on a challenge for 10 weeks."
+      uses: "at will",
+      effect: "summon 10–100 allied engineers for a 10-week challenge"
     },
     {
       name: "User Interview",
       type: "Action",
       description: "Conduct deep research to understand what users really need vs what they say they want.",
-      uses: "At will",
-      effect: "Gain insights that inform product decisions. Roll Investigation to determine quality of insights."
+      uses: "at will",
+      effect: "what users need vs. what they say they want"
     },
     {
       name: "A/B Experiment",
       type: "Action",
       description: "Run a controlled experiment to validate hypotheses before committing resources.",
-      uses: "At will",
-      effect: "Test two approaches simultaneously. Data determines winner."
+      uses: "at will",
+      effect: "test both — the data crowns the winner"
     },
     // Bonus Actions
     {
       name: "Dash",
       type: "Bonus Action",
       description: "Sprint to achieve remarkable results in a short time. A burst of focused energy and speed.",
-      uses: "1/short rest",
-      effect: "Double your movement speed this turn. Represents the ability to move fast when needed.",
+      uses: "1 / short rest",
+      effect: "a burst of focused speed toward remarkable results",
       recharge: "Short Rest"
     },
     {
       name: "Cunning Action",
       type: "Bonus Action",
       description: "Take the Dash, Disengage, or Hide action as a bonus action. Pivot quickly when needed.",
-      uses: "At will",
-      effect: "Dash, Disengage, or Hide as bonus action."
+      uses: "at will",
+      effect: "Dash, Disengage or Hide as a bonus action"
     },
     {
       name: "Inspire Team",
       type: "Bonus Action",
       description: "Boost an ally's confidence with encouraging words. Your acting background shows.",
-      uses: "3/long rest",
-      effect: "One ally gains advantage on their next roll."
+      uses: "3 / long rest",
+      effect: "one ally gains advantage on their next roll"
     },
     {
       name: "Operational Maneuver",
       type: "Bonus Action",
       description: "Reposition team and resources for tactical advantage.",
-      uses: "At will",
-      effect: "Reorganize team allocation without losing momentum."
+      uses: "at will",
+      effect: "reposition the party without losing momentum"
     },
     // Reactions
     {
       name: "Sneak Attack (Startup Edition)",
       type: "Reaction",
       description: "When you have advantage or an ally nearby, deal extra impact damage.",
-      uses: "1/turn",
-      effect: "Add 2d6 extra damage when conditions are met. Represents striking when the timing is right."
+      uses: "1 / turn",
+      effect: "+2d6 impact when the timing is right"
     }
   ],
 
@@ -436,39 +443,43 @@ const characterData = {
     spellSaveDC: 15,
     spellAttackBonus: 7,
     cantrips: [
-      { name: "Networking", castTime: "At will", range: "60 ft", description: "Make a professional connection with anyone in range. The foundation of community building.", dndEquivalent: "Message", cvMeaning: "LinkedIn connections, warm intros, event networking" },
-      { name: "Prestidigitation", castTime: "At will", range: "Touch", description: "Minor business magic - fix small problems, clean up messes, make a good impression.", dndEquivalent: "Prestidigitation", cvMeaning: "Small operational fixes, presentation polish" },
-      { name: "User Research", castTime: "At will", range: "30 ft", description: "Understand what users really need beyond what they say. Detect underlying motivations.", dndEquivalent: "Guidance", cvMeaning: "Customer interviews, user testing, empathy mapping" }
+      { name: "Networking", castTime: "At will", range: "60 ft", description: "Make a professional connection with anyone in range. The foundation of community building.", dndEquivalent: "Message", cvMeaning: "LinkedIn, warm intros, event networking" },
+      { name: "Prestidigitation", castTime: "At will", range: "Touch", description: "Minor business magic - fix small problems, clean up messes, make a good impression.", dndEquivalent: "Prestidigitation", cvMeaning: "small operational fixes, presentation polish" },
+      { name: "User Research", castTime: "At will", range: "30 ft", description: "Understand what users really need beyond what they say. Detect underlying motivations.", dndEquivalent: "Guidance", cvMeaning: "interviews, user testing, empathy mapping" }
     ],
     level1: [
-      { name: "Charm Person", slots: 4, castTime: "1 action", range: "30 ft", description: "Win someone over in a meeting. They regard you as a friendly acquaintance for 1 hour.", dndEquivalent: "Charm Person", cvMeaning: "First meetings, sales calls, partnership discussions" },
-      { name: "Comprehend Languages", slots: 4, castTime: "1 action", range: "Self", description: "Understand technical jargon in any domain - AI, finance, legal, academic.", dndEquivalent: "Comprehend Languages", cvMeaning: "Cross-functional communication, domain translation" }
+      { name: "Charm Person", slots: 4, castTime: "1 action", range: "30 ft", description: "Win someone over in a meeting. They regard you as a friendly acquaintance for 1 hour.", dndEquivalent: "Charm Person", cvMeaning: "win the meeting; friendly acquaintance for 1 hour" },
+      { name: "Comprehend Languages", slots: 4, castTime: "1 action", range: "Self", description: "Understand technical jargon in any domain - AI, finance, legal, academic.", dndEquivalent: "Comprehend Languages", cvMeaning: "jargon in any domain — AI, finance, legal, academic" }
     ],
     level2: [
-      { name: "Detect Thoughts", slots: 3, castTime: "1 action", range: "Self", description: "Read what stakeholders really want beyond their words. Essential for negotiations.", dndEquivalent: "Detect Thoughts", cvMeaning: "Reading room dynamics, understanding true objections" },
-      { name: "Suggestion", slots: 3, castTime: "1 action", range: "30 ft", description: "Plant an idea that seems reasonable and natural. The seed grows on its own.", dndEquivalent: "Suggestion", cvMeaning: "Influential proposals, gentle steering of decisions" }
+      { name: "Detect Thoughts", slots: 3, castTime: "1 action", range: "Self", description: "Read what stakeholders really want beyond their words. Essential for negotiations.", dndEquivalent: "Detect Thoughts", cvMeaning: "read what stakeholders really want beyond their words" },
+      { name: "Suggestion", slots: 3, castTime: "1 action", range: "30 ft", description: "Plant an idea that seems reasonable and natural. The seed grows on its own.", dndEquivalent: "Suggestion", cvMeaning: "plant a reasonable idea; the seed grows on its own" }
     ],
     level3: [
-      { name: "Sending", slots: 2, castTime: "1 action", range: "Unlimited", description: "Communicate with anyone, anywhere. Perfect for cold outreach that actually gets responses.", dndEquivalent: "Sending", cvMeaning: "Cold emails that land, international coordination" },
-      { name: "Tongues", slots: 2, castTime: "1 action", range: "Touch", description: "Speak any professional language fluently - startup, corporate, academic, government.", dndEquivalent: "Tongues", cvMeaning: "Code-switching between stakeholder types" },
-      { name: "Recruit", slots: 2, castTime: "1 action", range: "60 ft", description: "Recruit characters up to 7 levels higher to your party at will. Can convince senior leaders to join your cause.", dndEquivalent: "Hypnotic Pattern", cvMeaning: "Hiring above your weight class, recruiting advisors and investors" }
+      { name: "Sending", slots: 2, castTime: "1 action", range: "Unlimited", description: "Communicate with anyone, anywhere. Perfect for cold outreach that actually gets responses.", dndEquivalent: "Sending", cvMeaning: "cold outreach that actually gets responses; unlimited range" },
+      { name: "Tongues", slots: 2, castTime: "1 action", range: "Touch", description: "Speak any professional language fluently - startup, corporate, academic, government.", dndEquivalent: "Tongues", cvMeaning: "speak startup, corporate, academic and government fluently" },
+      // featured: OPTIONAL additive flag — this is the prototype's one highlighted spell
+      // (oxblood badge + name); renderSpells() checks it to add a guarded modifier class.
+      { name: "Recruit", slots: 2, castTime: "1 action", range: "60 ft", description: "Recruit characters up to 7 levels higher to your party at will. Can convince senior leaders to join your cause.", dndEquivalent: "Hypnotic Pattern", cvMeaning: "recruit characters up to 7 levels higher to your party", featured: true }
     ]
   },
 
   // ==========================================
   // INVENTORY TAB
   // ==========================================
+  // Order is sorted descending by gp value (matches the prototype's rendered row order,
+  // which is the only consumer of this array's order — see renderInventory()).
   inventory: [
-    { name: "AI/ML Frameworks", weight: "—", qty: 1, value: "20 gp", notes: "Technical foundation", active: true },
-    { name: "Python Ecosystem", weight: "—", qty: 1, value: "15 gp", notes: "Primary programming tool", active: true },
-    { name: "Google Sheets Mastery", weight: "—", qty: 1, value: "5 gp", notes: "\"Animal in the sheets\"", active: true },
-    { name: "Network of VCs", weight: "—", qty: 1, value: "100 gp", notes: "Thomas Wolf, LUMO Labs, etc.", active: true },
+    { name: "Network of VCs", weight: "—", qty: 1, value: "100 gp", notes: "Thomas Wolf, LUMO Labs, Shamrock…", active: true },
     { name: "International Contacts", weight: "—", qty: 1, value: "80 gp", notes: "Stanford, ESA, Greenpeace level", active: true },
-    { name: "Pitch Deck Templates", weight: "—", qty: 1, value: "10 gp", notes: "Battle-tested presentations", active: true },
     { name: "Customer Interview Notes", weight: "—", qty: 500, value: "50 gp", notes: "500+ interviews documented", active: true },
-    { name: "Experiment Backlog", weight: "—", qty: 1, value: "30 gp", notes: "Validated learning archive", active: true },
-    { name: "Product Roadmap", weight: "—", qty: 1, value: "25 gp", notes: "Platform development history", active: true },
-    { name: "Challenge Design Framework", weight: "—", qty: 1, value: "40 gp", notes: "10-week AI challenge template", active: true }
+    { name: "Challenge Design Framework", weight: "—", qty: 1, value: "40 gp", notes: "10-week AI challenge template", active: true },
+    { name: "Experiment Backlog", weight: "—", qty: 1, value: "30 gp", notes: "validated learning archive", active: true },
+    { name: "Product Roadmap", weight: "—", qty: 1, value: "25 gp", notes: "platform development history", active: true },
+    { name: "AI/ML Frameworks", weight: "—", qty: 1, value: "20 gp", notes: "technical foundation", active: true },
+    { name: "Python Ecosystem", weight: "—", qty: 1, value: "15 gp", notes: "primary programming tool", active: true },
+    { name: "Pitch Deck Templates", weight: "—", qty: 1, value: "10 gp", notes: "battle-tested presentations", active: true },
+    { name: "Google Sheets Mastery", weight: "—", qty: 1, value: "5 gp", notes: "\"animal in the sheets\"", active: true }
   ],
 
   // ==========================================
@@ -476,27 +487,30 @@ const characterData = {
   // ==========================================
   features: {
     classFeatures: [
-      { name: "Expertise", source: "Founder", description: "Double proficiency in Persuasion and Performance. Acting background + sales experience." },
-      { name: "Sneak Attack (Startup Edition)", source: "Founder", description: "Extra impact when you have advantage or allies nearby. Timing is everything." },
-      { name: "Cunning Action", source: "Founder", description: "Dash, Disengage, or Hide as bonus action - pivot quickly when the situation demands." },
-      { name: "Alertness", source: "Feat", description: "+4 bonus to initiative. Can't be surprised while conscious. Always aware of opportunities and threats." },
-      { name: "Product Sense", source: "Experience", description: "Can identify what users really need vs what they say they want. Built from 500+ user and customer interviews conducted." },
-      { name: "Experiment-Driven", source: "Growth Hacker", description: "Runs systematic experiments to validate hypotheses. Data over opinions." },
-      { name: "Platform Architect", source: "Founder", description: "Designed and built the platform that enabled 4500+ engineers to contribute €45M in impact." }
+      { name: "Expertise", source: "Founder", description: "double proficiency in Persuasion & Performance: acting background + sales experience" },
+      { name: "Sneak Attack (Startup Edition)", source: "Founder", description: "extra impact with advantage or allies nearby; timing is everything" },
+      { name: "Cunning Action", source: "Founder", description: "Dash, Disengage or Hide as a bonus action; pivot quickly" },
+      { name: "Alertness", source: "feat", description: "+4 initiative, can't be surprised; always aware of opportunities and threats" },
+      { name: "Product Sense", source: "Experience", description: "what users need vs. what they say; built from 500+ interviews" },
+      { name: "Experiment-Driven", source: "Growth Hacker", description: "systematic experiments to validate hypotheses; data over opinions" },
+      { name: "Platform Architect", source: "Founder", description: "designed the platform that let 4500+ engineers create €45M in impact" }
     ],
     backgroundFeature: {
       name: "AI & Startup Network",
-      source: "Entrepreneur Background",
-      description: "Extensive networks across AI engineers (4500+), startup founders (Sigma Squared, Founder Space), investors (Thomas Wolf, LUMO Labs, Shamrock Ventures), and top AI companies & research institutions (Stanford, ESA, Philips, Huawei, NXP). Can call upon these networks for information, resources, or introductions."
+      source: "Entrepreneur background",
+      description: "call upon 4500+ engineers, founders, investors and institutions for information, resources or introductions"
     },
+    // rarity: OPTIONAL additive field (Legendary/Epic tier for the featured-achievement badge pill).
+    // Only the 3 items carrying `rarity` render on the Character Sheet's Features tab
+    // (curated subset matching the prototype); the full 8-item list stays intact here.
     achievements: [
-      { name: "€45M Impact", description: "Crowdsourced massive value for impact organizations", date: "2024" },
+      { name: "The €45M Crowdsource", description: "", date: "2024", rarity: "Legendary" },
       { name: "4500+ Engineers", description: "Built and mobilized a global AI community", date: "2024" },
-      { name: "Tata Steel Victory", description: "AI against Toxic Clouds caused €4.1M in fines, led to Dutch ministry external monitoring", date: "2023", link: "https://siliconcanals.com/fruitpunch-ai-to-monitor-illegal-air-pollution/" },
+      { name: "The Tata Steel Victory", description: "€4.1M in fines", date: "2023", link: "https://siliconcanals.com/fruitpunch-ai-to-monitor-illegal-air-pollution/", rarity: "Legendary" },
       { name: "ESA Partnership", description: "European Space Agency partnership for AI for Earth projects", date: "2021" },
       { name: "€1M Fundraised", description: "VC funding from Thomas Wolf (Hugging Face) and LUMO Labs", date: "2020", link: "https://eu-startups.com/2021/01/dutch-startup-fruitpunch-ai-lands-six-figure-investment-to-create-future-ai-and-data-talent-for-good" },
       { name: "10/10 Research", description: "Perfect score on Brain Computer Interfacing research", date: "2018" },
-      { name: "Successful Exit", description: "FruitPunch AI acquired by Zindi", date: "2025" },
+      { name: "The Successful Exit", description: "acquired by Zindi, 2025", date: "2025", rarity: "Epic" },
       { name: "Platform Built", description: "Built online platform matching AI engineers with impact projects for volunteer work", date: "2018-2024" }
     ]
   },
@@ -510,33 +524,42 @@ const characterData = {
     skillProficiencies: ["Persuasion", "Stealth"],
     toolProficiencies: ["Thieves' Tools", "Gaming Set"],
     equipment: "Dark clothes, crowbar (for breaking into markets)",
+    // Note: personalityTraits/bonds/flaws each carry 3 candidates; the Character Sheet's
+    // Background tab renders only the first (curation = existing array order, no data removed).
     personalityTraits: [
-      "I'm always excited about the next big collaboration",
+      "Getting people excited for collaboration and new endeavors, from founders to senior leaders.",
       "I translate high-level ideas into testable experiments",
       "I believe in doing the right thing, even when it's not the easy thing"
     ],
+    // featured: OPTIONAL additive rank field. Only the 2 ideals carrying `featured` are
+    // joined into the Background tab's single "Ideals" line (rendered in `featured` order);
+    // Interdependence stays in the data, unfeatured, per the prototype's curation.
     ideals: [
       { name: "Interdependence", description: "We rise by lifting others.", alignment: "Good" },
-      { name: "Responsibility", description: "Nothing is impossible to those who will try.", alignment: "Chaotic" },
-      { name: "Impact", description: "Technology should serve humanity, not the other way around.", alignment: "Good" }
+      { name: "Responsibility", description: "Nothing is impossible to those who will try.", alignment: "Chaotic", featured: 2 },
+      { name: "Impact", description: "Technology should serve humanity, not the other way around.", alignment: "Good", featured: 1 }
     ],
     bonds: [
-      "The AI engineers I've worked with are like family",
+      "The AI engineers I've worked with are like family.",
       "I owe everything to my co-founders and early believers",
       "The platform we built represents years of learning and iteration"
     ],
     flaws: [
-      "I struggle with purely theoretical work - I need real-world impact",
+      "I struggle with purely theoretical work — I need real-world impact.",
       "I can be too idealistic about what startups can achieve",
       "I sometimes move too fast and need to slow down for others"
     ],
     characteristics: {
-      faith: "Panpsychism",
+      faith: "Panpsychism.",
       origin: "Grew up in parents' pawn shop in the Netherlands",
       formerLife: "Professional teen actor (Groen Casting, 2010-2015)",
       firstGig: "First paid acting gig for IKEA at 14 years old (2010)",
       artToEngineering: "Made art and performed until discovering engineering and the power of technology for good",
-      backgroundStory: "Growing up in a pawn shop taught me to see value where others don't. Teen acting gave me stage presence and the ability to perform under pressure. The transition to engineering came from wanting to build things that last and create real impact at scale."
+      // backgroundStory: merged single-paragraph Origin Story narrative (verbatim prototype
+      // copy), replacing the old shorter summary. origin/formerLife/firstGig/artToEngineering
+      // above are kept untouched (no longer individually rendered on this tab, per the
+      // prototype's 2-section Background tab; still available in data for future use).
+      backgroundStory: "Grew up in the family pawn shop in the Netherlands — learned to see value where others don't. Professional teen actor (Groen Casting, 2010–2015; first paid gig an IKEA commercial at 14), festival security guard, physics & chemistry teacher, then Mechanical Engineering & Neuroscience with a Data Science extension at TU/e, researching brain-computer interfaces. Helped found the university's AI institute (EAISI), dropped out of the MSc to found FruitPunch AI: seven years, 4500+ engineers, €45M crowdsourced, acquired by Zindi in 2025."
     }
   },
 
@@ -547,35 +570,38 @@ const characterData = {
     {
       text: "Getting people excited for collaboration and new endeavors, from founders to senior leaders.",
       author: "Sako Arts",
-      role: "Cofounder & CTO of FruitPunch AI"
+      role: "Cofounder & CTO, FruitPunch AI"
     },
     {
       text: "Inspiring people to stay true to their goals and ideals, regardless of what others think, or where the money may push him to go.",
       author: "Daan Streng",
-      role: "Chief Engineer of FruitPunch AI"
+      role: "Chief Engineer, FruitPunch AI"
     },
     {
-      text: "Buster has the strong ability to translate high-level ideas into testable experiments. Using the data and analysis gathered to build a plan grounded in truth.",
+      text: "The strong ability to translate high-level ideas into testable experiments — a plan grounded in truth.",
       author: "Dorian Groen",
-      role: "Challenge Manager of FruitPunch AI"
+      role: "Challenge Manager, FruitPunch AI"
     },
     {
       text: "Galvanizing AI engineers to apply their skills towards global challenges and the greater good.",
       author: "Arjé Cahn",
-      role: "Investor at Shamrock Ventures"
+      role: "Investor, Shamrock Ventures"
     }
   ],
 
+  // featured: OPTIONAL additive flag. Only the 6 flagged orgs render as name-only chips
+  // on the Character Sheet's Notes tab (curated subset matching the prototype); all 9
+  // organizations stay in the data, untouched, for other pages (e.g. contact.html).
   organizations: [
-    { name: "Open Edge HPC Initiative", role: "Board Member", dates: "Jun 2023 - Oct 2025", description: "Fostering open ecosystem for Arm & RISC-V technologies. Built consortium with Arm, Huawei, Fraunhofer.", url: "https://openedgehpc.org" },
-    { name: "Founder Space Utrecht", role: "Co-Founder", dates: "Apr 2024 - Oct 2025", description: "Community-first coworking for impact startup founders. 10 startups hosted, sold for profit.", url: null },
+    { name: "Open Edge HPC Initiative", role: "Board Member", dates: "Jun 2023 - Oct 2025", description: "Fostering open ecosystem for Arm & RISC-V technologies. Built consortium with Arm, Huawei, Fraunhofer.", url: "https://openedgehpc.org", featured: true },
+    { name: "Founder Space Utrecht", role: "Co-Founder", dates: "Apr 2024 - Oct 2025", description: "Community-first coworking for impact startup founders. 10 startups hosted, sold for profit.", url: null, featured: true },
     { name: "Nationale Coalitie Duurzame Digitalisering", role: "Board Member", dates: "Jul 2024 - May 2025", description: "Shaping goals of Dutch Coalition for Sustainable Digitization.", url: null },
-    { name: "Sigma Squared Society", role: "Executive, Dutch Chapter", dates: "Oct 2022 - Mar 2024", description: "Global community of impactful founders under 26. Led Dutch chapter, 14 events, 50% female founders.", url: "https://sigma-squared.org" },
+    { name: "Sigma Squared Society", role: "Executive, Dutch Chapter", dates: "Oct 2022 - Mar 2024", description: "Global community of impactful founders under 26. Led Dutch chapter, 14 events, 50% female founders.", url: "https://sigma-squared.org", featured: true },
     { name: "Provincie Noord-Brabant", role: "AI Advisory Board Member", dates: "Sep 2022 - Apr 2024", description: "Advised Dutch government (Brabant region) on AI policy & actions.", url: null },
     { name: "KICKOFF EHV", role: "External Affairs", dates: "Sep 2018 - Jul 2019", description: "Student entrepreneur community at TU/e. Revived community and organized monthly events.", url: null },
-    { name: "NL AI Coalitie", role: "Member", dates: "2020 - Present", description: "Dutch national AI coalition.", url: "https://nlaic.com" },
-    { name: "TU/e Alumni", role: "Active Alumnus", dates: "2018 - Present", description: "Eindhoven University of Technology alumni network.", url: "https://tue.nl" },
-    { name: "Tim Draper's Network State", role: "Member", dates: "2023 - Present", description: "Part of the global founder network.", url: null }
+    { name: "NL AI Coalitie", role: "Member", dates: "2020 - Present", description: "Dutch national AI coalition.", url: "https://nlaic.com", featured: true },
+    { name: "TU/e Alumni", role: "Active Alumnus", dates: "2018 - Present", description: "Eindhoven University of Technology alumni network.", url: "https://tue.nl", featured: true },
+    { name: "Tim Draper's Network State", role: "Member", dates: "2023 - Present", description: "Part of the global founder network.", url: null, featured: true }
   ],
 
   // ==========================================
@@ -584,9 +610,8 @@ const characterData = {
   extras: {
     funFacts: [
       "Grew up in a pawn shop (parents' business)",
-      "Professional teen actor (Groen Casting) - first paid gig for IKEA at 14",
-      "Part of Tim Draper's network state",
-      "Loves bodybuilding, rollerblading, climbing, ocean",
+      "Teen actor — first paid gig for IKEA at 14",
+      "Bodybuilding, rollerblading, climbing, the ocean",
       "Philosophy & politics nerd",
       "Dreams of building a coliving community / network state"
     ],

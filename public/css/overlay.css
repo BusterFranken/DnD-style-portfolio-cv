@@ -1,342 +1,152 @@
 /* ============================================
-   OVERLAY STYLES - Skill/Element Descriptions
+   OVERLAY STYLES — Parchment & Ink
+   Red header band + parchment body, art plate for
+   ability overlays, dotted-row "Key Evidence" pattern.
+   Structure/values transcribed from the prototype's
+   generic overlay renderer (Character Sheet.dc.html,
+   `ovOpen` block) — see task-5-report.md.
    ============================================ */
 
-.overlay-modal {
-  backdrop-filter: blur(4px);
-}
+/* Backdrop: overrides the shared rgba(0,0,0,.7) from main.css's
+   `.overlay-modal, .dice-modal, .admin-modal` rule — same targeted-override
+   pattern css/dice.css already used for `.dice-modal` in Task 4. */
+.overlay-modal { background: rgba(20,12,6,.74); cursor: pointer; }
+
+/* Hide the legacy #overlayClose corner button (kept in index.html/JS per the
+   brief — openOverlay()/closeOverlay() and the click handler are unchanged);
+   the gold ✕ in the header band (.ov-close-x) is the visible control now. */
+.overlay-close { display: none; }
 
 .overlay-content {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  max-width: 500px;
-  width: 90%;
-  max-height: 80vh;
+  width: 640px; max-width: 94vw;
+  background: var(--grain), var(--parchment);
+  border: 3px double var(--gold);
+  box-shadow: inset 0 0 50px rgba(120,84,30,.22), 0 24px 70px rgba(0,0,0,.65);
+  animation: pi-fadeup .25s;
+  padding: 0;
+  cursor: default;
+  max-height: 88vh;
   overflow-y: auto;
-  position: relative;
-  box-shadow: var(--shadow-lg);
-  animation: overlaySlideIn 0.3s ease-out;
 }
 
-@keyframes overlaySlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* @keyframes pi-fadeup/pi-slideup: shared, defined once in css/main.css
+   (T12 dedup) — main.css loads ahead of this file on all 6 pages. */
+@media (prefers-reduced-motion: reduce) {
+  .overlay-content { animation: none; }
 }
 
-.overlay-body {
-  padding: var(--spacing-xl);
+/* ============================================
+   HEADER BAND
+   ============================================ */
+.ov-head {
+  display: flex; align-items: baseline; gap: 10px;
+  background: linear-gradient(180deg, var(--oxblood-hi), var(--oxblood-lo));
+  padding: 11px 18px;
+  border-bottom: 2px solid var(--gold);
+}
+.ov-title { font: 700 19px var(--font-display); color: var(--gold-max); }
+.ov-sub { font: 500 11px var(--font-sc); letter-spacing: .14em; color: var(--gold-dim); }
+.ov-badge {
+  font: 800 17px var(--font-display); color: var(--gold-pale);
+  border: 1px solid var(--gold); padding: 1px 10px; margin-left: auto;
+}
+.ov-close-x { font: 400 18px/1 serif; color: var(--gold-dim); cursor: pointer; margin-left: 6px; }
+.ov-close-x:hover { color: var(--gold-max); }
+/* When an overlay has no badge (e.g. a non-attack Action, a spell whose level
+   label failed to resolve, the dead unleveled-class fallback), .ov-badge's
+   margin-left:auto never fires — the close-x takes over the same job so it
+   still lands flush against the band's right edge instead of hugging the
+   subtitle. */
+.ov-head:not(:has(.ov-badge)) .ov-close-x { margin-left: auto; }
+
+/* ============================================
+   BODY: art/photo plate (ability overlays only) + main column
+   ============================================ */
+.ov-body { display: flex; gap: 16px; padding: 16px 18px; }
+.ov-main { flex: 1; min-width: 0; }
+
+.ov-plate { flex: none; width: 150px; }
+.ov-plate img {
+  width: 150px; height: 180px; object-fit: cover;
+  filter: sepia(.55) contrast(1.05);
+  border: 1px solid var(--tile-border);
+  box-shadow: 0 0 0 4px var(--parchment), 0 0 0 5px var(--gold);
+  display: block;
+}
+.ov-plate-art {
+  width: 150px; height: 180px;
+  border: 1px dashed var(--gold);
+  background: repeating-linear-gradient(45deg, rgba(154,123,54,.1) 0 8px, transparent 8px 16px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px; box-sizing: border-box;
+}
+.ov-plate-art span { font: 10px/1.6 ui-monospace, monospace; color: var(--label); text-align: center; }
+.ov-plate-caption {
+  text-align: center; font: 500 10.5px var(--font-body); font-style: italic;
+  color: var(--label); margin-top: 6px;
 }
 
-/* Overlay Header */
-.overlay-header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-  margin-right: 50px; /* Space for close button */
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--primary-red);
+/* ============================================
+   BLURB + KEY EVIDENCE (shared idiom: also reused, with different titles,
+   for Vouch / Calculation / Spell Details / Attack Details — Step 1 of the
+   brief calls for those to reuse "the same SC titles + dotted rows")
+   ============================================ */
+.ov-blurb {
+  font: 500 13.5px/1.5 var(--font-body); font-style: italic;
+  border-left: 3px solid var(--gold); padding-left: 10px;
+  color: var(--body-ink);
+  text-wrap: pretty;
 }
+.ov-blurb + .ov-blurb { margin-top: 10px; }
 
-.overlay-icon {
-  font-size: 32px;
+.ov-evidence-title {
+  font: 700 9px var(--font-sc); letter-spacing: .22em; color: var(--oxblood);
+  margin: 12px 0 4px;
 }
-
-.overlay-title-block {
-  flex: 1;
+.ov-evidence-row {
+  font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink);
+  padding: 4px 0; border-bottom: 1px dotted var(--dot-rule);
 }
+.ov-evidence-row strong { color: var(--ink); font-weight: 700; }
 
-.overlay-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.overlay-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.overlay-modifier {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--primary-red);
-  background: var(--light-bg);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  margin-left: auto; /* Push to the right but within header margin */
-}
-
-/* Overlay Sections */
-.overlay-section {
-  margin-bottom: var(--spacing-lg);
-}
-
-.overlay-section-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--spacing-sm);
-}
-
-.overlay-section-content {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-primary);
-}
-
-/* D&D Definition Box */
-.dnd-definition {
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  border-left: 3px solid var(--text-secondary);
-}
-
-.dnd-definition p {
-  font-style: italic;
-  color: var(--text-secondary);
-}
-
-/* CV Meaning Box */
-.cv-meaning {
-  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
-  color: var(--white);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-}
-
-.cv-meaning-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-xs);
-}
-
-.cv-meaning-desc {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-/* Heroic Inspiration: "What inspires me" block (red-maroon box) */
-.overlay-section-inspiration {
-  margin-bottom: 0;
-}
-
-.cv-meaning-inspiration {
-  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
-  color: var(--white);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg) var(--spacing-xl);
-}
-
-.cv-meaning-inspiration .cv-meaning-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: var(--spacing-sm);
-  letter-spacing: 0.02em;
-}
-
-.cv-meaning-inspiration .cv-meaning-desc {
-  font-size: 14px;
-  line-height: 1.65;
-  color: var(--white);
-  opacity: 1;
-}
-
-.cv-meaning-inspiration .cv-meaning-desc p {
-  margin-bottom: var(--spacing-md);
-}
-
-.cv-meaning-inspiration .cv-meaning-desc p:last-child {
-  margin-bottom: 0;
-}
-
-.heroic-inspiration-background {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-primary);
-  font-style: italic;
-  margin: 0;
-  padding: var(--spacing-sm) 0;
-}
-
-/* Evidence List */
-.evidence-list {
-  list-style: none;
-}
-
-.evidence-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.evidence-item:last-child {
-  border-bottom: none;
-}
-
-.evidence-bullet {
-  color: var(--primary-red);
-  font-weight: bold;
-}
-
-.evidence-text {
-  flex: 1;
-  font-size: 14px;
-}
-
-/* Vouch in Overlay */
-.overlay-vouch {
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  border-left: 3px solid var(--accent-gold);
-}
-
-.overlay-vouch-text {
-  font-style: italic;
-  font-size: 14px;
-  margin-bottom: var(--spacing-sm);
-}
-
-.overlay-vouch-author {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-/* Calculation Breakdown */
-.calculation {
-  background: var(--dark-bg);
-  color: var(--white);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  font-family: monospace;
-}
-
-.calc-row {
-  display: flex;
-  justify-content: space-between;
-  padding: var(--spacing-xs) 0;
-}
-
-.calc-row.total {
-  border-top: 1px solid var(--text-light);
-  margin-top: var(--spacing-sm);
-  padding-top: var(--spacing-sm);
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.calc-label {
-  color: var(--text-light);
-}
-
-.calc-value {
-  color: var(--white);
-}
-
-/* Class Overlay Specific */
-.class-overlay-header {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
-  color: var(--white);
-  padding: var(--spacing-lg);
-  margin: calc(-1 * var(--spacing-xl));
-  margin-bottom: var(--spacing-lg);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.class-level-badge {
+/* ============================================
+   BUTTONS — solid (roll / primary CTA) + outline (secondary CTA)
+   Unwrapped by design (the canonical ability template places the roll
+   button directly after the evidence rows with no extra wrapper div), so
+   both variants carry their own top/right spacing rather than relying on
+   a container class.
+   ============================================ */
+.ov-roll-btn, .ov-outline-btn {
   display: inline-block;
-  background: var(--primary-red);
-  color: var(--white);
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: var(--spacing-sm);
+  font: 700 10.5px var(--font-sc); letter-spacing: .14em;
+  padding: 9px 18px; border-radius: 2px; border: 1px solid var(--gold);
+  cursor: pointer; text-decoration: none;
+  margin-top: 14px; margin-right: 8px;
 }
+.ov-roll-btn { color: var(--gold-max); background: var(--oxblood); }
+.ov-roll-btn:hover { background: #6b2413; }
+.ov-outline-btn { color: var(--gold-dim); background: transparent; }
+.ov-outline-btn:hover { color: var(--gold-max); border-color: var(--gold-bright); }
 
-.class-features-list {
-  list-style: none;
-}
-
-.class-feature-item {
-  padding: var(--spacing-sm);
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-sm);
-}
-
-.class-feature-level {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--primary-red);
-  text-transform: uppercase;
-}
-
-.class-feature-name {
-  font-weight: 600;
-  margin: var(--spacing-xs) 0;
-}
-
-.class-feature-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-/* Unleveled Class Overlay */
-.unleveled-class .overlay-header {
-  opacity: 0.6;
-}
-
-.unleveled-message {
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
-  text-align: center;
-  color: var(--text-secondary);
-  font-style: italic;
-}
-
-/* Roll Button in Overlay */
-.overlay-roll-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  width: 100%;
-  padding: var(--spacing-md);
-  background: var(--primary-red);
-  color: var(--white);
-  border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  margin-top: var(--spacing-md);
-}
-
-.overlay-roll-btn:hover {
-  background: var(--primary-red-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.overlay-roll-btn .dice-emoji {
-  font-size: 20px;
+/* ============================================
+   MOBILE BOTTOM SHEET (≤740px) — same pattern as css/dice.css (Task 4)
+   ============================================ */
+@media (max-width: 740px) {
+  .overlay-modal { align-items: flex-end; }
+  .overlay-content {
+    width: 100%; max-width: 100%; border: none; border-top: 3px double var(--gold);
+    border-radius: 22px 22px 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,.5);
+    animation: pi-slideup .3s;
+    padding-top: 14px;
+    max-height: 82vh;
+  }
+  /* No literal grabber element exists in index.html's #overlayModal markup
+     (out of this task's file list) — a ::before pseudo-element reproduces
+     the same affordance without an HTML change. */
+  .overlay-content::before {
+    content: ''; display: block; width: 42px; height: 4px; border-radius: 2px;
+    background: var(--panel-border); margin: 0 auto 10px;
+  }
+  .ov-plate, .ov-plate img, .ov-plate-art { width: 110px; }
+  .ov-plate img, .ov-plate-art { height: 132px; }
 }

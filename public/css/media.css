@@ -1,0 +1,181 @@
+/* ============================================
+   MEDIA PAGE STYLES — Parchment & Ink
+   Structure/values transcribed from the prototype's Tavern Tales &
+   Chronicles component (localhost:8098 .../Media.dc.html) — see
+   task-11-report.md.
+
+   NOTE ON SCOPE: new file, linked only on media.html. This page was the
+   LAST one still depending on css/campaigns.css's legacy `.page-header`/
+   `.page-subtitle` block (now dead — removed, see campaigns.css's own
+   updated comment) and the last one linking css/network.css (link removed
+   from this page's <head>; the file itself is untouched, just orphaned —
+   confirmed via repo-wide grep that no page links it anymore after this
+   task). It had no "network visualization" widget of its own — same
+   conclusion Task 10 reached for contact.html: it was always just
+   contact-card/CTA layout, since replaced by contact.css/this file.
+
+   `.rule-title`/`.ribbon`/`.ledger`/`.ledger-row` are redefined LOCALLY
+   here (not by <link>-ing notable.css) per the controller's explicit
+   guidance — the same choice Task 10 made for contact.css. Reuses the
+   exact same class names as notable.css (zero runtime collision: that
+   file is never linked on this page); values are re-derived from this
+   page's own prototype rather than copied over; the featured/press ledger
+   fields differ slightly from notable's Key-Encounters ledger (12px/38px
+   vs. notable's 13px/42px year column, no middle "mark"-glyph span here —
+   this page's ledger rows are themselves the real article links, so the
+   bold source name inline + em dash does the job the mark glyph did there).
+
+   No dedicated mobile frame exists for this page; the mobile README
+   (design_handoff_dnd_cv_mobile/README.md, frame 1f writeup) explicitly
+   says "Media and Contact-guilds reuse exactly these [frame 1f] patterns
+   (card stack + ledger)" — so the mobile block re-derives notable.css's
+   own frame-1f card-stack/ledger ratios (1-col grids, 1-col ledger, ~85-
+   92% font/gutter shrink) rather than inventing new ones.
+   ============================================ */
+
+/* ---- Section divider: same dual-rule idea as main.css's `.section-title`,
+   at the 12px/.26em size this page's prototype uses (identical values to
+   notable.css's/contact.css's own locally-redefined `.rule-title`). ---- */
+.rule-title {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  font: 700 12px var(--font-sc); letter-spacing: .26em; color: var(--oxblood);
+}
+.rule-title::before, .rule-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+
+.podcasts, .videos, .press { padding: 18px 26px 4px; }
+
+/* ============================================
+   FEATURED PODCAST CARD
+   Composes with main.css's `.section-box` (panel bg/border/inset ring);
+   overrides border-color to the brighter gold + adds the ribbon's
+   positioning context.
+   ============================================ */
+.featured-card {
+  display: block; position: relative;
+  border-color: var(--gold-bright);
+  padding: 14px 18px; margin-bottom: 10px;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.featured-kicker { font: 700 9px var(--font-sc); letter-spacing: .2em; color: var(--gold); }
+.featured-title { font: 700 18px var(--font-display); color: var(--oxblood); margin-top: 3px; }
+.featured-blurb { font: 500 13px/1.5 var(--font-body); color: var(--body-ink); margin-top: 4px; text-wrap: pretty; max-width: 900px; }
+.featured-source { font: 500 11.5px var(--font-body); font-style: italic; color: var(--label); margin-top: 4px; }
+
+/* ---- Ribbon — pennant badge, top-right of the featured card. Same
+   clip-path/gold gradient as notable.css's `.ribbon--legendary` (gold is
+   this page's only rarity, so no modifier classes are needed). ---- */
+.ribbon {
+  position: absolute; top: -1px; right: 14px;
+  font: 700 8.5px var(--font-sc); letter-spacing: .2em; color: var(--oxblood-lo);
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold-bright));
+  padding: 3px 10px 4px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+
+/* ============================================
+   PODCAST CARDS (3-col) + VIDEO CARDS (2-col)
+   Both compose with `.section-box` for the default panel-border card look
+   (padding 12px 14px comes from `.section-box` itself — identical to the
+   prototype's literal value here, no override needed).
+   ============================================ */
+.podcast-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.podcast-card, .video-card {
+  display: block;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.card-kicker { font: 700 9px var(--font-sc); letter-spacing: .16em; color: var(--gold); }
+.card-title { font: 700 14px var(--font-display); color: var(--oxblood); margin-top: 3px; }
+.card-desc { font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink); margin-top: 4px; }
+.card-source { font: 500 11px var(--font-body); font-style: italic; color: var(--label); margin-top: 4px; }
+
+.featured-card:hover, .podcast-card:hover, .video-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(60,35,10,.28); /* card hover-lift shadow tint — no matching token, same literal as character-sheet.css's .stat-box / contact.css's .scroll-card */
+}
+
+/* ============================================
+   PRESS CHRONICLES — 2-col year ledger
+   ============================================ */
+.ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; }
+
+.ledger-row {
+  display: flex; gap: 12px; align-items: baseline; padding: 8px 0;
+  border-bottom: 1px dotted var(--dot-rule);
+}
+.ledger-year { flex: none; font: 700 12px var(--font-display); color: var(--gold); width: 38px; text-align: right; }
+.ledger-text { font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink); }
+.ledger-source { font-weight: 700; color: var(--oxblood); }
+.ledger-row:hover .ledger-source { color: var(--red-hover); }
+
+/* ---- Company-profiles row: ✦ marker instead of a year; not itself a link
+   (wraps 3 real inline links instead, so it can't be one <a>). Inner <a>s
+   need their own explicit color — main.css's generic `a{color:accent-blue}`
+   would otherwise win on the <a> itself regardless of the parent span's
+   italic label color (same leak campaigns.css's `.chip-row a.chip-tag`
+   comment documents and fixes the same way). ---- */
+.ledger-text--profiles { font-style: italic; color: var(--label); }
+.ledger-text--profiles a { color: var(--oxblood); border-bottom: 1px dotted var(--gold); }
+.ledger-text--profiles a:hover { color: var(--red-hover); }
+
+/* ============================================
+   KEY NUMBERS — stat strip (brief: "like projects stats", i.e. projects.css's
+   `.quest-stats`/`.stat-block`/`.stat-num`/`.stat-label`/`.stat-divider`).
+   Renamed key-* here rather than reusing stat-* verbatim: character-
+   sheet.css's own bare `.stat-value`/`.stat-label` (the AC/Initiative/Speed/
+   Proficiency vitals tiles, loaded on every page incl. this one) would
+   otherwise leak a stray `margin-top` onto `.stat-label` the way Task 8
+   found and fixed for `.stat-value` — sidestepped entirely with distinct
+   names instead of a specificity fight.
+   ============================================ */
+.key-numbers {
+  display: flex; justify-content: center; gap: 34px; margin: 18px 26px 22px; padding: 12px 16px;
+  border: 1px solid var(--panel-border);
+  background: rgba(247,238,216,.6); /* --panel at 60% — no rgba-token equivalent, same convention (and the same literal) as projects.css's own quest-stats/partners-strip */
+}
+.key-stat { text-align: center; }
+.key-num { font: 700 24px var(--font-display); color: var(--oxblood); }
+.key-label { font: 700 8.5px var(--font-sc); letter-spacing: .18em; color: var(--label); }
+.key-divider { width: 1px; background: var(--panel-border); }
+
+/* ============================================
+   MOBILE (≤740px) — no dedicated frame for this page; reuses frame 1f's
+   card-stack + ledger patterns per the mobile README (see file-top note).
+   Every selector below is scoped under `.media-page` (this page's unique
+   wrapper), matching contact.css's own convention (Task 10).
+   ============================================ */
+@media (max-width: 740px) {
+  .media-page .page-head { display: none; }
+
+  /* Section dividers kept VISIBLE here (unlike notable's mobile treatment,
+     which hides "Notable Adventures" entirely) — this page stacks 3
+     distinctly-typed sections (podcasts/videos/press) with no ribbon or
+     icon of their own to tell them apart once the page-head is gone, so
+     the labels earn their keep. Resized per the same mobile `.rule-title`
+     treatment notable.css/contact.css already use (9px, no left rule). */
+  .media-page .rule-title { font-size: 9px; letter-spacing: .22em; gap: 8px; margin-bottom: 6px; }
+  .media-page .rule-title::before { content: none; }
+
+  .media-page .podcasts, .media-page .videos, .media-page .press { padding: 16px 16px 4px; }
+
+  /* Same mobile padding as notable.css's analogous ribbon card
+     (`.achievement-card`, 13px 14px 11px) — same component pattern. */
+  .media-page .featured-card { padding: 13px 14px 11px; }
+  .media-page .ribbon { font-size: 8px; padding: 3px 9px 4px; }
+
+  .media-page .podcast-grid, .media-page .video-grid { grid-template-columns: 1fr; }
+
+  .media-page .ledger { grid-template-columns: 1fr; }
+  .media-page .ledger-row {
+    gap: 10px;
+    min-height: 44px; box-sizing: border-box; /* real link rows need a genuine ≥44px tap target; short single-line headlines would otherwise measure well under it */
+  }
+  .media-page .ledger-year { font-size: 11px; width: 32px; }
+  .media-page .ledger-text { font-size: 12px; }
+
+  .media-page .key-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 12px 16px 18px; padding: 10px 12px; }
+  .media-page .key-divider { display: none; }
+  .media-page .key-num { font-size: 19px; }
+  .media-page .key-label { font-size: 7.5px; }
+}

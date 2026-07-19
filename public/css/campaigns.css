@@ -1,409 +1,204 @@
 /* ============================================
-   CAMPAIGNS PAGE STYLES
+   CAMPAIGNS PAGE STYLES — Parchment & Ink
+   Structure/values transcribed from the prototype's Campaign Journal
+   component (localhost:8098 .../Campaigns.dc.html) — see task-7-report.md.
+
+   NOTE ON SCOPE: this file is <link>ed on all 6 pages (a pre-existing
+   template convention, not introduced by this task), but only campaigns.html
+   uses the `.campaign-*`/`.adventure*`/`.milestone*`/`.side-quest*`/`.ey-*`
+   vocabulary below — confirmed via repo-wide grep before this rewrite, so
+   none of that is shared. The old dark-theme `.page-header`/`.page-subtitle`
+   rule family (kept here through Task 10 because media.html still depended
+   on it) was removed in Task 11 once media.html got its own `.page-head`
+   header, the last page to need it — confirmed via repo-wide grep of all 6
+   `*.html` files that neither class is referenced anywhere anymore. */
+
+/* .campaigns-page itself needs no rule: Task 1's .sheet already supplies the
+   parchment background/1220px width; the old min-height:100vh + centered
+   1000px-max-width container it replaces was a pre-"sheet" layout leftover
+   (flagged, unfixed, in task-1-report.md) that no longer serves a purpose. */
+
+/* ============================================
+   CAMPAIGNS LIST
    ============================================ */
+.campaigns-container { display: flex; flex-direction: column; gap: 14px; padding: 18px 26px 8px; }
 
-.campaigns-page {
-  min-height: 100vh;
-  background: var(--light-bg);
-}
-
-/* Page Header */
-.page-header {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
-  padding: var(--spacing-xl) var(--spacing-xl);
-  text-align: center;
-  color: var(--white);
-}
-
-.page-title {
-  font-size: 32px;
-  margin-bottom: var(--spacing-sm);
-}
-
-.page-subtitle {
-  font-size: 16px;
-  color: var(--text-light);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Campaigns Container */
-.campaigns-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
-}
-
-/* Campaign Card */
 .campaign-card {
-  background: var(--white);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--spacing-lg);
-  overflow: hidden;
-  transition: all var(--transition-normal);
+  position: relative; /* positioning context for .margin-note--ey */
+  background: var(--panel); border: 1px solid var(--panel-border);
+  box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--panel-ring);
 }
 
-.campaign-card.expanded {
-  border-color: var(--primary-red);
-}
-
-.campaign-header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  cursor: pointer;
-  transition: background var(--transition-fast);
-}
-
+.campaign-header { display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer; }
 .campaign-header:hover {
-  background: var(--light-bg);
+  background: #f2e7cc; /* fallback for browsers without color-mix() */
+  background: color-mix(in srgb, var(--panel), var(--parchment)); /* ≈ #f2e7cc, prototype's exact hover tint — no single token matches it */
 }
 
-.campaign-icon {
-  font-size: 32px;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
+.campaign-initial {
+  flex: none; width: 44px; height: 44px;
+  border: 1px solid var(--gold); background: var(--parchment);
+  display: flex; align-items: center; justify-content: center;
+  font: 700 22px var(--font-display); color: var(--oxblood);
+  box-shadow: inset 0 0 0 2px var(--panel), inset 0 0 0 3px var(--panel-border);
 }
 
-.campaign-info {
-  flex: 1;
-}
+.campaign-info { flex: 1; min-width: 0; }
+.campaign-title { font: 700 20px var(--font-display); color: var(--oxblood); }
+.campaign-meta { font: 500 12px var(--font-body); font-style: italic; color: var(--label); margin-top: 1px; }
 
-.campaign-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-xs);
+.campaign-status-chip {
+  flex: none;
+  font: 700 10px var(--font-sc); letter-spacing: .12em; white-space: nowrap;
+  color: var(--oxblood); background: var(--parchment); border: 1px solid var(--tile-border);
+  padding: 3px 12px; border-radius: 10px;
 }
-
-.campaign-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.campaign-outcome {
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-}
-
-.campaign-outcome.success {
-  background: #E8F5E9;
-  color: #2E7D32;
-}
+.campaign-status-chip.success { color: var(--gold-max); background: var(--oxblood); border-color: var(--gold); }
 
 .campaign-toggle {
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: var(--spacing-sm);
-  color: var(--text-secondary);
+  flex: none; width: 18px; text-align: center;
+  background: none; border: none; padding: 0; cursor: pointer;
+  font: 700 13px var(--font-display); color: var(--gold);
 }
 
-/* Campaign Body — collapsed by default, shown when expanded */
-.campaign-card:not(.expanded) .campaign-body {
-  display: none;
-}
+.campaign-body { border-top: 1px solid var(--panel-border); padding: 14px 18px 16px; animation: pi-fadeup .25s; }
+/* @keyframes pi-fadeup: shared, defined once in css/main.css (T12 dedup) */
+@media (prefers-reduced-motion: reduce) { .campaign-body { animation: none; } }
 
-.campaign-body {
-  padding: 0 var(--spacing-lg) var(--spacing-lg);
-  border-top: 1px solid var(--border-color);
-}
+.campaign-summary { font: 500 13.5px/1.55 var(--font-body); color: var(--body-ink); text-wrap: pretty; }
 
-/* Rotate toggle arrow when expanded */
-.campaign-card.expanded .campaign-toggle {
-  transform: rotate(180deg);
-}
+/* Party Members / Featured Quests chip rows (chips reuse main.css's .chip-tag).
+   The Featured Quests chips are real <a> links (Party Members' are plain
+   <span>s) — main.css's generic `a { color: var(--accent-blue) }` (a
+   pre-redesign leftover .chip-tag itself doesn't contest) would otherwise
+   render them in the site's old hyperlink blue instead of ink, confirmed via
+   computed-style introspection. The prototype's own link color site-wide is
+   simply oxblood/red-hover (its base `a{color:#58180d}a:hover{color:#7a2e1d}`),
+   so that's what these chips get too. */
+.chip-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.chip-row a.chip-tag { color: var(--oxblood); }
+.chip-row a.chip-tag:hover { color: var(--red-hover); }
+.chip-row-label { font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--label); }
 
-.campaign-summary {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-primary);
-  margin: var(--spacing-md) 0;
-}
-
-/* Partner Logos */
-.partner-logos {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-lg);
-  overflow-x: auto;
-}
-
-.partners-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.logo-scroll {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-
-.partner-badge {
-  padding: 4px 12px;
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-/* Adventures List */
+/* ---- Adventures ---- */
 .adventures-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
+  display: flex; flex-direction: column; gap: 12px; margin-top: 14px;
+  border-left: 2px solid var(--gold-bright); padding-left: 16px;
 }
+.adventure-head { display: flex; align-items: baseline; gap: 10px; }
+.adventure-title { font: 700 15px var(--font-display); color: var(--ink); }
+.adventure-dates { font: 500 11.5px var(--font-body); font-style: italic; color: var(--label); }
+.adventure-summary { font: 500 12.5px var(--font-body); color: var(--body-ink); margin-top: 2px; }
 
-.adventure-card {
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) var(--spacing-md);
-  border-left: 3px solid var(--primary-red);
-  margin-bottom: var(--spacing-md);
-}
+.milestones { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+.milestone { font: 500 12.5px var(--font-body); color: var(--ink); padding: 3px 10px; }
+.milestone-icon { color: var(--oxblood); }
+.milestone-name { font-weight: 600; }
+.milestone--notable { background: var(--parchment); border-left: 3px solid var(--gold-bright); padding: 5px 10px; }
+.milestone--notable .milestone-icon { color: var(--gold); }
 
-.adventure-card:last-child {
-  margin-bottom: 0;
-}
+/* ---- Early Years: 2-col activity grid + margin note (reuses main.css's .margin-note) ---- */
+.early-years-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.early-years-card { border: 1px solid var(--panel-border); background: var(--parchment); padding: 9px 12px; }
+.ey-title { font: 700 13.5px var(--font-display); color: var(--ink); }
+.ey-dates { font: 500 11.5px var(--font-body); font-style: italic; color: var(--label); }
+.ey-desc { font: 500 12.5px var(--font-body); color: var(--ink); margin-top: 2px; }
+.margin-note--ey { right: 22px; bottom: -12px; transform: rotate(-2deg); font-size: 16px; }
 
-.adventure-card.compact {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-}
+/* ============================================
+   SIDE QUESTS
+   ============================================ */
+.side-quests { padding: 18px 26px 22px; }
+.side-quests-sub { text-align: center; font: 500 12.5px var(--font-body); font-style: italic; color: var(--label); margin: -6px 0 12px; }
+.side-quests-hint { display: none; }
+.side-quests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.side-quests-grid > .section-box { padding: 11px 14px; }
 
-.adventure-header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
-}
+.sq-name { font: 700 13.5px var(--font-display); color: var(--oxblood); }
+.sq-meta { display: block; font: 700 9px var(--font-sc); letter-spacing: .14em; color: var(--label); margin: 2px 0; }
+.sq-desc { font: 500 12.5px/1.4 var(--font-body); color: var(--body-ink); }
 
-.adventure-icon {
-  font-size: 20px;
-}
+/* ============================================
+   MOBILE (≤740px)
+   Every selector below is deliberately scoped under `.campaigns-page`
+   (this page's unique top-level wrapper), even where the bare class is
+   already page-specific — because campaigns.css loads on notable/projects/
+   contact/media.html too (see the file-top note), any rule touching a class
+   name shared with main.css/character-sheet.css chrome (the `.page-head`
+   family, `.section-title`, `.margin-note`) would otherwise leak onto those
+   pages' own content once a later task gives them the same chrome. Same
+   defensive intent as main.css's #mainNavbar-prefix (Task 1).
+   ============================================ */
+@media (max-width: 740px) {
+  .campaigns-page .page-kicker { font-size: 8px; }
+  .campaigns-page .page-title { font-size: 25px; }
+  .campaigns-page .page-rule { margin-top: 6px; }
+  .campaigns-page .page-rule::before, .campaigns-page .page-rule::after { width: 70px; }
+  .campaigns-page .page-sub { display: none; } /* absent from frame 1d's mobile header */
 
-.adventure-info {
-  flex: 1;
-}
+  .campaigns-page .campaigns-container { padding: 12px 16px 4px; gap: 8px; }
 
-.adventure-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.adventure-dates {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.adventure-summary {
-  font-size: 14px;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-/* Encounters List */
-.encounters-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-sm);
-}
-
-.encounter-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  background: var(--white);
-  border-radius: var(--radius-sm);
-}
-
-.encounter-item.notable {
-  border-left: 3px solid var(--accent-gold);
-  background: #FFFDE7;
-}
-
-.encounter-icon {
-  font-size: 14px;
-}
-
-.encounter-content {
-  flex: 1;
-}
-
-.encounter-content strong {
-  font-size: 14px;
-  display: block;
-  margin-bottom: 2px;
-}
-
-.encounter-content p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-/* Featured Projects */
-.featured-projects {
-  margin-top: var(--spacing-lg);
-  padding-top: var(--spacing-md);
-  border-top: 1px dashed var(--border-color);
-}
-
-.projects-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: var(--spacing-md);
-}
-
-.project-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-sm);
-}
-
-.project-card {
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-sm);
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  transition: all var(--transition-fast);
-}
-
-.project-card:hover {
-  border-color: var(--primary-red);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.project-category {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--primary-red);
-}
-
-.project-name {
-  font-size: 13px;
-  color: var(--text-primary);
-}
-
-/* Side Quests Section */
-.side-quests-section {
-  margin-top: var(--spacing-xl);
-  padding-top: var(--spacing-xl);
-  border-top: 2px solid var(--border-color);
-}
-
-.side-quests-title {
-  font-size: 24px;
-  margin-bottom: var(--spacing-xs);
-}
-
-.side-quests-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-lg);
-}
-
-.side-quests-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-md);
-}
-
-.side-quest-card {
-  display: flex;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-}
-
-.sq-icon {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--light-bg);
-  border-radius: var(--radius-sm);
-}
-
-.sq-info h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.sq-role {
-  font-size: 12px;
-  color: var(--primary-red);
-  font-weight: 500;
-}
-
-.sq-dates {
-  font-size: 11px;
-  color: var(--text-light);
-  display: block;
-  margin-bottom: var(--spacing-xs);
-}
-
-.sq-info p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .campaigns-container {
-    padding: var(--spacing-md);
+  /* Header row becomes a 2-row grid: tile/info/chevron on row 1, the status
+     chip (always visible, open or closed) dropped to its own row 2 — the
+     brief's own "chips fold into the meta line or below per frame" allowance,
+     and grid (vs. a flex-wrap + flex-basis:100% trick) is what lets the chip
+     size to its own content instead of stretching edge-to-edge. */
+  .campaigns-page .campaign-header {
+    display: grid; grid-template-columns: 34px 1fr auto;
+    grid-template-areas: "tile info chev" "chip chip chip";
+    column-gap: 14px; row-gap: 5px; align-items: center;
+    padding: 12px 13px;
   }
-  
-  .campaign-header {
-    flex-wrap: wrap;
+  .campaigns-page .campaign-initial { grid-area: tile; width: 34px; height: 34px; font-size: 17px; box-shadow: none; }
+  .campaigns-page .campaign-info { grid-area: info; }
+  .campaigns-page .campaign-toggle { grid-area: chev; }
+  .campaigns-page .campaign-status-chip { grid-area: chip; justify-self: start; margin-left: 48px; }
+  .campaigns-page .campaign-title { font-size: 15.5px; }
+  .campaigns-page .campaign-meta { font-size: 10.5px; }
+
+  .campaigns-page .campaign-body { padding: 10px 13px 12px; }
+  .campaigns-page .campaign-summary,
+  .campaigns-page .adventure-summary,
+  .campaigns-page .milestone,
+  .campaigns-page .ey-desc,
+  .campaigns-page .sq-desc { font-size: 12px; }
+
+  /* Adventure title + dates collapse onto one inline line (the two spans'
+     source-order whitespace becomes a real space once the row stops being
+     a flex container). */
+  .campaigns-page .adventure-head { display: block; }
+  .campaigns-page .adventure-title { font-size: 13px; }
+  .campaigns-page .adventure-dates { font-size: 10.5px; }
+
+  .campaigns-page .early-years-grid { gap: 6px; }
+
+  /* Side Quests: 3-col grid becomes a horizontal swipe rail with a right
+     fade — same non-scrolling-wrapper-holds-the-fade pattern as
+     character-sheet.css's .ability-strip-wrap (Task 6), so the gradient
+     stays pinned to the visible edge instead of scrolling away with the
+     cards. */
+  .campaigns-page .side-quests-rail { position: relative; }
+  .campaigns-page .side-quests-grid {
+    display: flex; overflow-x: auto; gap: 8px; padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
   }
-  
-  .campaign-meta {
-    flex-direction: column;
-    gap: var(--spacing-xs);
+  .campaigns-page .side-quests-grid > .section-box { flex: none; width: 200px; }
+  .campaigns-page .side-quests-rail::after {
+    content: ''; position: absolute; top: 0; bottom: 12px; right: 0; width: 44px;
+    background: linear-gradient(90deg, transparent, var(--parchment)); pointer-events: none;
   }
-  
-  .project-cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .side-quests-grid {
-    grid-template-columns: 1fr;
-  }
+  .campaigns-page .side-quests-hint { display: inline; color: var(--gold); }
 }
+
+/* ==========================================================================
+   DnD-cv-maker branch: dynamic campaign-card expand/collapse behavior.
+   The generator's public/js/render.js emits .campaign-card and toggles
+   .expanded on click (with a .campaign-toggle chevron), plus .adventure-card
+   items. The redesign's campaigns.css (static site) styled these elements but
+   carried no show/hide logic. These rules are preserved during the Parchment &
+   Ink css sync so the generator's collapsible cards keep working.
+   ========================================================================== */
+.campaign-card:not(.expanded) .campaign-body { display: none; }
+.campaign-card.expanded .campaign-toggle { transform: rotate(180deg); }
+.adventure-card { margin-bottom: var(--spacing-md); }
+.adventure-card:last-child { margin-bottom: 0; }
