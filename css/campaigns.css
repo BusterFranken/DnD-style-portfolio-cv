@@ -7,31 +7,16 @@
    template convention, not introduced by this task), but only campaigns.html
    uses the `.campaign-*`/`.adventure*`/`.milestone*`/`.side-quest*`/`.ey-*`
    vocabulary below — confirmed via repo-wide grep before this rewrite, so
-   none of that is shared. Two rule families genuinely ARE still load-bearing
-   for media.html (it has no `.page-head`-based header yet — notable.html and
-   projects.html got theirs in Tasks 8/9, contact.html in Task 10, and no
-   longer match here): `.page-header`/`.page-subtitle` and the old dark-theme
-   `.page-title` size. Both are kept byte-identical below, with `.page-title`
-   rescoped to `.page-header .page-title` so the old-page rule wins by
-   specificity over main.css's bare `.page-title`; campaigns.html itself uses
-   the `.page-head` wrapper, so the `.page-header` rule never matches there —
-   same targeted-rescope pattern Task 1 already used for #mainNavbar.
-   ============================================ */
+   none of that is shared. The old dark-theme `.page-header`/`.page-subtitle`
+   rule family (kept here through Task 10 because media.html still depended
+   on it) was removed in Task 11 once media.html got its own `.page-head`
+   header, the last page to need it — confirmed via repo-wide grep of all 6
+   `*.html` files that neither class is referenced anywhere anymore. */
 
 /* .campaigns-page itself needs no rule: Task 1's .sheet already supplies the
    parchment background/1220px width; the old min-height:100vh + centered
    1000px-max-width container it replaces was a pre-"sheet" layout leftover
    (flagged, unfixed, in task-1-report.md) that no longer serves a purpose. */
-
-/* ---- Kept verbatim for contact/media.html (see note above) ---- */
-.page-header {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
-  padding: var(--spacing-xl) var(--spacing-xl);
-  text-align: center;
-  color: var(--white);
-}
-.page-header .page-title { font-size: 32px; margin-bottom: var(--spacing-sm); }
-.page-subtitle { font-size: 16px; color: var(--text-light); max-width: 600px; margin: 0 auto; }
 
 /* ============================================
    CAMPAIGNS LIST
