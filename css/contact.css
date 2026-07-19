@@ -1,0 +1,175 @@
+/* ============================================
+   CONTACT PAGE STYLES — Parchment & Ink
+   Structure/values transcribed from the prototype's Adventurer's Guild
+   component (localhost:8098 .../Contact.dc.html; mobile frame 1g in
+   .../Mobile Views.dc.html) — see task-10-report.md.
+
+   NOTE ON SCOPE: new file, linked only on contact.html. Replaces the old
+   css/network.css bundle (still linked on media.html, untouched here) — this
+   page's markup no longer uses any of that file's classes, so its link was
+   removed from contact.html's <head>. `.contact-page` itself needs no rule:
+   Task 1's `.sheet` already supplies the parchment background/1220px width,
+   same reasoning campaigns.css's own file-top comment documents.
+
+   `.rule-title` is deliberately redefined here (not reused via a shared
+   <link>) rather than linking notable.css — this page's own controller
+   guidance was explicit: don't link notable.css just to borrow one class,
+   replicate what's needed locally. Task 8's `.ledger-row` (dotted year-ledger
+   rows) has no visual analogue anywhere in this page's prototype (the Guilds
+   list and vouch cards are plain bordered panels, not dotted/year rows), so
+   it isn't reused here — `.guild-row` is a new, page-specific pattern instead.
+   ============================================ */
+
+/* ---- Section divider: same dual-rule idea as main.css's `.section-title`,
+   at the 12px/.26em size this page's prototype uses (identical values to
+   notable.css's own `.rule-title`, redefined locally per the note above). ---- */
+.rule-title {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  font: 700 12px var(--font-sc); letter-spacing: .26em; color: var(--oxblood);
+}
+.rule-title::before, .rule-title::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+
+/* ============================================
+   CONTACT SCROLLS — 4-up card grid (email/phone/LinkedIn/GitHub)
+   ============================================ */
+.contact-scrolls { padding: 18px 26px 4px; }
+
+.scroll-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+/* Composes with main.css's `.section-box` (panel bg/border/inset ring); this
+   adds the card's own padding, the icon+body+arrow flex row (arrow/large
+   glyph are mobile-only, see media block), and the hover lift. */
+.scroll-card {
+  display: flex; align-items: flex-start; gap: 5px;
+  padding: 14px 16px;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.scroll-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(60,35,10,.28); /* hover shadow tint — no matching token, same convention as css/projects.css's partners-strip literal */
+}
+/* Email card: brighter gold border (brief Step 2) */
+.scroll-card--email { border-color: var(--gold-bright); }
+
+.scroll-glyph-lg { display: none; } /* large icon column: mobile-only, see media block */
+.scroll-body { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.scroll-label { font: 700 9px var(--font-sc); letter-spacing: .2em; color: var(--gold); }
+.scroll-value { font: 600 13.5px var(--font-body); color: var(--oxblood); margin-top: 4px; }
+.scroll-note { font: 500 11.5px var(--font-body); font-style: italic; color: var(--label); margin-top: 2px; }
+.scroll-arrow { display: none; } /* mobile-only, see media block */
+
+/* ============================================
+   HOME BASE + GUILDS (left) / LETTERS OF RECOMMENDATION (right)
+   ============================================ */
+.contact-columns { display: grid; grid-template-columns: 1fr 1.2fr; gap: 14px; padding: 18px 26px 4px; }
+
+/* ---- Home Base ---- */
+.location-card { padding: 16px 18px; position: relative; }
+.location-city { font: 700 19px var(--font-display); color: var(--oxblood); }
+.location-address { font: 500 13px var(--font-body); color: var(--body-ink); margin-top: 3px; }
+.location-status-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.status-chip {
+  font: 700 10px var(--font-sc); letter-spacing: .12em; color: var(--gold-max);
+  background: var(--oxblood); border: 1px solid var(--gold);
+  padding: 3px 12px; border-radius: 10px;
+}
+.location-note { font: 500 12.5px var(--font-body); font-style: italic; color: var(--label); margin-top: 8px; }
+/* Reuses main.css's `.margin-note` (Caveat hand-note); position/rotation only. */
+.margin-note--ravens { right: 14px; top: 12px; transform: rotate(4deg); }
+
+/* ---- Guilds & Factions ---- */
+.guilds-rule { margin: 16px 0 12px; }
+.guild-list { display: flex; flex-direction: column; gap: 6px; }
+.guild-row {
+  display: flex; align-items: baseline; gap: 8px;
+  background: var(--panel); border: 1px solid var(--panel-border);
+  padding: 8px 12px;
+}
+.guild-name { font: 600 13px var(--font-body); color: var(--oxblood); }
+.guild-role { margin-left: auto; font: 500 11px var(--font-body); font-style: italic; color: var(--label); white-space: nowrap; }
+
+/* ---- Letters of Recommendation ---- */
+.vouch-list { display: flex; flex-direction: column; gap: 10px; }
+.vouch-card { padding: 12px 16px; } /* composes with .section-box */
+.vouch-quote { font: 500 13px/1.5 var(--font-body); font-style: italic; color: var(--body-ink); }
+.vouch-cite { display: block; font: 700 9.5px var(--font-sc); font-style: normal; letter-spacing: .14em; color: var(--label); margin-top: 5px; }
+
+/* ============================================
+   CTA — "Ready to Start a New Quest?"
+   ============================================ */
+.cta-panel {
+  text-align: center;
+  border: 1px solid var(--gold-bright);
+  background: rgba(247,238,216,.7); /* --panel (#f7eed8) at 70% — no token for the translucent variant, same convention as css/projects.css's stats-strip literal */
+  margin: 20px 26px 22px;
+  padding: 20px 20px 18px;
+  box-shadow: inset 0 0 0 3px rgba(247,238,216,.7), inset 0 0 0 4px var(--panel-ring);
+}
+.cta-title { font: 700 22px var(--font-display); color: var(--oxblood); }
+.cta-subtitle { font: 500 13.5px var(--font-body); font-style: italic; color: var(--body-ink); margin-top: 4px; }
+.cta-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 14px; }
+/* .ov-roll-btn/.ov-outline-btn (css/overlay.css) are unwrapped-by-design and
+   carry their own margin-top/margin-right for that context; reset both to 0
+   here since this row's own flex `gap` supplies the spacing instead. */
+.cta-buttons .ov-roll-btn, .cta-buttons .ov-outline-btn { margin: 0; }
+/* .ov-outline-btn's shared gold-dim-on-dark-band styling (tuned for the
+   oxblood overlay header) isn't legible on this light parchment-tinted
+   panel — override to the brief's literal oxblood-on-parchment treatment,
+   scoped to this button only so every other page's/overlay's use of
+   .ov-outline-btn is unaffected. */
+.cta-buttons .ov-outline-btn { color: var(--oxblood); }
+.cta-buttons .ov-outline-btn:hover { background: var(--panel); border-color: var(--gold); }
+
+/* ============================================
+   MOBILE (≤740px) — frame 1g: full-width scroll rows (glyph · label+value
+   · →), stacked cards, CTAs stacked full-width. Page-head stays visible
+   here (adjudicated, unlike notable/projects — see task-10-report.md); the
+   per-section `.rule-title` dividers ("Contact Scrolls"/"Home Base"/"Guilds
+   & Factions"/"Letters of Recommendation") are hidden, matching frame 1g's
+   own flat, undivided card stack.
+   ============================================ */
+@media (max-width: 740px) {
+  .contact-page .page-head { padding: 18px 16px 4px; }
+  .contact-page .page-kicker { font-size: 8px; }
+  .contact-page .page-title { font-size: 25px; }
+  .contact-page .page-rule { display: none; } /* absent from frame 1g's mobile header */
+  .contact-page .page-sub { display: none; } /* absent from frame 1g's mobile header */
+
+  .contact-page .rule-title { display: none; }
+
+  /* ---- Contact Scrolls: full-width rows (glyph · label+value · →) ---- */
+  .contact-page .contact-scrolls { padding: 12px 16px 4px; }
+  .contact-page .scroll-grid { grid-template-columns: 1fr; gap: 8px; }
+  .contact-page .scroll-card { align-items: center; gap: 12px; padding: 13px 15px; }
+  .contact-page .scroll-glyph-lg { display: block; flex: none; font: 400 17px serif; color: var(--gold); }
+  .contact-page .scroll-glyph-sm { display: none; }
+  .contact-page .scroll-note { display: none; }
+  .contact-page .scroll-arrow { display: block; flex: none; font: 700 12px var(--font-display); color: var(--gold); }
+
+  /* ---- Home Base + Guilds / Letters: single column ---- */
+  .contact-page .contact-columns { grid-template-columns: 1fr; gap: 0; padding: 4px 16px 4px; }
+  .contact-page .home-base { margin-bottom: 8px; }
+  .contact-page .guilds { margin-top: 8px; margin-bottom: 8px; }
+  .contact-page .letters { margin-top: 8px; }
+
+  .contact-page .location-city { font-size: 15px; }
+  .contact-page .location-address { display: none; } /* absent from frame 1g's condensed card */
+  .contact-page .margin-note--ravens { display: none; } /* no room on the narrower card */
+  .contact-page .status-chip { font-size: 9px; letter-spacing: .1em; padding: 3px 10px; border-radius: 9px; }
+
+  .contact-page .guild-list { gap: 8px; }
+  .contact-page .guild-row { min-height: 44px; box-sizing: border-box; }
+
+  .contact-page .vouch-list { gap: 8px; }
+
+  /* ---- CTA: stacked full-width buttons, ≥48px tall ---- */
+  .contact-page .cta-panel { margin: 8px 16px 18px; padding: 18px 16px 16px; }
+  .contact-page .cta-title { font-size: 19px; }
+  .contact-page .cta-subtitle { font-size: 12.5px; }
+  .contact-page .cta-buttons { flex-direction: column; gap: 10px; margin-top: 14px; }
+  .contact-page .cta-buttons .ov-roll-btn,
+  .contact-page .cta-buttons .ov-outline-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 48px; box-sizing: border-box;
+  }
+}

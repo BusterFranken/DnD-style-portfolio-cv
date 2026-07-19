@@ -8,14 +8,14 @@
    uses the `.campaign-*`/`.adventure*`/`.milestone*`/`.side-quest*`/`.ey-*`
    vocabulary below — confirmed via repo-wide grep before this rewrite, so
    none of that is shared. Two rule families genuinely ARE still load-bearing
-   for contact/media.html (neither has its own `.page-head`-based header yet —
-   notable.html and projects.html got theirs in Tasks 8/9 and no longer match
-   here): `.page-header`/`.page-subtitle` and the old dark-theme `.page-title`
-   size. Both are kept byte-identical below, with `.page-title` rescoped to
-   `.page-header .page-title` so the old-page rule wins by specificity over
-   main.css's bare `.page-title`; campaigns.html itself uses the `.page-head`
-   wrapper, so the `.page-header` rule never matches there — same
-   targeted-rescope pattern Task 1 already used for #mainNavbar.
+   for media.html (it has no `.page-head`-based header yet — notable.html and
+   projects.html got theirs in Tasks 8/9, contact.html in Task 10, and no
+   longer match here): `.page-header`/`.page-subtitle` and the old dark-theme
+   `.page-title` size. Both are kept byte-identical below, with `.page-title`
+   rescoped to `.page-header .page-title` so the old-page rule wins by
+   specificity over main.css's bare `.page-title`; campaigns.html itself uses
+   the `.page-head` wrapper, so the `.page-header` rule never matches there —
+   same targeted-rescope pattern Task 1 already used for #mainNavbar.
    ============================================ */
 
 /* .campaigns-page itself needs no rule: Task 1's .sheet already supplies the
