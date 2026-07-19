@@ -65,7 +65,7 @@ function initCreator() {
     }
     fileList.innerHTML = selectedFiles.map((f, i) => `
       <div class="file-item">
-        <span class="file-item-name">📄 ${f.name} <small>(${formatSize(f.size)})</small></span>
+        <span class="file-item-name">❖ ${f.name} <small>(${formatSize(f.size)})</small></span>
         <button class="file-item-remove" data-index="${i}" title="Remove">&times;</button>
       </div>
     `).join('');

@@ -97,9 +97,10 @@
    below are a read-only contract (.file-item/.file-item-name/.file-item-remove),
    restyled here to the `.chip-tag` pill idiom (main.css) since the emitted
    markup can't be swapped to that class name directly (it wraps a name +
-   remove button, `.chip-tag` alone is bare inline text). The 📄 emoji and
-   `&times;` glyph are part of creator.js's template string — left as-is,
-   see task-15-report.md. ---- */
+   remove button, `.chip-tag` alone is bare inline text). The ❖ glyph and
+   `&times;` remove-icon are part of creator.js's template string (❖ replaced
+   the prior true-emoji glyph in the T16 emoji-purge fix) — left as-is,
+   see task-15/16 reports. ---- */
 .file-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
 .file-item {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
