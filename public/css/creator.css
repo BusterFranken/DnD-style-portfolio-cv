@@ -1,467 +1,311 @@
 /* ============================================
-   CREATOR PAGE STYLES
+   CREATOR PAGE STYLES — Parchment & Ink (extrapolated)
+   No prototype exists for this page (Task 15) — values below extrapolate
+   from the established design system rather than transcribing a reference
+   frame: main.css (.sheet/#mainNavbar/.contact-bar/.section-box/.page-head/
+   .chip-tag tokens), css/overlay.css (.ov-roll-btn/.ov-outline-btn, and the
+   dashed-hatch ".ov-plate-art" art-placeholder idiom reused verbatim below
+   for the dropzone), and the dotted ".ledger-row" idiom (css/notable.css /
+   css/media.css) reused as the visual language for the past-sheets list.
+   Flagged decisions are called out inline; see task-15-report.md for the
+   full list.
+
+   SCOPE: only main.css + character-sheet.css + overlay.css are <link>ed
+   alongside this file (see creator.html head comment) — NOT classic-cv.css/
+   campaigns.css/dice.css, which the other 6 pages link mostly as leftover
+   template convention (campaigns.css's own file-top comment confirms most
+   pages don't actually use its classes). This page never had that
+   convention to begin with (pre-redesign creator.html linked no shared CSS
+   at all) and loads only creator.js (no data.js/render.js/overlay.js/
+   admin.js/main.js) — so no admin-login button, overlay modal or dice modal
+   markup is added either: none of it would function without those scripts,
+   and the original page never had them.
    ============================================ */
 
-.creator-page {
-  max-width: 720px;
+/* .creator-page itself needs no rule: main.css's `.sheet` already supplies
+   the parchment background/1220px width (same reasoning as every sibling
+   page's own file-top comment). */
+
+/* ============================================
+   PAGE CONTAINER — centered column, single linear task-flow
+   (narrower than the 1220px sheet on purpose: this page is one linear flow,
+   not a multi-column layout, so it's centered like css/overlay.css's own
+   640px `.overlay-content` rather than spanning the full sheet width —
+   flagged extrapolation, see report.)
+   ============================================ */
+.creator-container {
+  max-width: 680px;
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-lg);
-  min-height: 80vh;
-}
-
-.creator-page .page-title {
-  text-align: center;
-  margin-bottom: var(--spacing-xs);
-}
-
-.creator-page .page-subtitle {
-  text-align: center;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xl);
-  max-width: 540px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-}
-
-/* ── Upload Card ─────────────────── */
-
-.upload-card {
-  background: var(--white);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  margin-bottom: var(--spacing-xl);
-}
-
-.upload-card h2 {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  margin-bottom: var(--spacing-sm);
-  color: var(--text-primary);
-}
-
-.upload-card p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-lg);
-}
-
-/* ── Dropzone ─────────────────── */
-
-.dropzone {
-  border: 2px dashed var(--border-color);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-xl) var(--spacing-lg);
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: var(--bg-secondary);
-}
-
-.dropzone:hover,
-.dropzone.drag-over {
-  border-color: var(--primary-red);
-  background: rgba(155, 28, 28, 0.03);
-}
-
-.dropzone-icon {
-  font-size: 48px;
-  margin-bottom: var(--spacing-sm);
-  display: block;
-}
-
-.dropzone-text {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.dropzone-hint {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-}
-
-.dropzone input[type="file"] {
-  display: none;
-}
-
-/* ── File List ─────────────────── */
-
-.file-list {
-  margin-top: var(--spacing-md);
+  padding: 10px 26px 34px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 18px;
 }
 
+/* Shared card-heading idiom (flanking dotted-panel-border lines, SC label) —
+   replicated locally rather than reusing main.css's `.section-title` because
+   character-sheet.css's own mobile block sets
+   `.section-box > .section-title { display:none }` (an accordion-era rule
+   for the character-sheet page this file doesn't want): a same-named class
+   on a `.section-box` child here would vanish at ≤740px with no accordion
+   head to replace it. */
+.upload-card-title, .past-sheets-title {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  font: 700 11px var(--font-sc); letter-spacing: .2em; color: var(--oxblood);
+}
+.upload-card-title::before, .upload-card-title::after,
+.past-sheets-title::before, .past-sheets-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--panel-border);
+}
+
+/* ============================================
+   UPLOAD CARD
+   ============================================ */
+.upload-card-copy {
+  font: 500 13px/1.55 var(--font-body); color: var(--body-ink);
+  margin-bottom: 16px;
+}
+
+/* ---- Dropzone: same dashed-gold/hatched-parchment idiom as
+   css/overlay.css's `.ov-plate-art` (art-placeholder plate), values
+   transcribed verbatim per the brief. ---- */
+.dropzone {
+  position: relative;
+  border: 1px dashed var(--gold);
+  background: repeating-linear-gradient(45deg, rgba(154,123,54,.1) 0 8px, transparent 8px 16px);
+  padding: 34px 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.dropzone:hover { border-color: var(--gold-bright); }
+.dropzone.drag-over {
+  border-style: solid;
+  border-color: var(--gold-bright);
+  background: repeating-linear-gradient(45deg, rgba(154,123,54,.18) 0 8px, transparent 8px 16px);
+}
+.dropzone-icon { display: block; font-size: 38px; color: var(--gold); margin-bottom: 10px; }
+.dropzone-text { font: 500 15px var(--font-body); color: var(--body-ink); margin-bottom: 6px; }
+/* SC hint line (brief: "SC hint lines") — source text stays lowercase, the
+   Alegreya Sans SC face renders it small-caps itself; forcing
+   text-transform:uppercase here would defeat that (see css/character-sheet.css's
+   T12 comment on `.campaign-label`/`.campaign-name` for the same rule). */
+.dropzone-hint { font: 700 9.5px var(--font-sc); letter-spacing: .14em; color: var(--label); }
+.dropzone input[type="file"] { display: none; }
+
+/* ---- File chips: JS-emitted markup (creator.js renderFileList()) — classes
+   below are a read-only contract (.file-item/.file-item-name/.file-item-remove),
+   restyled here to the `.chip-tag` pill idiom (main.css) since the emitted
+   markup can't be swapped to that class name directly (it wraps a name +
+   remove button, `.chip-tag` alone is bare inline text). The 📄 emoji and
+   `&times;` glyph are part of creator.js's template string — left as-is,
+   see task-15-report.md. ---- */
+.file-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
 .file-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg-secondary);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  font: 500 12.5px var(--font-body); color: var(--body-ink);
+  border: 1px solid var(--tile-border); background: var(--parchment);
+  padding: 6px 6px 6px 14px; border-radius: 14px;
 }
-
-.file-item-name {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
+.file-item-name { display: flex; align-items: baseline; gap: 4px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-item-name small { color: var(--label); font-size: .85em; flex: none; }
 .file-item-remove {
-  background: none;
-  border: none;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  font-size: 1.1rem;
-  padding: 2px 6px;
-  border-radius: 4px;
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px;
+  background: none; border: none; border-radius: 50%;
+  color: var(--label); cursor: pointer; font-size: 16px; line-height: 1;
+  transition: background .15s ease, color .15s ease;
 }
+.file-item-remove:hover { color: var(--oxblood); background: rgba(88,24,13,.08); }
 
-.file-item-remove:hover {
-  color: var(--primary-red);
-  background: rgba(155, 28, 28, 0.08);
-}
-
-/* ── Generate Button ─────────────────── */
-
+/* ---- Generate button: .ov-roll-btn (css/overlay.css) supplies the solid-
+   oxblood/gold-border/SC look; this adds the page-specific block-width +
+   min-height (brief: "≥48px primary CTA") + disabled state (.ov-roll-btn is
+   normally an <a>, so overlay.css never needed a :disabled rule). ---- */
 .generate-btn {
-  display: block;
-  width: 100%;
-  padding: 14px 24px;
-  background: var(--primary-red);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: var(--spacing-lg);
-  letter-spacing: 0.5px;
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 48px; box-sizing: border-box;
+  margin: 18px 0 0; font-size: 12px;
 }
-
-.generate-btn:hover:not(:disabled) {
-  background: #7a1616;
-  transform: translateY(-1px);
-}
-
 .generate-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  opacity: .5; cursor: not-allowed; background: var(--oxblood);
 }
+.generate-btn:disabled:hover { background: var(--oxblood); }
 
-/* ── Loading State ─────────────────── */
-
-.loading-overlay {
-  display: none;
-  text-align: center;
-  padding: var(--spacing-xl);
-}
-
-.loading-overlay.active {
-  display: block;
-}
-
-.loading-spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--primary-red);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto var(--spacing-md);
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.loading-step {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.loading-detail {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-.loading-progress {
-  display: flex;
-  gap: var(--spacing-xs);
-  justify-content: center;
-  margin-top: var(--spacing-md);
-}
-
-.progress-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--border-color);
-  transition: background 0.3s;
-}
-
-.progress-dot.done {
-  background: var(--primary-red);
-}
-
-.progress-dot.active {
-  background: var(--primary-red);
-  animation: pulse 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* ── Success State ─────────────────── */
-
-.success-card {
-  display: none;
-  background: var(--white);
-  border: 2px solid #2d7a2d;
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  text-align: center;
-}
-
-.success-card.active {
-  display: block;
-}
-
-.success-icon {
-  font-size: 48px;
-  margin-bottom: var(--spacing-sm);
-}
-
-.success-card h2 {
-  font-family: var(--font-display);
-  color: #2d7a2d;
-  margin-bottom: var(--spacing-sm);
-}
-
-.share-link-box {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin: var(--spacing-lg) 0;
-}
-
-.share-link-url {
-  flex: 1;
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  word-break: break-all;
-  text-align: left;
-}
-
-.copy-btn {
-  padding: 6px 14px;
-  background: var(--primary-red);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.copy-btn:hover {
-  background: #7a1616;
-}
-
-.success-actions {
-  display: flex;
-  gap: var(--spacing-md);
-  justify-content: center;
-  margin-top: var(--spacing-lg);
-  flex-wrap: wrap;
-}
-
-.success-actions a,
-.success-actions button {
-  padding: 10px 20px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-decoration: none;
-  cursor: pointer;
-  border: 2px solid var(--border-color);
-  background: var(--white);
-  color: var(--text-primary);
-  transition: all 0.2s;
-}
-
-.success-actions a:hover,
-.success-actions button:hover {
-  border-color: var(--primary-red);
-  color: var(--primary-red);
-}
-
-.success-actions .primary-action {
-  background: var(--primary-red);
-  color: #fff;
-  border-color: var(--primary-red);
-}
-
-.success-actions .primary-action:hover {
-  background: #7a1616;
-  color: #fff;
-}
-
-/* ── Error State ─────────────────── */
-
+/* ---- Error box ---- */
 .error-msg {
   display: none;
-  background: #fff3f3;
-  border: 1px solid #e88;
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  color: #922;
-  font-size: 0.85rem;
-  margin-top: var(--spacing-md);
+  background: rgba(88,24,13,.06);
+  border: 1px solid var(--oxblood);
+  color: var(--body-ink);
+  padding: 12px 14px;
+  font: 500 12.5px/1.5 var(--font-body);
+  margin-top: 14px;
 }
+.error-msg.active { display: block; }
 
-.error-msg.active {
-  display: block;
+/* ============================================
+   LOADING STATE
+   ============================================ */
+.loading-overlay { display: none; text-align: center; }
+.loading-overlay.active { display: block; }
+
+/* Recolored gold/oxblood (brief) — reuses main.css's shared `@keyframes spin`. */
+.loading-spinner {
+  width: 44px; height: 44px; margin: 0 auto 16px;
+  border: 4px solid var(--panel-border);
+  border-top: 4px solid var(--oxblood);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
+@media (prefers-reduced-motion: reduce) { .loading-spinner { animation: none; } }
 
-/* ── Past Sheets Section ─────────────────── */
+.loading-step { font: 700 15px var(--font-display); color: var(--oxblood); }
+.loading-detail { font: 500 12.5px var(--font-body); font-style: italic; color: var(--label); margin-top: 4px; }
 
-.past-sheets-section {
-  margin-top: var(--spacing-xl, 40px);
-  border-top: 1px solid var(--border-color, #e0e0e0);
-  padding-top: var(--spacing-xl, 40px);
+/* Progress ledger: 5 diamond pips (rotated squares, same idiom as main.css's
+   `.proficiency-marker`) joined by a dotted connector — the brief's
+   ".ledger-row-style dotted rows with red ◆" interpreted here as a
+   horizontal dotted "ledger" of markers rather than 5 vertical text rows,
+   since the only per-step text contract is the single dynamic
+   #loadingStep/#loadingDetail pair above (already carries the current-step
+   label); duplicating creator.js's internal 5-step copy as static per-row
+   labels risked staleness/redundancy. Flagged for review. */
+.loading-progress { display: flex; align-items: center; justify-content: center; margin-top: 18px; }
+.progress-connector { flex: 0 0 22px; height: 0; border-top: 1px dotted var(--dot-rule); }
+.progress-dot {
+  flex: none; width: 9px; height: 9px; border-radius: 0;
+  background: var(--panel-border);
+  transform: rotate(45deg);
+  transition: background .3s ease;
 }
+.progress-dot.done { background: var(--oxblood); }
+.progress-dot.active { background: var(--oxblood); animation: pi-pulse 1s ease-in-out infinite; }
+@keyframes pi-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+@media (prefers-reduced-motion: reduce) { .progress-dot.active { animation: none; } }
 
-.past-sheets-title {
-  font-family: 'Cinzel', serif;
-  font-size: 22px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-  color: var(--text-primary, #1a1a1a);
-}
+/* ============================================
+   SUCCESS STATE
+   ============================================ */
+.success-card { display: none; text-align: center; }
+.success-card.active { display: block; }
 
-.past-sheets-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary, #6b7280);
-  margin: 0 0 var(--spacing-lg, 20px) 0;
-}
+.success-icon { font-size: 38px; color: var(--gold); margin-bottom: 8px; }
+.success-title { font: 700 22px var(--font-display); color: var(--oxblood); margin-bottom: 8px; }
+.success-copy { font: 500 13.5px var(--font-body); color: var(--body-ink); }
+.success-copy strong { color: var(--oxblood); }
 
-.past-sheets-grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm, 8px);
+.share-link-box {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--parchment); border: 1px solid var(--panel-border);
+  padding: 10px 14px; margin: 16px 0;
 }
+.share-link-url {
+  flex: 1; min-width: 0;
+  font: 500 12.5px ui-monospace, monospace; color: var(--ink);
+  word-break: break-all; text-align: left;
+}
+.copy-btn {
+  flex: none;
+  font: 700 10px var(--font-sc); letter-spacing: .1em; color: var(--gold-max);
+  background: var(--oxblood); border: 1px solid var(--gold);
+  padding: 7px 14px; cursor: pointer; white-space: nowrap;
+}
+.copy-btn:hover { background: #6b2413; }
+
+.success-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+/* .ov-roll-btn/.ov-outline-btn carry their own margin-top/margin-right
+   (unwrapped-by-design per overlay.css) — reset since this row's flex `gap`
+   supplies spacing instead (same fix contact.css applies to its `.cta-buttons`). */
+.success-actions .ov-roll-btn, .success-actions .ov-outline-btn { margin: 0; }
+/* .ov-outline-btn's shared gold-dim-on-oxblood-band styling isn't legible on
+   this card's light parchment background — same override contact.css
+   applies to its own `.cta-buttons .ov-outline-btn`. */
+.success-actions .ov-outline-btn { color: var(--oxblood); }
+.success-actions .ov-outline-btn:hover { background: var(--panel); border-color: var(--gold); }
+
+/* ============================================
+   PAST SHEETS SECTION
+   JS-emitted markup (creator.js loadPastSheets()) — .past-sheet-card/
+   -avatar/-info/-name/-title/-date/-arrow are a read-only contract, restyled
+   here to the dotted-ledger-row idiom (css/notable.css `.ledger-row`): dotted
+   row separators + a leading red ◆ (via ::before, since the emitted markup
+   has no dedicated mark element) + oxblood link text + parchment hover
+   highlight (brief-specified; the `.ledger-row` precedent itself has no
+   hover-background, only a hover text-color shift on nested text — the
+   parchment-highlight background here is this component's own addition per
+   the brief). The → arrow is plain Unicode, not emoji — left as-is.
+   ============================================ */
+.past-sheets-section { border-top: 1px solid var(--panel-border); padding-top: 20px; }
+.past-sheets-subtitle { font: 500 12.5px var(--font-body); font-style: italic; color: var(--label); margin-bottom: 14px; text-align: center; }
+
+.past-sheets-grid { display: flex; flex-direction: column; }
 
 .past-sheet-card {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md, 16px);
-  padding: var(--spacing-md, 16px) var(--spacing-lg, 20px);
-  background: var(--card-bg, #fff);
-  border: 1px solid var(--border-color, #e0e0e0);
-  border-radius: var(--radius-md, 8px);
-  text-decoration: none;
-  color: inherit;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 4px 10px 20px;
+  border-bottom: 1px dotted var(--dot-rule);
+  text-decoration: none; color: inherit;
+  transition: background .15s ease;
 }
-
-.past-sheet-card:hover {
-  border-color: var(--primary-red, #dc3545);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.past-sheets-grid .past-sheet-card:last-child { border-bottom: none; }
+.past-sheet-card:hover { background: rgba(154,123,54,.08); }
+.past-sheet-card::before {
+  content: '◆'; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  color: var(--oxblood); font-size: 10px;
 }
 
 .past-sheet-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--primary-red, #dc3545);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  flex-shrink: 0;
+  flex: none; width: 38px; height: 38px; border-radius: 50%;
+  background: var(--oxblood); border: 1px solid var(--gold); color: var(--gold-max);
+  display: flex; align-items: center; justify-content: center;
+  font: 700 13px var(--font-display);
 }
-
-.past-sheet-info {
-  flex: 1;
-  min-width: 0;
-}
-
+.past-sheet-info { flex: 1; min-width: 0; }
 .past-sheet-name {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text-primary, #1a1a1a);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font: 700 14px var(--font-body); color: var(--oxblood);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-
+.past-sheet-card:hover .past-sheet-name { color: var(--red-hover); }
 .past-sheet-title {
-  font-size: 13px;
-  color: var(--text-secondary, #6b7280);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font: 500 12px var(--font-body); font-style: italic; color: var(--label);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.past-sheet-date { font: 500 10.5px var(--font-body); color: var(--label); margin-top: 1px; }
+.past-sheet-arrow { flex: none; font: 700 14px var(--font-display); color: var(--gold); transition: color .15s ease; }
+.past-sheet-card:hover .past-sheet-arrow { color: var(--oxblood); }
 
-.past-sheet-date {
-  font-size: 11px;
-  color: var(--text-tertiary, #9ca3af);
-  margin-top: 2px;
-}
+/* ============================================
+   MOBILE (≤740px) — single-column stack (already is one), ≥44px touch
+   targets, ≥48px full-width primary CTA.
+   ============================================ */
+@media (max-width: 740px) {
+  .creator-page .page-head { padding: 18px 16px 4px; }
+  .creator-page .page-kicker { font-size: 8px; }
+  .creator-page .page-title { font-size: 25px; }
+  .creator-page .page-rule { margin-top: 6px; }
+  .creator-page .page-rule::before, .creator-page .page-rule::after { width: 70px; }
+  .creator-page .page-sub { font-size: 12.5px; }
 
-.past-sheet-arrow {
-  font-size: 18px;
-  color: var(--text-secondary, #6b7280);
-  flex-shrink: 0;
-  transition: color 0.2s;
-}
+  .creator-container { padding: 6px 16px 26px; gap: 14px; }
 
-.past-sheet-card:hover .past-sheet-arrow {
-  color: var(--primary-red, #dc3545);
-}
+  .upload-card-copy { font-size: 12.5px; }
+  .dropzone { padding: 28px 16px; }
+  .dropzone-icon { font-size: 32px; }
 
-/* ── Responsive ─────────────────── */
+  /* Remove-× hit target grown to 44px only here (desktop keeps the tighter
+     26px chip button) — same pattern as contact.css's `.guild-row` mobile
+     min-height bump. */
+  .file-item { padding: 4px 4px 4px 14px; }
+  .file-item-remove { width: 44px; height: 44px; }
 
-@media (max-width: 600px) {
-  .creator-page {
-    padding: var(--spacing-lg) var(--spacing-md);
+  .success-actions { flex-direction: column; }
+  .success-actions .ov-roll-btn, .success-actions .ov-outline-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 48px; box-sizing: border-box;
   }
 
-  .upload-card {
-    padding: var(--spacing-lg);
-  }
-
-  .success-actions {
-    flex-direction: column;
-  }
-
-  .past-sheet-card {
-    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
-    gap: var(--spacing-sm, 8px);
-  }
-
-  .past-sheet-avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
-  }
+  .past-sheet-card { min-height: 44px; box-sizing: border-box; padding: 8px 4px 8px 18px; }
+  .past-sheet-avatar { width: 34px; height: 34px; font-size: 12px; }
 }
