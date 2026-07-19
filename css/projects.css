@@ -1,244 +1,134 @@
 /* ============================================
-   PROJECTS PAGE STYLES
+   PROJECTS PAGE STYLES — Parchment & Ink
+   Structure/values transcribed from the prototype's Quest Board component
+   (localhost:8098 .../Projects.dc.html; mobile frame 1e in
+   .../Mobile Views.dc.html) — see task-9-report.md.
+
+   NOTE ON SCOPE: this file is <link>ed only on projects.html (confirmed via
+   repo-wide grep before this rewrite) — full rewrite, no legacy selectors to
+   preserve for other pages (unlike campaigns.css, which still owns
+   `.page-header`/`.page-subtitle` for contact/media.html). `.project-card`
+   composes with main.css's `.section-box` (panel bg/border/inset ring) the
+   same way notable.css's `.achievement-card` does — see js/render.js's
+   `class="section-box project-card"`. `.category-filter`/`.filter-btn`
+   (+ `data-filter`) and `#projectsGrid`/`.project-card[data-category]` are
+   the pre-existing filter-JS contract (projects.html's inline <script>) and
+   are restyled below only, never renamed.
    ============================================ */
 
-.projects-page {
-  min-height: 100vh;
-  background: var(--light-bg);
-}
+@keyframes pi-fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
-.projects-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
-}
+.projects-container { padding: 0 26px; }
 
-/* Category Filter */
+/* ---------- Category Filter ---------- */
 .category-filter {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
-  flex-wrap: wrap;
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 8px; padding: 14px 0 4px;
 }
-
 .filter-btn {
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border: 2px solid var(--border-color);
-  background: var(--white);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-family: var(--font-primary);
-  font-size: 14px;
-  font-weight: 500;
-  transition: all var(--transition-fast);
+  font: 700 10px var(--font-sc); letter-spacing: .12em; color: var(--label);
+  background: var(--panel); border: 1px solid var(--tile-border);
+  padding: 5px 14px; border-radius: 12px; cursor: pointer;
 }
+.filter-btn:hover:not(.active) { border-color: var(--gold); color: var(--oxblood); }
+.filter-btn.active { color: var(--gold-max); background: var(--oxblood); border-color: var(--gold); }
 
-.filter-btn:hover {
-  border-color: var(--primary-red);
+/* ---------- Impact Partners strip ---------- */
+.partners-strip {
+  display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
+  gap: 14px; margin: 12px 0 4px; padding: 8px 14px;
+  border: 1px solid var(--panel-border);
+  /* --panel (#f7eed8) at 60% opacity — no rgba-token equivalent, same
+     literal-with-comment convention as notable.css's --note-blue tint. */
+  background: rgba(247,238,216,.6);
 }
+.partners-label { font: 700 9px var(--font-sc); letter-spacing: .18em; color: var(--label); }
+.partner-name { font: 600 12px var(--font-body); color: var(--body-ink); }
+.partner-sep { color: var(--gold-bright); font-size: 8px; }
 
-.filter-btn.active {
-  background: var(--primary-red);
-  border-color: var(--primary-red);
-  color: var(--white);
-}
-
-/* Partner Marquee */
-.partners-marquee {
-  background: var(--dark-bg);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-  overflow: hidden;
-}
-
-.marquee-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-  text-align: center;
-  margin-bottom: var(--spacing-sm);
-}
-
-.marquee-track {
-  overflow: hidden;
-}
-
-.marquee-content {
-  display: flex;
-  gap: var(--spacing-xl);
-  animation: marquee 30s linear infinite;
-  white-space: nowrap;
-}
-
-.partner-logo {
-  color: var(--white);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Projects Grid */
+/* ---------- Quest Cards ---------- */
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  padding: 14px 0 6px;
 }
-
-/* Project Card */
-.project-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: all var(--transition-normal);
-  border: 2px solid var(--border-color);
-}
-
-.project-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-red);
-}
-
+/* .project-card keeps `display:flex; flex-direction:column` unconditionally
+   (not just as a default) because the pre-existing filter JS toggles
+   visibility via `card.style.display = 'flex' | 'none'` inline — the value
+   it re-asserts must match this layout or a shown card would flatten back
+   to a row. */
+.project-card { display: flex; flex-direction: column; padding: 8px; animation: pi-fadeup .25s; }
 .project-image {
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--light-bg) 0%, var(--border-color) 100%);
-  overflow: hidden;
-  position: relative;
+  width: 100%; height: 150px; border: 1px solid var(--tile-border);
+  position: relative; overflow: hidden; background: var(--panel);
 }
-
-.project-banner {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
+.project-banner { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .project-emoji {
-  font-size: 48px;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; inset: 0; align-items: center; justify-content: center;
+  font-size: 40px; color: var(--gold-bright);
 }
-
-.project-content {
-  padding: var(--spacing-lg);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.project-category {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--primary-red);
-  margin-bottom: var(--spacing-xs);
-}
-
-.project-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: var(--spacing-sm);
-  line-height: 1.3;
-}
-
-.project-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  flex: 1;
-  margin-bottom: var(--spacing-md);
-}
-
-.project-meta {
-  display: flex;
-  gap: var(--spacing-md);
-  font-size: 12px;
-  color: var(--text-light);
-  margin-bottom: var(--spacing-md);
-  flex-wrap: wrap;
-}
-
-.project-partner {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.project-tech {
-  background: var(--light-bg);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-}
-
+.project-content { padding: 10px 8px 6px; flex: 1; display: flex; flex-direction: column; }
+.project-category { font: 700 9px var(--font-sc); letter-spacing: .2em; color: var(--gold); }
+.project-title { font: 700 15px var(--font-display); color: var(--oxblood); margin-top: 2px; }
+.project-desc { font: 500 12.5px/1.45 var(--font-body); color: var(--body-ink); margin-top: 4px; text-wrap: pretty; flex: 1; }
 .project-link {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--primary-red);
-  text-decoration: none;
+  display: inline-block; align-self: flex-start; margin-top: 6px;
+  font: 600 11.5px var(--font-body); font-style: italic;
+  color: var(--oxblood); border-bottom: 1px dotted var(--gold);
 }
+.project-link:hover { color: var(--red-hover); }
 
-.project-link:hover {
-  text-decoration: underline;
+/* ---------- Stats strip ---------- */
+.quest-stats {
+  display: flex; justify-content: center; gap: 34px; margin: 10px 0 22px; padding: 12px 16px;
+  border: 1px solid var(--panel-border);
+  background: rgba(247,238,216,.6);
 }
+.stat-block { text-align: center; }
+.stat-num { font: 700 24px var(--font-display); color: var(--oxblood); }
+.stat-label { font: 700 8.5px var(--font-sc); letter-spacing: .18em; color: var(--label); }
+.stat-divider { width: 1px; background: var(--panel-border); }
 
-/* Impact Stats */
-.impact-stats {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-xl);
-  padding: var(--spacing-xl);
-  background: var(--dark-bg);
-  border-radius: var(--radius-lg);
-  flex-wrap: wrap;
-}
+/* ============================================
+   MOBILE (≤740px) — frame 1e
+   Page-specific selectors scoped under `.projects-page` per the codebase-wide
+   convention (main.css/campaigns.css/character-sheet.css/notable.css).
+   ============================================ */
+@media (max-width: 740px) {
+  .projects-page .page-head { display: none; }
+  .projects-page .projects-container { padding: 0 16px; }
 
-.stat-item {
-  text-align: center;
-}
-
-.stat-number {
-  display: block;
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--white);
-  font-family: var(--font-display);
-}
-
-.stat-label {
-  font-size: 14px;
-  color: var(--text-light);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .projects-container {
-    padding: var(--spacing-md);
+  /* Filter chips: horizontal swipe strip, same non-scrolling-wrapper-holds-
+     the-fade pattern as character-sheet.css's .ability-strip-wrap (Task 6)
+     and campaigns.css's .side-quests-rail (Task 7). */
+  .projects-page .filter-rail { position: relative; }
+  .projects-page .category-filter {
+    justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto;
+    gap: 7px; padding: 14px 0 4px; -webkit-overflow-scrolling: touch;
   }
-  
-  .projects-grid {
-    grid-template-columns: 1fr;
+  /* Chip visually measures ~28px tall (8px padding + 10px font) — well under
+     the 44px accessible tap-target minimum. Same fix as character-sheet.css's
+     .skill-mod/.sub-tab (Task 6): keep the frame's own padding/font, let
+     min-height do the rest. */
+  .projects-page .filter-btn {
+    flex: none; padding: 8px 15px; border-radius: 14px;
+    min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box;
   }
-  
-  .impact-stats {
-    gap: var(--spacing-lg);
-    padding: var(--spacing-lg);
+  .projects-page .filter-rail::after {
+    content: ''; position: absolute; top: 14px; bottom: 4px; right: 0; width: 44px;
+    background: linear-gradient(90deg, transparent, var(--parchment)); pointer-events: none;
   }
-  
-  .stat-number {
-    font-size: 28px;
-  }
+
+  /* Frame 1e doesn't depict the partners strip (a partial mockup, like the
+     desktop prototype's own "40+ more quests" note) — kept rather than
+     dropped (no data lost) and let it wrap across lines at the narrower
+     width instead of a single scrolling/overflowing row. */
+  .projects-page .partners-strip { margin: 10px 0 4px; gap: 6px 10px; padding: 8px 12px; }
+  .projects-page .partners-label { flex-basis: 100%; text-align: center; margin-bottom: 2px; }
+
+  .projects-page .projects-grid { grid-template-columns: 1fr; padding: 12px 0 0; gap: 12px; }
+
+  .projects-page .quest-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 12px 0 18px; padding: 10px 12px; }
+  .projects-page .stat-divider { display: none; }
+  .projects-page .stat-num { font-size: 19px; }
+  .projects-page .stat-label { font-size: 7.5px; }
 }

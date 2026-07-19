@@ -2,11 +2,51 @@
    RENDER - Dynamic Content Rendering
    ============================================ */
 
+// Short quest blurbs, keyed by project.link (stable across the occasional
+// title rewording — a couple of prototype card titles are shortened
+// versions of data.js's `name`, so matching on link is unambiguous).
+// Verbatim from the prototype (localhost:8098 .../Projects.dc.html) for the
+// handful of projects it explicitly mocks up; condensed from that project's
+// own real page's <meta name="description"> for the rest (the prototype
+// only shows 7 of the 24 real projects, captioned "...and 40+ more quests in
+// the guild archive" — a partial preview, not the full data set). One
+// deviation from the prototype's own text: its "AI Against Oil Spills" card
+// (matched here by link) says "satellite imagery"; the real post it links to
+// is about drone-based cleanup, not satellite detection, so that one line
+// was re-derived from the real source instead of copied verbatim. See
+// task-9-report.md.
+const projectBlurbs = {
+  '/fruitpunch/blog/ai-powered-wildlife-conservation-in-africa/': "Autonomous drones with thermal cameras detecting poachers in South Africa's reserves.",
+  '/fruitpunch/blog/listening-to-the-giants-protecting-forest-elephants-through-audio-monitoring/': 'Acoustic monitoring models that hear forest elephants — and poachers — in rainforest audio.',
+  '/fruitpunch/blog/tracking-turtles-how-ai-helps-conservationists-to-re-identify-sea-turtles/': 'Computer vision that identifies and tracks sea turtles across survey footage.',
+  '/fruitpunch/blog/the-bear-necessity-of-ai-in-conservation/': 'Advanced computer vision for monitoring and identifying bears in the wild.',
+  '/fruitpunch/blog/flying-high-with-ai-counting-pelican-breeding-pairs-in-the-danube-delta/': 'Computer vision models count pelican breeding pairs from aerial photographs of the Danube Delta.',
+  '/fruitpunch/blog/from-pixels-to-preservation-how-ai-gives-rise-to-a-birdwatching-revolution/': 'A machine-learning pipeline built with SLU to assess eagle behavior, species and age.',
+  '/fruitpunch/blog/understanding-seals-with-ai/': 'Improving the SealNet facial-recognition model for studying and monitoring marine mammals.',
+  '/fruitpunch/blog/solving-automated-wildlife-taxonomy-with-ai/': 'An AI solution to analyze the flood of data captured by camera traps across European wildlife reserves.',
+  '/fruitpunch/blog/model-optimization-and-pruning-of-poacher-detecting-yolov5/': 'Optimizing a YOLOv5 model for NVIDIA Jetson Nano to boost inference speed and cut memory footprint.',
+  '/fruitpunch/challenges/ai-for-coral-reefs/': 'Reef-health mapping with Indonesian marine biologists — later an accredited TU/e course.',
+  '/fruitpunch/blog/how-we-detect-oil-spills/': 'Computer vision and segmentation help response-team drones clean up oil spills faster, using fewer chemicals.',
+  '/fruitpunch/blog/ai-against-oil-spills-going-inland-to-clean-oil-spills-with-ai/': 'Calculating oil-spill volume with segmentation models like SAM and Mask-RCNN.',
+  '/fruitpunch/blog/ai-based-early-warning-system-for-river-floods/': 'Forecasting flash floods with LSTM, ARIMA and Prophet on hydrological sensor data from French rivers.',
+  '/fruitpunch/blog/the-pains-of-classifying-flooded-forests-in-satellite-data/': 'Training CNNs on satellite infrared bands to detect flooded forests — a deceptively tricky use case.',
+  '/fruitpunch/blog/can-ai-track-reforestation-projects-using-drone-and-satellite-data/': 'Satellite and drone data monitor tree coverage of re-greening projects in Tanzania and Kenya.',
+  '/fruitpunch/blog/how-to-use-vehicle-sensors-to-make-cities-more-sustainable/': 'Vegetation monitoring and traffic-density detection to help make cities greener.',
+  '/fruitpunch/blog/leveraging-large-language-models-to-make-businesses-around-the-world-more-sustainable/': 'NLP models classify product descriptions to estimate their environmental impact.',
+  '/fruitpunch/blog/can-ai-detect-heart-failure-from-electrocardiograms/': 'Can AI detect heart failure from electrocardiograms? With European medical centers.',
+  '/fruitpunch/blog/how-we-applied-ai-to-prevent-sepsis-in-preterm-babies/': 'XGBoost time-series forecasting predicts sepsis onset in preterm infants up to 12 hours early.',
+  '/fruitpunch/blog/prioritizing-essential-care-with-ai/': 'Advancing neonatal care: how IMPALA and AI improve early diagnosis and treatment.',
+  '/fruitpunch/blog/autonomous-flight-and-the-landing-of-a-fixed-wing-uav/': 'Autonomous UAV landing compared across GPS-beacon guidance and reinforcement learning.',
+  '/fruitpunch/blog/user-friendly-wilderness-proof-mlops/': 'A CI/CD pipeline that auto-retrains and redeploys the poacher-detecting model straight to the drone.',
+  '/fruitpunch/blog/ai-and-visualisations-a-data-driven-all-rounded-approach-for-road-safety/': 'Uncovering accident triggers through exploratory data analysis of a collision-avoidance dataset.',
+  '/fruitpunch/blog/fruitpunch-ai-2-0-community-driven/': "The next step toward a community of 1M people willing and able to solve humanity's greatest challenges by 2030."
+};
+
 // Render Projects Grid
 function renderProjects() {
   const projectsGrid = document.getElementById('projectsGrid');
   if (!projectsGrid || typeof aiForGoodProjects === 'undefined') return;
-  
+
   // Map category names to filter categories
   const categoryMap = {
     'Wildlife': 'wildlife',
@@ -17,14 +57,15 @@ function renderProjects() {
     'Safety': 'safety',
     'Community': 'community'
   };
-  
+
   projectsGrid.innerHTML = aiForGoodProjects.map(project => {
     const filterCategory = categoryMap[project.category] || 'other';
     const linkPath = project.link.startsWith('/') ? project.link.substring(1) : project.link;
     const fullLink = linkPath.endsWith('/') ? linkPath + 'index.html' : linkPath;
-    
+    const blurb = projectBlurbs[project.link] || 'An AI for Good initiative delivered through FruitPunch AI.';
+
     return `
-      <article class="project-card" data-category="${filterCategory}">
+      <article class="section-box project-card" data-category="${filterCategory}">
         <div class="project-image">
           <img src="${project.image}" alt="${project.name}" class="project-banner" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <div class="project-emoji" style="display:none;">${getCategoryEmoji(project.category)}</div>
@@ -32,28 +73,26 @@ function renderProjects() {
         <div class="project-content">
           <span class="project-category">${project.category}</span>
           <h3 class="project-title">${project.name}</h3>
-          <div class="project-meta">
-            <span class="project-tech">AI for Good</span>
-          </div>
-          <a href="${fullLink}" class="project-link">View Quest Details →</a>
+          <p class="project-desc">${blurb}</p>
+          <a href="${fullLink}" class="project-link">View quest details →</a>
         </div>
       </article>
     `;
   }).join('');
 }
 
-// Helper function to get emoji for category (fallback)
+// Helper function to get glyph for category (image onerror fallback)
 function getCategoryEmoji(category) {
-  const emojiMap = {
-    'Wildlife': '🦁',
-    'Earth': '🌍',
-    'Health': '❤️',
-    'Autonomous': '🚁',
-    'MLOps': '⚙️',
-    'Safety': '🛡️',
-    'Community': '👥'
+  const glyphMap = {
+    'Wildlife': '✦',
+    'Earth': '❖',
+    'Health': '◆',
+    'Autonomous': '◇',
+    'MLOps': '✦',
+    'Safety': '❖',
+    'Community': '◆'
   };
-  return emojiMap[category] || '🎯';
+  return glyphMap[category] || '❖';
 }
 
 // Render Skills List

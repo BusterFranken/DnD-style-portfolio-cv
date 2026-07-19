@@ -8,13 +8,14 @@
    uses the `.campaign-*`/`.adventure*`/`.milestone*`/`.side-quest*`/`.ey-*`
    vocabulary below — confirmed via repo-wide grep before this rewrite, so
    none of that is shared. Two rule families genuinely ARE still load-bearing
-   for notable/projects/contact/media.html (none of which have their own
-   `.page-head`-based header yet): `.page-header`/`.page-subtitle` and the
-   old dark-theme `.page-title` size. Both are kept byte-identical below,
-   with `.page-title` rescoped to `.page-header .page-title` so the old-page
-   rule wins by specificity over main.css's bare `.page-title`; campaigns.html
-   itself uses the `.page-head` wrapper, so the `.page-header` rule never
-   matches there — same targeted-rescope pattern Task 1 already used for #mainNavbar.
+   for contact/media.html (neither has its own `.page-head`-based header yet —
+   notable.html and projects.html got theirs in Tasks 8/9 and no longer match
+   here): `.page-header`/`.page-subtitle` and the old dark-theme `.page-title`
+   size. Both are kept byte-identical below, with `.page-title` rescoped to
+   `.page-header .page-title` so the old-page rule wins by specificity over
+   main.css's bare `.page-title`; campaigns.html itself uses the `.page-head`
+   wrapper, so the `.page-header` rule never matches there — same
+   targeted-rescope pattern Task 1 already used for #mainNavbar.
    ============================================ */
 
 /* .campaigns-page itself needs no rule: Task 1's .sheet already supplies the
@@ -22,7 +23,7 @@
    1000px-max-width container it replaces was a pre-"sheet" layout leftover
    (flagged, unfixed, in task-1-report.md) that no longer serves a purpose. */
 
-/* ---- Kept verbatim for notable/projects/contact/media.html (see note above) ---- */
+/* ---- Kept verbatim for contact/media.html (see note above) ---- */
 .page-header {
   background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
   padding: var(--spacing-xl) var(--spacing-xl);
