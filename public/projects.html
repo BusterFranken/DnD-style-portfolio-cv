@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/character-sheet.css">
@@ -21,13 +21,16 @@
 </head>
 <body>
   <!-- Admin Login Button -->
-  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
 
+  <div class="sheet">
   <!-- Navigation Bar (shared across both views) -->
   <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
     <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
       <span class="navbar-toggle-icon"></span>
     </button>
+    <span class="navbar-page-title">Quest Board</span>
     <div class="navbar-menu" id="navbarMenu">
       <div class="navbar-left">
         <a href="index.html" class="nav-link">Character Sheet</a>
@@ -40,13 +43,13 @@
       </div>
       <div class="navbar-right">
         <div class="campaign-status dnd-only clickable" data-element="campaign-status">
-          <span class="campaign-label">PROJECTS:</span>
+          <span class="campaign-label">projects ·</span>
           <span class="campaign-name">AI for Good</span>
         </div>
         <!-- View Toggle -->
         <div class="view-toggle">
-          <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
-          <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
         </div>
       </div>
     </div>
@@ -54,100 +57,83 @@
 
   <div class="projects-page">
 
-    <header class="page-header">
-      <h1 class="page-title">🎯 Quest Board</h1>
-      <p class="page-subtitle">AI for Good projects and impact initiatives completed through FruitPunch AI.</p>
+    <header class="page-head">
+      <div class="page-kicker">Posted at the Guild Hall</div>
+      <h1 class="page-title">Quest Board</h1>
+      <div class="page-rule">❖</div>
+      <p class="page-sub">AI for Good projects completed through FruitPunch AI.</p>
     </header>
 
     <main class="projects-container">
-      
+
       <!-- Category Filter -->
-      <div class="category-filter">
-        <button class="filter-btn active" data-filter="all">All Quests</button>
-        <button class="filter-btn" data-filter="wildlife">🦁 Wildlife</button>
-        <button class="filter-btn" data-filter="earth">🌍 Earth</button>
-        <button class="filter-btn" data-filter="health">❤️ Health</button>
-        <button class="filter-btn" data-filter="autonomous">🚁 Autonomous</button>
-        <button class="filter-btn" data-filter="mlops">⚙️ MLOps</button>
-        <button class="filter-btn" data-filter="safety">🛡️ Safety</button>
-        <button class="filter-btn" data-filter="community">👥 Community</button>
-      </div>
-      
-      <!-- Partner Marquee -->
-      <div class="partners-marquee">
-        <div class="marquee-label">Impact Partners:</div>
-        <div class="marquee-track">
-          <div class="marquee-content">
-            <span class="partner-logo">🏛️ Stanford</span>
-            <span class="partner-logo">🛸 ESA</span>
-            <span class="partner-logo">🌿 Greenpeace</span>
-            <span class="partner-logo">🐼 WWF</span>
-            <span class="partner-logo">☁️ AWS</span>
-            <span class="partner-logo">📱 Huawei</span>
-            <span class="partner-logo">💡 NXP</span>
-            <span class="partner-logo">💉 Philips</span>
-            <span class="partner-logo">🇳🇱 TU/e</span>
-            <span class="partner-logo">🇺🇳 United Nations</span>
-            <!-- Duplicate for seamless scroll -->
-            <span class="partner-logo">🏛️ Stanford</span>
-            <span class="partner-logo">🛸 ESA</span>
-            <span class="partner-logo">🌿 Greenpeace</span>
-            <span class="partner-logo">🐼 WWF</span>
-            <span class="partner-logo">☁️ AWS</span>
-            <span class="partner-logo">📱 Huawei</span>
-          </div>
+      <div class="filter-rail">
+        <div class="category-filter">
+          <button class="filter-btn active" data-filter="all">All Quests</button>
+          <button class="filter-btn" data-filter="wildlife">Wildlife</button>
+          <button class="filter-btn" data-filter="earth">Earth</button>
+          <button class="filter-btn" data-filter="health">Health</button>
+          <button class="filter-btn" data-filter="autonomous">Autonomous</button>
+          <button class="filter-btn" data-filter="mlops">MLOps</button>
+          <button class="filter-btn" data-filter="safety">Safety</button>
+          <button class="filter-btn" data-filter="community">Community</button>
         </div>
       </div>
-      
+
+      <!-- Impact Partners -->
+      <div class="partners-strip">
+        <span class="partners-label">Impact Partners</span>
+        <span class="partner-name">Stanford</span><span class="partner-sep">✦</span>
+        <span class="partner-name">ESA</span><span class="partner-sep">✦</span>
+        <span class="partner-name">Greenpeace</span><span class="partner-sep">✦</span>
+        <span class="partner-name">WWF</span><span class="partner-sep">✦</span>
+        <span class="partner-name">AWS</span><span class="partner-sep">✦</span>
+        <span class="partner-name">Huawei</span><span class="partner-sep">✦</span>
+        <span class="partner-name">NXP</span><span class="partner-sep">✦</span>
+        <span class="partner-name">Philips</span><span class="partner-sep">✦</span>
+        <span class="partner-name">TU/e</span><span class="partner-sep">✦</span>
+        <span class="partner-name">United Nations</span>
+      </div>
+
       <!-- Projects Grid -->
       <div class="projects-grid" id="projectsGrid">
         <!-- Projects will be rendered dynamically -->
       </div>
-      
+
       <!-- Stats Summary -->
-      <div class="impact-stats">
-        <div class="stat-item">
-          <span class="stat-number">€45M</span>
-          <span class="stat-label">Impact Value</span>
+      <div class="quest-stats">
+        <div class="stat-block">
+          <div class="stat-num">€45M</div>
+          <div class="stat-label">Impact Value</div>
         </div>
-        <div class="stat-item">
-          <span class="stat-number">4500+</span>
-          <span class="stat-label">Engineers</span>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">4500+</div>
+          <div class="stat-label">Engineers</div>
         </div>
-        <div class="stat-item">
-          <span class="stat-number">50+</span>
-          <span class="stat-label">Projects</span>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Projects</div>
         </div>
-        <div class="stat-item">
-          <span class="stat-number">80+</span>
-          <span class="stat-label">Partners</span>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">80+</div>
+          <div class="stat-label">Partners</div>
         </div>
       </div>
-      
+
     </main>
 
-    <footer class="contact-bar">
-      <a href="mailto:busterfranken@gmail.com" class="contact-item">
-        <span class="contact-icon">📧</span>
-        <span class="contact-text">busterfranken@gmail.com</span>
-      </a>
-      <a href="tel:+31624877967" class="contact-item">
-        <span class="contact-icon">📱</span>
-        <span class="contact-text">+31 6 2487 7967</span>
-      </a>
-      <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">
-        <span class="contact-icon">💼</span>
-        <span class="contact-text">LinkedIn</span>
-      </a>
-      <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">
-        <span class="contact-icon">💻</span>
-        <span class="contact-text">GitHub</span>
-      </a>
-      <span class="contact-item location">
-        <span class="contact-icon">📍</span>
-        <span class="contact-text">Amsterdam, Netherlands</span>
-      </span>
-    </footer>
+  </div>
+
+  <footer class="contact-bar">
+    <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+    <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+    <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+    <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+    <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+  </footer>
   </div>
 
   <!-- Overlay Modal -->

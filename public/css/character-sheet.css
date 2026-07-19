@@ -987,7 +987,10 @@
    Preserved during the Parchment & Ink css sync — the redesign's
    character-sheet.css had no such rule. Restyled as a gold chip.
    ========================================================================== */
-.nav-link.back-to-owner {
+/* #mainNavbar prefix needed: main.css's `#mainNavbar .nav-link` (1,1,0)
+   would otherwise out-rank a bare .nav-link.back-to-owner and paint the
+   text in the same gold as the chip background. */
+#mainNavbar .nav-link.back-to-owner {
   color: var(--oxblood-lo);
   background: var(--gold-chip);
   padding: 4px 8px;
@@ -995,6 +998,19 @@
   margin-right: 4px;
   font-weight: 700;
 }
-.nav-link.back-to-owner:hover {
+#mainNavbar .nav-link.back-to-owner:hover {
+  color: var(--oxblood-lo);
   background: var(--gold-pale);
+}
+
+/* DnD-cv-maker branch: example-sheet banner (#exampleBanner on index.html;
+   shown on the owner/default page, hidden by main.js on ?slug= pages).
+   Restyled from the old inline green bar to the parchment idiom. */
+.branch-preview-bar {
+  background: var(--gold-chip);
+  color: var(--oxblood-lo);
+  text-align: center;
+  padding: 4px 12px;
+  font: 700 12px var(--font-body);
+  letter-spacing: 0.04em;
 }

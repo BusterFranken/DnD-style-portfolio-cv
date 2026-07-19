@@ -33,6 +33,7 @@ function init() {
   setupClickableElements();
   setupRollableElements();
   setupRestButtons();
+  setupMobileAccordions();
   
   // Set fixed height for right column to match left column (one-time calculation)
   // Only runs on character sheet page (index.html) where .left-column exists
@@ -64,7 +65,7 @@ function init() {
     }
   }, 100);
   
-  console.log('🎲 Character sheet initialized!');
+  console.log('✦ Character sheet initialized!');
 }
 
 // ============================================
@@ -127,8 +128,10 @@ function setupViewToggle() {
   // Hide Classic CV button for generated pages (not Buster's default page)
   if (window.__appDataSource !== 'default' && classicBtn) {
     classicBtn.style.display = 'none';
-    // Also hide the classic view container
+    // Also hide the classic view container and the mobile quick-bar shortcut
     if (classicView) classicView.style.display = 'none';
+    const qbClassic = document.getElementById('qbClassic');
+    if (qbClassic) qbClassic.style.display = 'none';
   }
   
   toggleBtns.forEach(btn => {
@@ -201,6 +204,113 @@ function setupTabNavigation() {
       });
     });
   });
+}
+
+// ============================================
+// MOBILE ACCORDIONS (≤740px)
+// ============================================
+// .acc-head buttons are static markup (index.html), one per mapped section-
+// box/tab-panel/acc-group (see css/character-sheet.css's mobile block for the
+// section-to-accordion mapping). Above 740px .acc-head is display:none and
+// this is a no-op; ≤740px exactly one box is ever .acc-open at a time.
+function setupMobileAccordions() {
+  const mq = window.matchMedia('(max-width: 740px)');
+  const heads = document.querySelectorAll('.acc-head');
+  if (!heads.length) return;
+
+  function collapseAll() {
+    heads.forEach(h => {
+      h.parentElement.classList.add('collapsed');
+      h.parentElement.classList.remove('acc-open');
+      h.setAttribute('aria-expanded', 'false');
+      h.querySelector('.acc-chevron').textContent = '▸';
+    });
+  }
+
+  function apply() {
+    if (mq.matches) {
+      collapseAll();
+      fillAccordionPreviews();
+    } else {
+      heads.forEach(h => {
+        h.parentElement.classList.remove('collapsed', 'acc-open');
+      });
+    }
+  }
+
+  heads.forEach(h => h.addEventListener('click', () => {
+    if (!mq.matches) return;
+    const box = h.parentElement;
+    const wasOpen = box.classList.contains('acc-open');
+    collapseAll();
+    if (!wasOpen) {
+      box.classList.remove('collapsed');
+      box.classList.add('acc-open');
+      h.setAttribute('aria-expanded', 'true');
+      h.querySelector('.acc-chevron').textContent = '▾';
+    }
+  }));
+
+  mq.addEventListener('change', apply);
+  apply();
+}
+
+// Collapsed-bar preview text ("DEX +7 · WIS +6 · CHA +7", etc.) — display-
+// only, derived from the same characterData the desktop tabs already render
+// from. Property names/shapes match js/data.js exactly (d.spells is a level-
+// grouped object, not a flat array; d.actions items carry attackBonus only on
+// attacks; the Inventory blurb reuses the existing "Weight carried" copy
+// already in the DOM rather than duplicating it as a second hardcoded string).
+function fillAccordionPreviews() {
+  const d = typeof characterData !== 'undefined' ? characterData : null;
+  if (!d) return;
+
+  // Query once and reuse for every set() call below, instead of re-querying
+  // the whole document on each of the 5 calls.
+  const heads = document.querySelectorAll('.acc-head');
+  const set = (title, text) => {
+    heads.forEach(h => {
+      if (h.querySelector('.acc-title').textContent === title) {
+        const preview = h.querySelector('.acc-preview');
+        if (preview) preview.textContent = text;
+      }
+    });
+  };
+
+  // Generated sheets may lack any of these fields — every preview is
+  // computed defensively and simply skipped when its data is missing.
+  const sgn = n => `${n >= 0 ? '+' : ''}${n}`;
+  const pb = (d.coreStats && d.coreStats.proficiencyBonus != null) ? d.coreStats.proficiencyBonus : 0;
+  const profSaves = Object.values(d.abilities || {}).filter(a => a && a.saveProficient)
+    .map(a => `${a.abbr || ''} ${sgn((a.modifier || 0) + pb)}`).join(' · ');
+  if (profSaves) set('Saving Throws', profSaves);
+
+  const skills = Array.isArray(d.skills) ? d.skills : [];
+  if (skills.length) {
+    const topSkills = [...skills].sort((a, b) => (b.modifier || 0) - (a.modifier || 0)).slice(0, 2)
+      .map(s => `${s.name} ${sgn(s.modifier || 0)}`).join(' · ') + ' …';
+    set('Skills', topSkills);
+  }
+
+  const actions = Array.isArray(d.actions) ? d.actions : [];
+  const attacks = actions.filter(a => a.attackBonus != null);
+  const nonAttacks = actions.length - attacks.length;
+  if (attacks.length) {
+    set('Actions', `${attacks[0].name} +${attacks[0].attackBonus} · ${attacks.length} attacks, ${nonAttacks} moves`);
+  }
+
+  // d.spells is {spellcastingAbility, spellSaveDC, spellAttackBonus, cantrips[],
+  // level1[], level2[], level3[]} — not a flat array — mirrors the existing
+  // static .spell-header text ("Spellcasting: CHA / Save DC: 15 / Spell Attack: +7").
+  if (d.spells && d.spells.spellcastingAbility != null && d.spells.spellSaveDC != null && d.spells.spellAttackBonus != null) {
+    set('Spells', `${String(d.spells.spellcastingAbility).toUpperCase()} · save DC ${d.spells.spellSaveDC} · attack +${d.spells.spellAttackBonus}`);
+  }
+
+  // "ideas are weightless" lives in the existing static .inventory-header markup,
+  // not in characterData — read it from the DOM rather than hardcoding a second
+  // copy of the same copy that could drift out of sync.
+  const weightNote = document.querySelector('.inventory-header > span > span');
+  set('Inventory', weightNote ? weightNote.textContent : `${(d.inventory || []).length} items`);
 }
 
 // ============================================
@@ -346,13 +456,18 @@ function setupClickableElements() {
   // Actions (after render)
   setupActionClickables();
   
-  // Campaign Status - handle first to prevent generic handler
+  // Campaign Status - handle first to prevent generic handler. The hardcoded
+  // fallback that used to live here (old .overlay-header/emoji markup, only
+  // reachable if getCampaignStatusOverlayContent were somehow undefined) is
+  // dropped: js/overlay.js is always loaded before js/main.js on every page
+  // (see index.html/campaigns.html/etc. script order), so the function is
+  // always defined and that branch was dead code.
   document.querySelectorAll('.campaign-status.clickable').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      
+
       if (typeof getCampaignStatusOverlayContent === 'function') {
         openOverlay(getCampaignStatusOverlayContent());
       }
@@ -408,18 +523,21 @@ function setupActionClickables() {
   });
 }
 
-// Generic element overlay content
+// Generic element overlay content — fallback used by the bottom [data-element]
+// handler in setupClickableElements(). Every other key here (hp/ac/initiative/
+// speed/proficiency/defenses/conditions) also has its own dedicated function
+// in js/overlay.js that always wins first, so in the current UI only
+// 'background' (the header's "Entrepreneur" pill) actually reaches this path;
+// the rest are kept as a defensive fallback, restyled the same way.
 function getElementOverlayContent(element) {
-  var info;
+  let info;
 
   if (window.__appDataSource === 'default') {
-    // Original Buster Franken hardcoded content
-    var defaultInfo = {
+    // Owner page: copy-final content, identical to the static site's main.js.
+    const elementInfo = {
       'hp': {
         title: 'Hit Points',
-        icon: '❤️',
-        description: 'Your life force in D&D represents your ability to withstand damage.',
-        cvMeaning: '€45M Crowdsourced Impact',
+        sub: '€45M Crowdsourced Impact',
         evidence: [
           'Represents the €45M in AI engineering value crowdsourced',
           'Your capacity to absorb challenges and keep going',
@@ -428,9 +546,7 @@ function getElementOverlayContent(element) {
       },
       'ac': {
         title: 'Armor Class',
-        icon: '🛡️',
-        description: 'How hard you are to hit in combat. Represents your defenses.',
-        cvMeaning: 'Network Protection',
+        sub: 'Network Protection',
         evidence: [
           'Your professional network provides protection',
           'Strong relationships deflect problems',
@@ -439,9 +555,7 @@ function getElementOverlayContent(element) {
       },
       'initiative': {
         title: 'Initiative',
-        icon: '⚡',
-        description: 'How quickly you can react and act in combat situations.',
-        cvMeaning: 'First Mover Advantage',
+        sub: 'First Mover Advantage',
         evidence: [
           'DEX (+4) + Alertness Feat (+4) = +8',
           'How quickly you can pivot and respond to opportunities',
@@ -450,9 +564,7 @@ function getElementOverlayContent(element) {
       },
       'speed': {
         title: 'Speed',
-        icon: '🏃',
-        description: 'How far you can move in a single turn.',
-        cvMeaning: 'Execution Velocity',
+        sub: 'Execution Velocity',
         evidence: [
           '60 ft is double normal human speed',
           'Cunning Action: Dash as bonus action',
@@ -461,31 +573,24 @@ function getElementOverlayContent(element) {
       },
       'proficiency': {
         title: 'Proficiency Bonus',
-        icon: '📊',
-        description: 'Reflects your overall experience and training level.',
-        cvMeaning: 'Experience Level',
+        sub: 'Experience Level',
         evidence: [
           '+3 bonus at Level 7',
           'Added to skills, saves, and attacks where proficient',
           '7 years of startup experience'
         ]
       },
+      // Copy synced verbatim to the prototype's OV.background (title/sub/badge/
+      // blurb, no evidence — the prototype's `k` is absent for this key).
       'background': {
-        title: 'Background: Entrepreneur',
-        icon: '🎭',
-        description: 'Based on the Criminal background template - because entrepreneurs break into markets.',
-        cvMeaning: 'Origin Story',
-        evidence: [
-          'Grew up in parents\' pawn shop',
-          'Professional teen actor (first IKEA gig at 14)',
-          'Made art until switching to engineering'
-        ]
+        title: 'Entrepreneur',
+        sub: 'Background',
+        badge: 'BG',
+        blurb: "Grew up in the family pawn shop — learned to see value where others don't. Then: actor, security guard, teacher, engineer, founder."
       },
       'defenses': {
         title: 'Defenses',
-        icon: '🛡️',
-        description: 'Protective traits that provide advantages in difficult situations.',
-        cvMeaning: 'Market Protection',
+        sub: 'Market Protection',
         evidence: [
           'Resilient Network - 4500+ engineers, 80+ partners',
           'Pivot Ready - Multiple successful pivots',
@@ -494,9 +599,7 @@ function getElementOverlayContent(element) {
       },
       'conditions': {
         title: 'Conditions',
-        icon: '✨',
-        description: 'Active effects that influence your capabilities.',
-        cvMeaning: 'Active Buffs',
+        sub: 'Active Buffs',
         evidence: [
           'Inspired - Advantage on impact-driven goals',
           'Alert - +4 initiative, can\'t be surprised',
@@ -504,92 +607,87 @@ function getElementOverlayContent(element) {
         ]
       }
     };
-    info = defaultInfo[element];
+    info = elementInfo[element];
   } else {
-    // Dynamic content from characterData for generated pages
-    var cs = (typeof characterData !== 'undefined' && characterData.coreStats) ? characterData.coreStats : {};
-    var p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-    var bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
-    var defs = (typeof characterData !== 'undefined' && characterData.defenses) ? characterData.defenses : [];
-    var conds = (typeof characterData !== 'undefined' && characterData.conditions) ? characterData.conditions : [];
+    // Generated sheets: build the same {title, sub, badge?, blurb?, evidence}
+    // shape from characterData — every field access guarded (generated data
+    // may lack any of these).
+    const cs = (typeof characterData !== 'undefined' && characterData.coreStats) ? characterData.coreStats : {};
+    const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+    const bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
+    const defs = (typeof characterData !== 'undefined' && characterData.defenses) ? characterData.defenses : [];
+    const conds = (typeof characterData !== 'undefined' && characterData.conditions) ? characterData.conditions : [];
 
-    var dynamicInfo = {
+    const dynamicInfo = {
       'hp': {
         title: 'Hit Points',
-        icon: '❤️',
-        description: 'Your life force in D&D represents your ability to withstand damage.',
-        cvMeaning: cs.hitPoints ? cs.hitPoints.meaning : 'Resilience',
+        sub: (cs.hitPoints && cs.hitPoints.meaning) || 'Resilience',
+        blurb: 'Your life force in D&D represents your ability to withstand damage.',
         evidence: [
-          cs.hitPoints ? 'Current: ' + cs.hitPoints.current + ' / Max: ' + cs.hitPoints.max : '',
+          cs.hitPoints ? `Current: ${cs.hitPoints.current} / Max: ${cs.hitPoints.max}` : '',
           'Capacity to absorb challenges and keep going',
-          cs.hitDice ? 'Hit Dice: ' + cs.hitDice : ''
+          cs.hitDice ? `Hit Dice: ${cs.hitDice}` : ''
         ].filter(Boolean)
       },
       'ac': {
         title: 'Armor Class',
-        icon: '🛡️',
-        description: 'How hard you are to hit in combat. Represents your defenses.',
-        cvMeaning: 'Professional Defense',
+        sub: 'Professional Defense',
+        blurb: 'How hard you are to hit in combat. Represents your defenses.',
         evidence: [
-          cs.armorClass ? 'AC ' + cs.armorClass : '',
-          'Professional network and experience provide protection',
+          cs.armorClass != null ? `AC ${cs.armorClass}` : '',
+          cs.armorClassExplanation || 'Professional network and experience provide protection'
         ].filter(Boolean)
       },
       'initiative': {
         title: 'Initiative',
-        icon: '⚡',
-        description: 'How quickly you can react and act in combat situations.',
-        cvMeaning: 'Responsiveness',
+        sub: 'Responsiveness',
+        blurb: 'How quickly you can react and act in combat situations.',
         evidence: [
-          cs.initiative !== undefined ? '+' + cs.initiative + ' initiative modifier' : '',
-          cs.initiativeBreakdown || 'How quickly you respond to opportunities',
+          cs.initiative !== undefined ? `+${cs.initiative} initiative modifier` : '',
+          cs.initiativeBreakdown || 'How quickly you respond to opportunities'
         ].filter(Boolean)
       },
       'speed': {
         title: 'Speed',
-        icon: '🏃',
-        description: 'How far you can move in a single turn.',
-        cvMeaning: 'Execution Velocity',
+        sub: 'Execution Velocity',
+        blurb: 'How far you can move in a single turn.',
         evidence: [
-          cs.speed ? 'Speed: ' + cs.speed : '',
-          cs.speedExplanation || 'Pace of career movement and adaptability',
+          cs.speed ? `Speed: ${cs.speed}` : '',
+          cs.speedExplanation || 'Pace of career movement and adaptability'
         ].filter(Boolean)
       },
       'proficiency': {
         title: 'Proficiency Bonus',
-        icon: '📊',
-        description: 'Reflects your overall experience and training level.',
-        cvMeaning: 'Experience Level',
+        sub: 'Experience Level',
+        blurb: 'Reflects your overall experience and training level.',
         evidence: [
-          cs.proficiencyBonus ? '+' + cs.proficiencyBonus + ' proficiency bonus' : '',
-          p.level ? 'Character Level ' + p.level : '',
-          'Added to skills, saves, and attacks where proficient',
+          cs.proficiencyBonus != null ? `+${cs.proficiencyBonus} proficiency bonus` : '',
+          p.level ? `Character Level ${p.level}` : '',
+          'Added to skills, saves, and attacks where proficient'
         ].filter(Boolean)
       },
       'background': {
-        title: 'Background: ' + (bg.name || p.background || 'Unknown'),
-        icon: '🎭',
-        description: bg.template ? 'Based on the ' + bg.template + ' template.' : 'Your origin story and formative experiences.',
-        cvMeaning: 'Origin Story',
+        title: bg.name || p.background || 'Background',
+        sub: 'Background',
+        badge: 'BG',
+        blurb: (bg.characteristics && bg.characteristics.backgroundStory) ||
+               (bg.template ? `Based on the ${bg.template} template.` : 'Origin story and formative experiences.'),
         evidence: [
-          bg.characteristics && bg.characteristics.backgroundStory ? bg.characteristics.backgroundStory : '',
-          bg.characteristics && bg.characteristics.origin ? 'Origin: ' + bg.characteristics.origin : '',
-          bg.characteristics && bg.characteristics.firstGig ? 'First Gig: ' + bg.characteristics.firstGig : '',
+          bg.characteristics && bg.characteristics.origin ? `Origin: ${bg.characteristics.origin}` : '',
+          bg.characteristics && bg.characteristics.firstGig ? `First Gig: ${bg.characteristics.firstGig}` : ''
         ].filter(Boolean)
       },
       'defenses': {
         title: 'Defenses',
-        icon: '🛡️',
-        description: 'Protective traits that provide advantages in difficult situations.',
-        cvMeaning: 'Professional Protections',
-        evidence: defs.length ? defs.map(function(d) { return d.name + ' — ' + d.description; }) : ['No specific defenses listed']
+        sub: 'Professional Protections',
+        blurb: 'Protective traits that provide advantages in difficult situations.',
+        evidence: defs.length ? defs.map(d => `${d.name || ''}${d.description ? ' — ' + d.description : ''}`) : ['No specific defenses listed']
       },
       'conditions': {
         title: 'Conditions',
-        icon: '✨',
-        description: 'Active effects that influence your capabilities.',
-        cvMeaning: 'Active Buffs',
-        evidence: conds.length ? conds.map(function(c) { return c.name + (c.active ? ' (Active)' : '') + ' — ' + c.description; }) : ['No active conditions']
+        sub: 'Active Buffs',
+        blurb: 'Active effects that influence your capabilities.',
+        evidence: conds.length ? conds.map(c => `${c.name || ''}${c.active ? ' (Active)' : ''}${c.description ? ' — ' + c.description : ''}`) : ['No active conditions']
       }
     };
     info = dynamicInfo[element];
@@ -598,46 +696,29 @@ function getElementOverlayContent(element) {
   if (!info) {
     info = {
       title: element,
-      icon: '📊',
-      description: 'Information about this element.',
-      cvMeaning: 'Professional Context',
+      sub: 'Professional Context',
       evidence: ['Click for more details']
     };
   }
-  
+  // Never render an empty "Key Evidence" section (generated data may filter to none).
+  if (info.evidence && !info.evidence.length) info = { ...info, evidence: undefined };
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${info.icon}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${info.title}</h2>
+    <div class="ov-head">
+      <span class="ov-title">${info.title}</span>
+      <span class="ov-sub">${info.sub}</span>
+      ${info.badge ? `<span class="ov-badge">${info.badge}</span>` : ''}
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+    </div>
+    <div class="ov-body">
+      <div class="ov-main">
+        ${info.blurb ? `<div class="ov-blurb">${info.blurb}</div>` : ''}
+        ${info.evidence ? `
+          <div class="ov-evidence-title">Key Evidence</div>
+          ${info.evidence.map(e => `<div class="ov-evidence-row">◆ ${e}</div>`).join('')}
+        ` : ''}
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Meaning</div>
-      <div class="dnd-definition">
-        <p>${info.description}</p>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${info.cvMeaning}</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Details</div>
-      <ul class="evidence-list">
-        ${info.evidence.map(e => `
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">${e}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-  `;
+    </div>`;
 }
 
 // ============================================
@@ -653,217 +734,151 @@ function setupRollableElements() {
 // REST BUTTONS
 // ============================================
 function setupRestButtons() {
+  // Short Rest = Daily/Weekly Activities. Content text unchanged from the
+  // pre-redesign version — only the wrapper/bullet markup is restyled to the
+  // ov-head/ov-body template, and the old pre-redesign emoji bullets were
+  // swapped to glyphs (brief's Step 5 mapping covers the art/palette bullet
+  // -> ✦; the other Short Rest bullets aren't in that mapping, so they reuse
+  // the same small glyph set already established for Long Rest's mapped
+  // bullets: fitness -> ✦, cooking -> ❖, coffee/foodie -> ◇, reading -> ◆,
+  // people -> ❖).
   const shortRestBtn = document.getElementById('shortRestBtn') || document.querySelector('.short-rest');
   const longRestBtn = document.getElementById('longRestBtn') || document.querySelector('.long-rest');
 
   shortRestBtn?.addEventListener('click', () => {
     if (window.__appDataSource === 'default') {
       openOverlay(`
-        <div class="overlay-header">
-          <span class="overlay-icon">⚡</span>
-          <div class="overlay-title-block">
-            <h2 class="overlay-title">Short Rest</h2>
-            <div class="overlay-subtitle">Daily & Weekly Activities</div>
+        <div class="ov-head">
+          <span class="ov-title">Short Rest</span>
+          <span class="ov-sub">Daily & Weekly Activities</span>
+          <span class="ov-badge">✦</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+        </div>
+        <div class="ov-body">
+          <div class="ov-main">
+            <div class="ov-blurb">A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</div>
+
+            <div class="ov-evidence-title">What I Do Daily & Weekly</div>
+            <div class="ov-evidence-row">✦ <strong>Fitness & Training:</strong> I love to work out and have done many sports. I go to the gym every day and am big into scientific lifting. I've been training since I was 17, and in the last 2 years I gained 12kg in muscle with this approach.</div>
+            <div class="ov-evidence-row">❖ <strong>Cooking:</strong> I love cooking—Arabic, Mediterranean, and modern fusion mostly. Think Ottolenghi style.</div>
+            <div class="ov-evidence-row">◇ <strong>Foodie & Coffee Nerd:</strong> I'm a big foodie and coffee nerd. Ask me for my top recommendations in any city I've visited—I keep an extensive record in Google Maps.</div>
+
+            <div class="ov-evidence-title">General Interests</div>
+            <div class="ov-evidence-row">✦ <strong>Art:</strong> I'm into art—anything that is cutting edge really, culturally or technologically.</div>
+            <div class="ov-evidence-row">◆ <strong>Political Economy, Philosophy & Sociology:</strong> I'm a nerd in these fields, always reading and refining my understanding. My Goodreads account is my trophy wall.</div>
+            <div class="ov-evidence-row">❖ <strong>Meeting New People:</strong> I love meeting new people, am very social, and like to hear from very different backgrounds—that is what makes life rich.</div>
           </div>
-        </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">D&D Definition</div>
-          <div class="dnd-definition">
-            <p>A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</p>
-          </div>
-        </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">What I Do Daily & Weekly</div>
-          <ul class="evidence-list">
-            <li class="evidence-item">
-              <span class="evidence-bullet">💪</span>
-              <span class="evidence-text"><strong>Fitness & Training:</strong> I love to work out and have done many sports. I go to the gym every day and am big into scientific lifting. I've been training since I was 17, and in the last 2 years I gained 12kg in muscle with this approach.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">🍳</span>
-              <span class="evidence-text"><strong>Cooking:</strong> I love cooking—Arabic, Mediterranean, and modern fusion mostly. Think Ottolenghi style.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">☕</span>
-              <span class="evidence-text"><strong>Foodie & Coffee Nerd:</strong> I'm a big foodie and coffee nerd. Ask me for my top recommendations in any city I've visited—I keep an extensive record in Google Maps.</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">General Interests</div>
-          <ul class="evidence-list">
-            <li class="evidence-item">
-              <span class="evidence-bullet">🎨</span>
-              <span class="evidence-text"><strong>Art:</strong> I'm into art—anything that is cutting edge really, culturally or technologically.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">📚</span>
-              <span class="evidence-text"><strong>Political Economy, Philosophy & Sociology:</strong> I'm a nerd in these fields, always reading and refining my understanding. My Goodreads account is my trophy wall.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">👥</span>
-              <span class="evidence-text"><strong>Meeting New People:</strong> I love meeting new people, am very social, and like to hear from very different backgrounds—that is what makes life rich.</span>
-            </li>
-          </ul>
         </div>
       `);
     } else {
+      // Generated sheets: interests & fun facts from characterData.extras,
+      // restyled to the same ov-head/ov-body glyph template.
       const extras = (typeof characterData !== 'undefined' && characterData.extras) ? characterData.extras : {};
       const funFacts = extras.funFacts || [];
       const interests = extras.interests || [];
       openOverlay(`
-        <div class="overlay-header">
-          <span class="overlay-icon">⚡</span>
-          <div class="overlay-title-block">
-            <h2 class="overlay-title">Short Rest</h2>
-            <div class="overlay-subtitle">Interests & Fun Facts</div>
+        <div class="ov-head">
+          <span class="ov-title">Short Rest</span>
+          <span class="ov-sub">Interests & Fun Facts</span>
+          <span class="ov-badge">✦</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+        </div>
+        <div class="ov-body">
+          <div class="ov-main">
+            <div class="ov-blurb">A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</div>
+            ${interests.length ? `
+              <div class="ov-evidence-title">Interests</div>
+              ${interests.map(i => `<div class="ov-evidence-row">◆ ${i}</div>`).join('')}
+            ` : ''}
+            ${funFacts.length ? `
+              <div class="ov-evidence-title">Fun Facts</div>
+              ${funFacts.map(fact => `<div class="ov-evidence-row">✦ ${fact}</div>`).join('')}
+            ` : ''}
           </div>
         </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">D&D Definition</div>
-          <div class="dnd-definition">
-            <p>A short rest is a period of at least 1 hour during which a character does nothing more strenuous than reading, talking, eating, or standing watch.</p>
-          </div>
-        </div>
-        
-        ${interests.length ? `
-          <div class="overlay-section">
-            <div class="overlay-section-title">Interests</div>
-            <ul class="evidence-list">
-              ${interests.map(i => `
-                <li class="evidence-item">
-                  <span class="evidence-bullet">•</span>
-                  <span class="evidence-text">${i}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        ` : ''}
-        
-        ${funFacts.length ? `
-          <div class="overlay-section">
-            <div class="overlay-section-title">Fun Facts</div>
-            <ul class="evidence-list">
-              ${funFacts.map(f => `
-                <li class="evidence-item">
-                  <span class="evidence-bullet">🎲</span>
-                  <span class="evidence-text">${f}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        ` : ''}
       `);
     }
   });
 
+  // Long Rest = Day Off Activities. Same treatment; glyph swap follows the
+  // brief's Step 5 mapping exactly (party/community -> ✦, sauna/spa -> ❖,
+  // nature -> ◆, nightlife/culture -> ◇, art/passion projects -> ✦,
+  // psychedelics -> ☾, email -> ✉, LinkedIn -> ❖, download CV -> ❖).
+  // Contact CTAs use .ov-roll-btn (solid, Email) and .ov-outline-btn (gold
+  // outline, LinkedIn/Download CV) instead of the old inline
+  // var(--primary-red)/var(--accent-blue) styles.
   longRestBtn?.addEventListener('click', () => {
     if (window.__appDataSource === 'default') {
       openOverlay(`
-        <div class="overlay-header">
-          <span class="overlay-icon">🌙</span>
-          <div class="overlay-title-block">
-            <h2 class="overlay-title">Long Rest</h2>
-            <div class="overlay-subtitle">Day Off Activities</div>
-          </div>
+        <div class="ov-head">
+          <span class="ov-title">Long Rest</span>
+          <span class="ov-sub">Day Off Activities</span>
+          <span class="ov-badge">☾</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
         </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">D&D Definition</div>
-          <div class="dnd-definition">
-            <p>A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</p>
-          </div>
-        </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">What I Do With a Day Off</div>
-          <ul class="evidence-list">
-            <li class="evidence-item">
-              <span class="evidence-bullet">🎉</span>
-              <span class="evidence-text"><strong>Community Building:</strong> Organizing events for startup founders and friends, designing unique experiences they won't forget—from whisky tastings with food pairing to big parties, to D&D-themed NY parties where everyone competes in D&D skill-related party games to determine their skillset for the final quest, to boat trips with unique storytelling formats to get deep.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">🧖</span>
-              <span class="evidence-text"><strong>Sauna & Spa:</strong> I love the sauna and going to the nude spa with friends.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">🏔️</span>
-              <span class="evidence-text"><strong>Nature:</strong> Going into nature—hiking, swimming, climbing.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">🎵</span>
-              <span class="evidence-text"><strong>Culture & Nightlife:</strong> Going raving, or to a museum exhibition.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">🎨</span>
-              <span class="evidence-text"><strong>Passion Projects:</strong> Working on passion projects—art or tech.</span>
-            </li>
-            <li class="evidence-item">
-              <span class="evidence-bullet">🧘</span>
-              <span class="evidence-text"><strong>Psychedelics:</strong> Once in a while, doing a psychedelics trip.</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-          <div class="overlay-section-title">Want to Connect?</div>
-          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-            <a href="mailto:busterfranken@gmail.com?subject=Let's Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-              📧 Email Me
-            </a>
-            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-              💼 LinkedIn
-            </a>
-            <a href="Resume-Buster-short.pdf" download class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-              📄 Download CV
-            </a>
+        <div class="ov-body">
+          <div class="ov-main">
+            <div class="ov-blurb">A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</div>
+
+            <div class="ov-evidence-title">What I Do With a Day Off</div>
+            <div class="ov-evidence-row">✦ <strong>Community Building:</strong> Organizing events for startup founders and friends, designing unique experiences they won't forget—from whisky tastings with food pairing to big parties, to D&D-themed NY parties where everyone competes in D&D skill-related party games to determine their skillset for the final quest, to boat trips with unique storytelling formats to get deep.</div>
+            <div class="ov-evidence-row">❖ <strong>Sauna & Spa:</strong> I love the sauna and going to the nude spa with friends.</div>
+            <div class="ov-evidence-row">◆ <strong>Nature:</strong> Going into nature—hiking, swimming, climbing.</div>
+            <div class="ov-evidence-row">◇ <strong>Culture & Nightlife:</strong> Going raving, or to a museum exhibition.</div>
+            <div class="ov-evidence-row">✦ <strong>Passion Projects:</strong> Working on passion projects—art or tech.</div>
+            <div class="ov-evidence-row">☾ <strong>Psychedelics:</strong> Once in a while, doing a psychedelics trip.</div>
+
+            <div class="ov-evidence-title">Want to Connect?</div>
+            <a href="mailto:${characterData.personal.email}?subject=Let's Connect!" class="ov-roll-btn">✉ Email Me</a>
+            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="ov-outline-btn">❖ LinkedIn</a>
+            <a href="Resume-Buster-short.pdf" download class="ov-outline-btn">❖ Download CV</a>
           </div>
         </div>
       `);
     } else {
+      // Generated sheets: about + contact links from characterData.personal,
+      // using the redesign's .ov-roll-btn / .ov-outline-btn CTAs.
       const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
       const contactLinks = [];
-      if (p.email) contactLinks.push('<a href="mailto:' + p.email + '?subject=Let\'s Connect!" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>');
-      if (p.linkedin) contactLinks.push('<a href="' + p.linkedin + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>');
-      if (p.github) contactLinks.push('<a href="' + p.github + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>');
-
+      if (p.email) contactLinks.push(`<a href="mailto:${p.email}?subject=Let's Connect!" class="ov-roll-btn">✉ Email</a>`);
+      if (p.linkedin) contactLinks.push(`<a href="${p.linkedin}" target="_blank" class="ov-outline-btn">❖ LinkedIn</a>`);
+      if (p.github) contactLinks.push(`<a href="${p.github}" target="_blank" class="ov-outline-btn">❖ GitHub</a>`);
       openOverlay(`
-        <div class="overlay-header">
-          <span class="overlay-icon">🌙</span>
-          <div class="overlay-title-block">
-            <h2 class="overlay-title">Long Rest</h2>
-            <div class="overlay-subtitle">Connect & Collaborate</div>
-          </div>
+        <div class="ov-head">
+          <span class="ov-title">Long Rest</span>
+          <span class="ov-sub">Connect & Collaborate</span>
+          <span class="ov-badge">☾</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
         </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">D&D Definition</div>
-          <div class="dnd-definition">
-            <p>A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</p>
-          </div>
-        </div>
-        
-        <div class="overlay-section">
-          <div class="overlay-section-title">About ${p.name || 'This Character'}</div>
-          <p>${p.summary || 'No summary available.'}</p>
-          ${p.currentStatus ? '<div style="margin-top: var(--spacing-md);"><strong>Status:</strong> ' + p.currentStatus + '</div>' : ''}
-          ${p.currentCampaign ? '<div><strong>Current Focus:</strong> ' + p.currentCampaign + '</div>' : ''}
-        </div>
-        
-        ${contactLinks.length ? `
-          <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-            <div class="overlay-section-title">Get In Touch</div>
-            <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
+        <div class="ov-body">
+          <div class="ov-main">
+            <div class="ov-blurb">A long rest is a period of extended downtime, at least 8 hours long, during which a character regains all lost hit points and spent abilities.</div>
+            ${(p.summary || p.currentStatus || p.currentCampaign) ? `
+              <div class="ov-evidence-title">About ${p.name || 'This Character'}</div>
+              ${p.summary ? `<div class="ov-evidence-row">◆ ${p.summary}</div>` : ''}
+              ${p.currentStatus ? `<div class="ov-evidence-row">✦ <strong>Status:</strong> ${p.currentStatus}</div>` : ''}
+              ${p.currentCampaign ? `<div class="ov-evidence-row">❖ <strong>Current Focus:</strong> ${p.currentCampaign}</div>` : ''}
+            ` : ''}
+            ${contactLinks.length ? `
+              <div class="ov-evidence-title">Get In Touch</div>
               ${contactLinks.join('')}
-            </div>
+            ` : ''}
           </div>
-        ` : ''}
+        </div>
       `);
     }
+  });
+
+  // Mobile quick bar (≤740px, index.html only): dispatches to the same
+  // buttons/toggle above rather than duplicating their content/behavior.
+  // #shortRestBtn/#longRestBtn live inside the ≤740px nav dropdown (hidden
+  // until opened) and .view-toggle-btn is always in the DOM — a .click() on a
+  // hidden (display:none only on the closed dropdown's ancestor, not on the
+  // buttons themselves once open) element still fires its click handler.
+  document.getElementById('qbShort')?.addEventListener('click', () => shortRestBtn?.click());
+  document.getElementById('qbLong')?.addEventListener('click', () => longRestBtn?.click());
+  document.getElementById('qbClassic')?.addEventListener('click', () => {
+    document.querySelector('.view-toggle-btn[data-view="classic"]')?.click();
   });
 }
 
@@ -908,6 +923,10 @@ function formatDate(dateString) {
 // UPDATE HEADER FROM DATA (for share-link / creator views)
 // ============================================
 function updateHeaderFromData() {
+  // Owner page (default data.js): the static markup already IS the rendered
+  // state — leave the DOM untouched so it stays identical to the static site.
+  // Everything below only applies to externally loaded (generated) sheets.
+  if (window.__appDataSource === 'default') return;
   if (typeof characterData === 'undefined') return;
   const p = characterData.personal;
   if (!p) return;
@@ -948,6 +967,15 @@ function updateHeaderFromData() {
   if (exampleBanner && window.__appDataSource !== 'default') {
     exampleBanner.style.display = 'none';
   }
+
+  // ── Owner-specific flavor doesn't apply to generated sheets ──
+  // The handwritten margin notes ("the money-maker", "still full HP!" …)
+  // reference the owner's own data; hide them on generated pages.
+  document.querySelectorAll('.margin-note').forEach(el => { el.style.display = 'none'; });
+
+  // Level banner under the avatar (static "Level 7" in the markup)
+  const levelBanner = document.querySelector('.level-banner');
+  if (levelBanner && p.level != null) levelBanner.textContent = `Level ${p.level}`;
 
   // ── Nav updates for generated pages ──
   const slug = window.__appDataSlug;
@@ -997,8 +1025,8 @@ function updateHeaderFromData() {
   const classDisplay = document.getElementById('classDisplay');
   if (classDisplay && characterData.classes && characterData.classes.length) {
     classDisplay.innerHTML = characterData.classes
-      .map(c => `<span class="class-item" data-class="${c.id}">${c.name} ${c.level}</span>`)
-      .join(' / ');
+      .map(c => `<span class="class-item" data-class="${c.id || ''}">${c.name || ''}${c.level != null ? ' ' + c.level : ''}</span>`)
+      .join(' <span class="class-sep">/</span> ');
   }
 
   // Update character details
@@ -1029,13 +1057,13 @@ function updateHeaderFromData() {
   if (characterData.coreStats) {
     const cs = characterData.coreStats;
     const profEl = document.querySelector('.stat-box.proficiency .stat-value');
-    if (profEl) { profEl.textContent = `+${cs.proficiencyBonus}`; profEl.dataset.mod = cs.proficiencyBonus; }
+    if (profEl && cs.proficiencyBonus != null) { profEl.textContent = `+${cs.proficiencyBonus}`; profEl.dataset.mod = cs.proficiencyBonus; }
     const initEl = document.querySelector('.stat-box.initiative .stat-value');
-    if (initEl) { initEl.textContent = `+${cs.initiative}`; initEl.dataset.mod = cs.initiative; }
+    if (initEl && cs.initiative != null) { initEl.textContent = `+${cs.initiative}`; initEl.dataset.mod = cs.initiative; }
     const acEl = document.querySelector('.stat-box.armor-class .stat-value');
-    if (acEl) acEl.textContent = cs.armorClass;
+    if (acEl && cs.armorClass != null) acEl.textContent = cs.armorClass;
     const spdEl = document.querySelector('.stat-box.speed .stat-value');
-    if (spdEl) spdEl.innerHTML = `${cs.speed.replace(/\s*ft\.?/, '')}<span class="unit">ft.</span>`;
+    if (spdEl && cs.speed) spdEl.innerHTML = `${String(cs.speed).replace(/\s*ft\.?/, '')}<span class="unit">ft.</span>`;
     const hpCur = document.querySelector('.hp-current');
     const hpMax = document.querySelector('.hp-max');
     const hpMeaning = document.querySelector('.hp-meaning');
@@ -1090,6 +1118,28 @@ function updateHeaderFromData() {
     sensesEl.textContent = characterData.senses;
   }
 
+  // Update the static Spells-tab header (markup ships the owner's values)
+  if (characterData.spells) {
+    const sp = characterData.spells;
+    const headParts = document.querySelectorAll('.spell-header > span');
+    if (headParts[0] && sp.spellcastingAbility) {
+      const inner = headParts[0].querySelector('span');
+      if (inner) inner.textContent = String(sp.spellcastingAbility).toUpperCase();
+    }
+    if (headParts[1] && sp.spellSaveDC != null) {
+      const dc = headParts[1].querySelector('.rollable');
+      if (dc) { dc.textContent = sp.spellSaveDC; dc.dataset.mod = sp.spellSaveDC; }
+    }
+    if (headParts[2] && sp.spellAttackBonus != null) {
+      const atk = headParts[2].querySelector('.rollable');
+      if (atk) { atk.textContent = `+${sp.spellAttackBonus}`; atk.dataset.mod = sp.spellAttackBonus; }
+    }
+  }
+
+  // Update the static Inventory-tab weight note (owner joke copy in markup)
+  const weightNoteEl = document.querySelector('.inventory-header > span > span');
+  if (weightNoteEl) weightNoteEl.textContent = `${(characterData.inventory || []).length} items`;
+
   // Update proficiencies text using label-based selectors (more robust)
   if (characterData.proficiencies) {
     const profs = characterData.proficiencies;
@@ -1114,16 +1164,16 @@ function updateHeaderFromData() {
     });
   }
 
-  // Update contact bar
+  // Update contact bar — redesign format (glyph-prefixed .contact-item links)
   const contactBar = document.querySelector('.contact-bar');
   if (contactBar && p) {
     const items = [];
-    if (p.email) items.push(`<a href="mailto:${p.email}" class="contact-item"><span class="contact-icon">&#128231;</span><span class="contact-text">${p.email}</span></a>`);
-    if (p.phone) items.push(`<a href="tel:${p.phone}" class="contact-item"><span class="contact-icon">&#128241;</span><span class="contact-text">${p.phone}</span></a>`);
-    if (p.linkedin) items.push(`<a href="${p.linkedin}" target="_blank" class="contact-item"><span class="contact-icon">&#128188;</span><span class="contact-text">LinkedIn</span></a>`);
-    if (p.github) items.push(`<a href="${p.github}" target="_blank" class="contact-item"><span class="contact-icon">&#128187;</span><span class="contact-text">GitHub</span></a>`);
-    if (p.location) items.push(`<span class="contact-item location"><span class="contact-icon">&#128205;</span><span class="contact-text">${p.location}</span></span>`);
-    if (items.length) contactBar.innerHTML = items.join('');
+    if (p.email) items.push(`<a href="mailto:${p.email}" class="contact-item">✉ ${p.email}</a>`);
+    if (p.phone) items.push(`<a href="tel:${String(p.phone).replace(/\s+/g, '')}" class="contact-item">❖ ${p.phone}</a>`);
+    if (p.linkedin) items.push(`<a href="${p.linkedin}" target="_blank" class="contact-item">❖ LinkedIn</a>`);
+    if (p.github) items.push(`<a href="${p.github}" target="_blank" class="contact-item">❖ GitHub</a>`);
+    if (p.location) items.push(`<span class="contact-item location">❖ ${p.location}</span>`);
+    if (items.length) contactBar.innerHTML = items.join('\n      ');
   }
 
   // Update navbar campaign status text
@@ -1131,10 +1181,12 @@ function updateHeaderFromData() {
   const campaignLabelEl = document.querySelector('.campaign-status .campaign-label');
   if (campaignNameEl) {
     // On index.html, show campaign name; on other pages, show level
-    if (p.currentCampaign && campaignLabelEl && campaignLabelEl.textContent.includes('CAMPAIGN')) {
+    if (p.currentCampaign && campaignLabelEl && campaignLabelEl.textContent.toUpperCase().includes('CAMPAIGN')) {
       campaignNameEl.textContent = p.currentCampaign;
-    } else if (p.level && campaignLabelEl && campaignLabelEl.textContent.includes('LEVEL')) {
+    } else if (p.level && campaignLabelEl && campaignLabelEl.textContent.toUpperCase().includes('LEVEL')) {
       campaignNameEl.textContent = p.level;
+    } else if (p.currentStatus && campaignLabelEl && campaignLabelEl.textContent.toUpperCase().includes('STATUS')) {
+      campaignNameEl.textContent = p.currentStatus;
     }
   }
 }

@@ -191,14 +191,23 @@
 }
 
 /* ==========================================================================
-   DnD-cv-maker branch: dynamic campaign-card expand/collapse behavior.
-   The generator's public/js/render.js emits .campaign-card and toggles
-   .expanded on click (with a .campaign-toggle chevron), plus .adventure-card
-   items. The redesign's campaigns.css (static site) styled these elements but
-   carried no show/hide logic. These rules are preserved during the Parchment &
-   Ink css sync so the generator's collapsible cards keep working.
+   DnD-cv-maker branch: dynamic campaign-card behavior + generated-sheet
+   extras. public/js/render.js's renderCampaignsPage() now emits the same
+   .campaign-card / .adventure / .milestone markup as the static page and
+   swaps the ▸/▾ chevron in JS (like the static page's inline script), so the
+   old rotate(180deg) chevron rule and the legacy .adventure-card rules from
+   the pre-redesign generator are gone. The :not(.expanded) rule stays as a
+   belt-and-braces fallback for class-driven collapsing.
+   .milestone-link styles the optional "read more →" links generated sheets
+   can carry on encounters/side-quests (the static site links via chip-rows
+   instead, so the redesign css has no rule for links inside milestones).
    ========================================================================== */
 .campaign-card:not(.expanded) .campaign-body { display: none; }
-.campaign-card.expanded .campaign-toggle { transform: rotate(180deg); }
-.adventure-card { margin-bottom: var(--spacing-md); }
-.adventure-card:last-child { margin-bottom: 0; }
+.campaign-card.expanded .campaign-body { display: block; }
+.milestone-link {
+  color: var(--gold);
+  font-style: italic;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.milestone-link:hover { color: var(--oxblood); text-decoration: underline; }

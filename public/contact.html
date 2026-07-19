@@ -8,24 +8,30 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Alegreya+Sans+SC:wght@500;700;800&family=Caveat:wght@400;600&family=Cinzel:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/character-sheet.css">
   <link rel="stylesheet" href="css/campaigns.css">
-  <link rel="stylesheet" href="css/network.css">
   <link rel="stylesheet" href="css/classic-cv.css">
   <link rel="stylesheet" href="css/overlay.css">
-  
+  <link rel="stylesheet" href="css/contact.css">
+
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
 </head>
 <body>
-  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">⚙️</button>
+  <!-- Admin Login Button -->
+  <button class="admin-login-btn" id="adminLoginBtn" title="Admin Login">◆</button>
 
+  <div class="sheet">
+  <!-- Navigation Bar (shared across both views) -->
   <nav class="navbar" id="mainNavbar">
+    <div class="nav-d20">20</div>
     <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" id="navbarToggle">
       <span class="navbar-toggle-icon"></span>
     </button>
+    <span class="navbar-page-title">Adventurer's Guild</span>
     <div class="navbar-menu" id="navbarMenu">
       <div class="navbar-left">
         <a href="index.html" class="nav-link">Character Sheet</a>
@@ -37,30 +43,197 @@
       </div>
       <div class="navbar-right">
         <div class="campaign-status dnd-only clickable" data-element="campaign-status">
-          <span class="campaign-label">STATUS:</span>
+          <span class="campaign-label">status ·</span>
           <span class="campaign-name">Open to Adventures</span>
         </div>
+        <!-- View Toggle -->
         <div class="view-toggle">
-          <button class="view-toggle-btn active" data-view="dnd">🎲 D&D View</button>
-          <button class="view-toggle-btn" data-view="classic">📄 Classic CV</button>
+          <button class="view-toggle-btn active" data-view="dnd">◆ D&D View</button>
+          <button class="view-toggle-btn" data-view="classic">Classic CV</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="network-page">
-    <header class="page-header">
-      <h1 class="page-title">🌐 Adventurer's Guild</h1>
-      <p class="page-subtitle">Connect through various channels or join the network of allies.</p>
-    </header>
+  <div class="contact-page">
 
-    <!-- Data-driven container: populated by renderContactPage() -->
-    <main class="network-container" id="contactContainer">
-      <p style="text-align:center;color:var(--text-secondary);padding:40px;">Loading contact info...</p>
-    </main>
+      <header class="page-head">
+        <div class="page-kicker">Allies, Guilds &amp; Ravens</div>
+        <h1 class="page-title">Adventurer's Guild</h1>
+        <div class="page-rule">❖</div>
+        <p class="page-sub">Connect through various channels, or join the network of allies.</p>
+      </header>
+
+      <main class="contact-container" id="contactContainer">
+
+        <!-- Contact Scrolls -->
+        <section class="contact-scrolls">
+          <h2 class="rule-title">Contact Scrolls</h2>
+
+          <div class="scroll-grid">
+            <a href="mailto:busterfranken@gmail.com" class="section-box scroll-card scroll-card--email">
+              <span class="scroll-glyph-lg">✉</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">✉</span> Email</span>
+                <span class="scroll-value">busterfranken@gmail.com</span>
+                <span class="scroll-note">Best for detailed inquiries</span>
+              </span>
+              <span class="scroll-arrow">→</span>
+            </a>
+
+            <a href="tel:+31624877967" class="section-box scroll-card">
+              <span class="scroll-glyph-lg">❖</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">❖</span> Phone</span>
+                <span class="scroll-value">+31 6 2487 7967</span>
+                <span class="scroll-note">Netherlands / WhatsApp</span>
+              </span>
+              <span class="scroll-arrow">→</span>
+            </a>
+
+            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="section-box scroll-card">
+              <span class="scroll-glyph-lg">❖</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">❖</span> LinkedIn</span>
+                <span class="scroll-value">linkedin.com/in/buster-franken</span>
+                <span class="scroll-note">Professional network</span>
+              </span>
+              <span class="scroll-arrow">→</span>
+            </a>
+
+            <a href="https://github.com/BusterFranken" target="_blank" class="section-box scroll-card">
+              <span class="scroll-glyph-lg">❖</span>
+              <span class="scroll-body">
+                <span class="scroll-label"><span class="scroll-glyph-sm">❖</span> GitHub</span>
+                <span class="scroll-value">github.com/BusterFranken</span>
+                <span class="scroll-note">Code &amp; projects</span>
+              </span>
+              <span class="scroll-arrow">→</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Home Base + Guilds / Letters of Recommendation -->
+        <div class="contact-columns">
+          <div class="contact-col-left">
+            <section class="home-base">
+              <h2 class="rule-title">Home Base</h2>
+              <div class="section-box location-card">
+                <h3 class="location-city">Amsterdam, Netherlands</h3>
+                <p class="location-address">Nieuwegrachtje 5-3, 1011 VP</p>
+                <div class="location-status-row">
+                  <span class="status-chip">✦ Open to Adventures</span>
+                </div>
+                <p class="location-note">Willing to relocate for the right quest (SF, anywhere interesting).</p>
+                <span class="margin-note margin-note--ravens">ravens accepted</span>
+              </div>
+            </section>
+
+            <section class="guilds">
+              <h2 class="rule-title guilds-rule">Guilds &amp; Factions</h2>
+              <div class="guild-list">
+                <a href="https://openedgehpc.org" target="_blank" class="guild-row">
+                  <span class="guild-name">Open Edge HPC Initiative</span>
+                  <span class="guild-role">Board Member</span>
+                </a>
+                <div class="guild-row">
+                  <span class="guild-name">Founder Space Utrecht</span>
+                  <span class="guild-role">Co-Founder</span>
+                </div>
+                <a href="https://sigma-squared.org" target="_blank" class="guild-row">
+                  <span class="guild-name">Sigma Squared Society</span>
+                  <span class="guild-role">Former Executive, NL</span>
+                </a>
+                <a href="https://nlaic.com" target="_blank" class="guild-row">
+                  <span class="guild-name">NL AI Coalitie</span>
+                  <span class="guild-role">Member</span>
+                </a>
+                <a href="https://tue.nl" target="_blank" class="guild-row">
+                  <span class="guild-name">TU/e Alumni</span>
+                  <span class="guild-role">Active Alumnus</span>
+                </a>
+                <div class="guild-row">
+                  <span class="guild-name">Tim Draper's Network State</span>
+                  <span class="guild-role">Member</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="contact-col-right">
+            <section class="letters">
+              <h2 class="rule-title">Letters of Recommendation</h2>
+              <div class="vouch-list">
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Getting people excited for collaboration and new endeavors, from founders to senior leaders."</p>
+                  <footer class="vouch-cite">— Sako Arts · Cofounder &amp; CTO, FruitPunch AI</footer>
+                </blockquote>
+
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Inspiring people to stay true to their goals and ideals, regardless of what others think, or where the money may push him to go."</p>
+                  <footer class="vouch-cite">— Daan Streng · Chief Engineer, FruitPunch AI</footer>
+                </blockquote>
+
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Buster has the strong ability to translate high-level ideas into testable experiments. Using the data and analysis gathered to build a plan grounded in truth."</p>
+                  <footer class="vouch-cite">— Dorian Groen · Challenge Manager, FruitPunch AI</footer>
+                </blockquote>
+
+                <blockquote class="section-box vouch-card">
+                  <p class="vouch-quote">"Galvanizing AI engineers to apply their skills towards global challenges and the greater good."</p>
+                  <footer class="vouch-cite">— Arjé Cahn · Investor, Shamrock Ventures</footer>
+                </blockquote>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <section class="cta-panel">
+          <h2 class="cta-title">Ready to Start a New Quest?</h2>
+          <p class="cta-subtitle">Currently exploring new adventures in energy hardtech — open to other impact-focused ventures.</p>
+          <div class="cta-buttons">
+            <a href="mailto:busterfranken@gmail.com?subject=New Quest Inquiry" class="ov-roll-btn">✦ Start a Quest</a>
+            <a href="Resume-Buster-short.pdf" download class="ov-outline-btn">❖ Download CV</a>
+          </div>
+        </section>
+
+      </main>
+
   </div>
 
-  <!-- Scripts -->
+  <!-- Footer -->
+  <footer class="contact-bar">
+    <a href="mailto:busterfranken@gmail.com" class="contact-item">✉ busterfranken@gmail.com</a>
+    <a href="tel:+31624877967" class="contact-item">❖ +31 6 2487 7967</a>
+    <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-item">❖ LinkedIn</a>
+    <a href="https://github.com/BusterFranken" target="_blank" class="contact-item">❖ GitHub</a>
+    <span class="contact-item location">❖ Amsterdam, Netherlands</span>
+  </footer>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div class="overlay-modal" id="overlayModal">
+    <div class="overlay-content">
+      <button class="overlay-close" id="overlayClose">&times;</button>
+      <div class="overlay-body" id="overlayBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-content">
+      <button class="admin-close" id="adminClose">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminForm">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
   <script src="js/data.js"></script>
   <script src="js/descriptions.js"></script>
   <script src="js/load-app-data.js"></script>
@@ -68,5 +241,27 @@
   <script src="js/overlay.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    // Campaign Status click handler
+    document.querySelectorAll('.campaign-status.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        if (typeof getCampaignStatusOverlayContent === 'function') {
+          openOverlay(getCampaignStatusOverlayContent());
+        }
+      });
+    });
+    
+    // View toggle - redirect to character sheet for classic CV
+    const toggleBtns = document.querySelectorAll('.view-toggle-btn');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view === 'classic') {
+          localStorage.setItem('preferredView', 'classic');
+          window.location.href = 'index.html';
+        }
+      });
+    });
+  </script>
 </body>
 </html>

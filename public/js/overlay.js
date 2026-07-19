@@ -11,7 +11,7 @@ function openOverlay(content) {
   overlayBody.innerHTML = content;
   overlayModal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  
+
   // Add rollable handlers to any rollable elements in overlay
   overlayBody.querySelectorAll('.rollable').forEach(el => {
     el.addEventListener('click', handleRollClick);
@@ -41,319 +41,183 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Generate Ability Score overlay content
+// Swipe-down to close (mobile bottom sheet) — same technique as js/dice.js's
+// touch handlers (Task 4), applied to the overlay modal.
+let overlayTouchStartY = null;
+overlayModal?.addEventListener('touchstart', (e) => { overlayTouchStartY = e.touches[0].clientY; }, { passive: true });
+overlayModal?.addEventListener('touchmove', (e) => {
+  if (overlayTouchStartY !== null && e.touches[0].clientY - overlayTouchStartY > 60) { overlayTouchStartY = null; closeOverlay(); }
+}, { passive: true });
+
+
+// Generate Ability Score overlay content — canonical parchment template:
+// red header band (title / "Score N · cv meaning" sub / rollable modifier
+// badge / close-x) + body with an art plate (photo for CHA, hatched
+// placeholder + artLabel for the rest) beside blurb / Key Evidence / Vouch /
+// roll button. On generated sheets (?slug=) the owner's abilityDescriptions
+// art/photo captions don't apply — those render the hatched placeholder with
+// the generic "commissioned art" caption instead, and every field access is
+// guarded so missing generated data never prints "undefined".
 function getAbilityOverlayContent(abilityKey) {
-  const ability = characterData.abilities[abilityKey];
-  const desc = abilityDescriptions[abilityKey];
-  
+  const ability = (characterData.abilities || {})[abilityKey];
+  if (!ability) return '<p>Ability not found</p>';
+  const isGenerated = window.__appDataSource !== 'default';
+  const desc = (typeof abilityDescriptions !== 'undefined' && abilityDescriptions[abilityKey]) || {};
+  const mod = ability.modifier != null ? ability.modifier : 0;
+  const abbr = ability.abbr || abilityKey.toUpperCase();
+  const plate = (!isGenerated && desc.photoCaption)
+    ? `<div class="ov-plate"><img src="assets/images/buster.jpg" alt="${ability.name || abbr}">
+       <div class="ov-plate-caption">${desc.photoCaption}</div></div>`
+    : `<div class="ov-plate"><div class="ov-plate-art"><span>${isGenerated ? (ability.name || 'commissioned art') : (desc.artLabel || 'commissioned art')}</span></div>
+       <div class="ov-plate-caption">${isGenerated ? 'commissioned art' : 'your AI art drops in here'}</div></div>`;
+  const evidence = ability.evidence || [];
+  const vouch = ability.vouch && ability.vouch.text ? ability.vouch : null;
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${desc.icon}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${ability.name}</h2>
-        <div class="overlay-subtitle">${ability.abbr} • Score: ${ability.score}</div>
-      </div>
-      <div class="overlay-modifier rollable" data-mod="${ability.modifier}" data-ability="${abilityKey}">
-        ${ability.modifier >= 0 ? '+' : ''}${ability.modifier}
-      </div>
+    <div class="ov-head">
+      <span class="ov-title">${ability.name || abbr}</span>
+      <span class="ov-sub">Score ${ability.score != null ? ability.score : '—'}${ability.cvMeaning ? ' · ' + ability.cvMeaning : ''}</span>
+      <span class="ov-badge rollable" data-mod="${mod}" data-ability="${abilityKey}">${mod >= 0 ? '+' : ''}${mod}</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Definition</div>
-      <div class="dnd-definition">
-        <p>${desc.dndDefinition}</p>
+    <div class="ov-body">
+      ${plate}
+      <div class="ov-main">
+        ${ability.cvDescription ? `<div class="ov-blurb">${ability.cvDescription}</div>` : ''}
+        ${evidence.length ? `
+          <div class="ov-evidence-title">Key Evidence</div>
+          ${evidence.map(e => `<div class="ov-evidence-row">◆ ${e}</div>`).join('')}
+        ` : ''}
+        ${vouch ? `<div class="ov-evidence-title">Vouch</div><div class="ov-blurb">"${vouch.text}" — ${vouch.author || 'anonymous'}${vouch.role ? ', ' + vouch.role : ''}</div>` : ''}
+        <button class="ov-roll-btn" onclick="rollFromOverlay('${abbr}', ${mod})">✦ Roll ${abbr} Check</button>
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${ability.cvMeaning}</div>
-        <div class="cv-meaning-desc">${ability.cvDescription}</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Key Evidence</div>
-      <ul class="evidence-list">
-        ${ability.evidence.map(e => `
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">${e}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-    
-    ${ability.vouch ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Vouch</div>
-        <div class="overlay-vouch">
-          <div class="overlay-vouch-text">"${ability.vouch.text}"</div>
-          <div class="overlay-vouch-author">– ${ability.vouch.author}, ${ability.vouch.role}</div>
-        </div>
-      </div>
-    ` : ''}
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Calculation</div>
-      <div class="calculation">
-        <div class="calc-row">
-          <span class="calc-label">Base Score</span>
-          <span class="calc-value">${ability.score}</span>
-        </div>
-        <div class="calc-row">
-          <span class="calc-label">Modifier</span>
-          <span class="calc-value">${ability.modifier >= 0 ? '+' : ''}${ability.modifier}</span>
-        </div>
-        <div class="calc-row">
-          <span class="calc-label">Save Proficient</span>
-          <span class="calc-value">${ability.saveProficient ? 'Yes (+3)' : 'No'}</span>
-        </div>
-      </div>
-    </div>
-    
-    <button class="overlay-roll-btn" onclick="rollFromOverlay('${ability.abbr}', ${ability.modifier})">
-      <span class="dice-emoji">🎲</span>
-      Roll ${ability.abbr} Check
-    </button>
-  `;
+    </div>`;
 }
 
-// Generate Skill overlay content
+
+// Generate Skill overlay content — same band/body pattern, no plate.
+// Generated sheets prefer the skill's own cvMeaning/evidence over the
+// owner's skillDescriptions copy (branch behavior), with guarded fallbacks.
 function getSkillOverlayContent(skillKey) {
-  const skill = characterData.skills.find(s => 
-    s.name.toLowerCase().replace(/\s+/g, '') === skillKey
+  const skill = (characterData.skills || []).find(s =>
+    (s.name || '').toLowerCase().replace(/\s+/g, '') === skillKey
   );
   if (!skill) return '<p>Skill not found</p>';
-  
-  const desc = skillDescriptions[skillKey] || {};
-  const ability = characterData.abilities[skill.ability];
-  
+
+  const isGenerated = window.__appDataSource !== 'default';
+  const desc = (!isGenerated && typeof skillDescriptions !== 'undefined' && skillDescriptions[skillKey]) || {};
+  const ability = (characterData.abilities || {})[skill.ability] || {};
+  const coreStats = characterData.coreStats || {};
   const profStatus = skill.expertise ? 'Expertise' : (skill.proficient ? 'Proficient' : 'Not Proficient');
-  
+  const cvMeaning = skill.cvMeaning || desc.cvMeaning || skill.name;
+  const hasOwnEvidence = skill.evidence && skill.evidence.length;
+  const evidence = hasOwnEvidence ? skill.evidence : (desc.evidence || ['Demonstrated through work experience']);
+  const blurb = (isGenerated && skill.cvMeaning)
+    ? (hasOwnEvidence ? skill.evidence[0] : 'Professional application of this skill.')
+    : (desc.cvDescription || 'Professional application of this skill.');
+  const sMod = skill.modifier != null ? skill.modifier : 0;
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${desc.icon || '📊'}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${skill.name}</h2>
-        <div class="overlay-subtitle">${skill.ability.toUpperCase()} • ${profStatus}</div>
-      </div>
-      <div class="overlay-modifier rollable" data-mod="${skill.modifier}" data-skill="${skill.name}">
-        ${skill.modifier >= 0 ? '+' : ''}${skill.modifier}
-      </div>
+    <div class="ov-head">
+      <span class="ov-title">${skill.name}</span>
+      <span class="ov-sub">${(skill.ability || '').toUpperCase()} · ${profStatus} · ${cvMeaning}</span>
+      <span class="ov-badge rollable" data-mod="${sMod}" data-skill="${skill.name}">${sMod >= 0 ? '+' : ''}${sMod}</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Definition</div>
-      <div class="dnd-definition">
-        <p>${desc.dndDefinition || 'A skill check using ' + skill.ability.toUpperCase() + '.'}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${blurb}</div>
+        <div class="ov-evidence-title">Key Evidence</div>
+        ${evidence.map(e => `<div class="ov-evidence-row">◆ ${e}</div>`).join('')}
+        ${skill.vouch && skill.vouch.text ? `<div class="ov-evidence-title">Vouch</div><div class="ov-blurb">"${skill.vouch.text}" — ${skill.vouch.author || 'anonymous'}</div>` : ''}
+        <div class="ov-evidence-title">Calculation</div>
+        ${ability.modifier != null ? `<div class="ov-evidence-row">◆ ${(skill.ability || '').toUpperCase()} Modifier — ${ability.modifier >= 0 ? '+' : ''}${ability.modifier}</div>` : ''}
+        ${skill.proficient && coreStats.proficiencyBonus != null ? `<div class="ov-evidence-row">◆ Proficiency Bonus — +${coreStats.proficiencyBonus}</div>` : ''}
+        ${skill.expertise && coreStats.proficiencyBonus != null ? `<div class="ov-evidence-row">◆ Expertise Bonus — +${coreStats.proficiencyBonus}</div>` : ''}
+        <div class="ov-evidence-row">◆ Total — ${sMod >= 0 ? '+' : ''}${sMod}</div>
+        <button class="ov-roll-btn" onclick="rollFromOverlay('${skill.name}', ${sMod})">✦ Roll ${skill.name} Check</button>
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${skill.cvMeaning || desc.cvMeaning || skill.name}</div>
-        <div class="cv-meaning-desc">${skill.cvMeaning ? (skill.evidence && skill.evidence.length ? skill.evidence[0] : 'Professional application of this skill.') : (desc.cvDescription || 'Professional application of this skill.')}</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Key Evidence</div>
-      <ul class="evidence-list">
-        ${(skill.evidence || desc.evidence || ['Demonstrated through work experience']).map(e => `
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">${e}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-    
-    ${skill.vouch ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Vouch</div>
-        <div class="overlay-vouch">
-          <div class="overlay-vouch-text">"${skill.vouch.text}"</div>
-          <div class="overlay-vouch-author">– ${skill.vouch.author}</div>
-        </div>
-      </div>
-    ` : ''}
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Calculation</div>
-      <div class="calculation">
-        <div class="calc-row">
-          <span class="calc-label">${skill.ability.toUpperCase()} Modifier</span>
-          <span class="calc-value">+${ability.modifier}</span>
-        </div>
-        ${skill.proficient ? `
-          <div class="calc-row">
-            <span class="calc-label">Proficiency Bonus</span>
-            <span class="calc-value">+${characterData.coreStats.proficiencyBonus}</span>
-          </div>
-        ` : ''}
-        ${skill.expertise ? `
-          <div class="calc-row">
-            <span class="calc-label">Expertise Bonus</span>
-            <span class="calc-value">+${characterData.coreStats.proficiencyBonus}</span>
-          </div>
-        ` : ''}
-        <div class="calc-row total">
-          <span class="calc-label">Total</span>
-          <span class="calc-value">${skill.modifier >= 0 ? '+' : ''}${skill.modifier}</span>
-        </div>
-      </div>
-    </div>
-    
-    <button class="overlay-roll-btn" onclick="rollFromOverlay('${skill.name}', ${skill.modifier})">
-      <span class="dice-emoji">🎲</span>
-      Roll ${skill.name} Check
-    </button>
-  `;
+    </div>`;
 }
 
-// Generate Class overlay content
+
+// Generate Class overlay content — no plate (classes/passives/etc. follow
+// the prototype's plate-less non-ability pattern). Class Features + Key
+// Evidence + Vouch are existing data sources, kept and restyled; all list
+// accesses guarded for generated sheets.
 function getClassOverlayContent(classKey) {
-  const classData = characterData.classes.find(c => c.id === classKey);
-  
+  const classData = (characterData.classes || []).find(c => c.id === classKey);
+
   if (!classData) {
     // Check unleveled classes
-    const unleveled = characterData.unleveldClasses.find(c => c.id === classKey);
+    const unleveled = (characterData.unleveldClasses || []).find(c => c.id === classKey);
     if (unleveled) {
       return `
-        <div class="unleveled-class">
-          <div class="overlay-header" style="opacity: 0.6;">
-            <div class="overlay-title-block">
-              <h2 class="overlay-title">${unleveled.name}</h2>
-              <div class="overlay-subtitle">Primary: ${unleveled.primaryAbility}</div>
-            </div>
-          </div>
-          
-          <div class="overlay-section">
-            <div class="overlay-section-title">Class Description</div>
-            <div class="overlay-section-content">${unleveled.description}</div>
-          </div>
-          
-          <div class="unleveled-message">
-            ${unleveled.notYetMessage}
-          </div>
+        <div class="ov-head">
+          <span class="ov-title">${unleveled.name || 'Class'}</span>
+          <span class="ov-sub">${unleveled.primaryAbility ? 'Primary: ' + unleveled.primaryAbility : 'Unleveled class'}</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
         </div>
-      `;
+        <div class="ov-body">
+          <div class="ov-main">
+            ${unleveled.description ? `<div class="ov-blurb">${unleveled.description}</div>` : ''}
+            ${unleveled.notYetMessage ? `<div class="ov-evidence-row">◆ ${unleveled.notYetMessage}</div>` : ''}
+          </div>
+        </div>`;
     }
     return '<p>Class not found</p>';
   }
-  
+
+  const features = classData.features || [];
+  const evidence = classData.evidence || [];
   return `
-    <div class="class-overlay-header">
-      <h2 class="overlay-title">${classData.name}</h2>
-      <div class="overlay-subtitle">Primary Ability: ${classData.primaryAbility}</div>
-      <span class="class-level-badge">Level ${classData.level}</span>
+    <div class="ov-head">
+      <span class="ov-title">${classData.name || 'Class'}</span>
+      <span class="ov-sub">${classData.primaryAbility || ''}${classData.level != null ? ' · Level ' + classData.level : ''}</span>
+      ${classData.level != null ? `<span class="ov-badge">${classData.level}</span>` : ''}
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Class Description</div>
-      <div class="overlay-section-content">${classData.description}</div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Style</div>
-      <div class="dnd-definition">
-        <p>${classData.dndStyle}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        ${classData.description ? `<div class="ov-blurb">${classData.description}</div>` : ''}
+        ${features.length ? `
+          <div class="ov-evidence-title">Class Features</div>
+          ${features.map(f => `<div class="ov-evidence-row">◆ ${f.level != null ? 'Lv.' + f.level + ' ' : ''}${f.name || ''}${f.desc ? ' — ' + f.desc : ''}</div>`).join('')}
+        ` : ''}
+        ${evidence.length ? `
+          <div class="ov-evidence-title">Key Evidence</div>
+          ${evidence.map(e => `<div class="ov-evidence-row">◆ ${e}</div>`).join('')}
+        ` : ''}
+        ${classData.vouch && classData.vouch.text ? `<div class="ov-evidence-title">Vouch</div><div class="ov-blurb">"${classData.vouch.text}" — ${classData.vouch.author || 'anonymous'}${classData.vouch.role ? ', ' + classData.vouch.role : ''}</div>` : ''}
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Class Features</div>
-      <ul class="class-features-list">
-        ${classData.features.map(f => `
-          <li class="class-feature-item">
-            <div class="class-feature-level">Level ${f.level}</div>
-            <div class="class-feature-name">${f.name}</div>
-            <div class="class-feature-desc">${f.desc}</div>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Evidence</div>
-      <ul class="evidence-list">
-        ${classData.evidence.map(e => `
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">${e}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-    
-    ${classData.vouch ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Vouch</div>
-        <div class="overlay-vouch">
-          <div class="overlay-vouch-text">"${classData.vouch.text}"</div>
-          <div class="overlay-vouch-author">– ${classData.vouch.author}, ${classData.vouch.role}</div>
-        </div>
-      </div>
-    ` : ''}
-  `;
+    </div>`;
 }
 
-// Generate Alignment overlay content
+
+// Generate Alignment overlay content — owner page matches the prototype's
+// OV.alignment exactly (band + blurb only); generated sheets derive the
+// definition from a standard alignment table plus the sheet's own
+// alignmentDescription.
 function getAlignmentOverlayContent() {
   if (window.__appDataSource === 'default') {
+    const abbr = characterData.personal.alignment.split(' ').map(w => w[0]).join('');
     return `
-      <div class="overlay-header">
-        <span class="overlay-icon">⚖️</span>
-        <div class="overlay-title-block">
-          <h2 class="overlay-title">Chaotic Good</h2>
-          <div class="overlay-subtitle">Alignment</div>
+      <div class="ov-head">
+        <span class="ov-title">${characterData.personal.alignment}</span>
+        <span class="ov-sub">${alignmentDescription.cvMeaning}</span>
+        <span class="ov-badge">${abbr}</span>
+        <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+      </div>
+      <div class="ov-body">
+        <div class="ov-main">
+          <div class="ov-blurb">${alignmentDescription.cvDescription}</div>
         </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">D&D Definition</div>
-        <div class="dnd-definition">
-          <p>${alignmentDescription.dndDefinition}</p>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="cv-meaning">
-          <div class="cv-meaning-title">${alignmentDescription.cvMeaning}</div>
-          <div class="cv-meaning-desc">${alignmentDescription.cvDescription}</div>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">In Practice</div>
-        <ul class="evidence-list">
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">Will challenge established systems if they don't serve the greater good</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">Believes in doing what's right, not what's easy or conventional</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">Values freedom and flexibility over rules and hierarchy</span>
-          </li>
-          <li class="evidence-item">
-            <span class="evidence-bullet">•</span>
-            <span class="evidence-text">Makes decisions based on impact, not protocol</span>
-          </li>
-        </ul>
-      </div>
-    `;
+      </div>`;
   }
 
-  // Dynamic content for generated pages
+  // Generated sheets
   const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-  const alignment = p.alignment || 'Unknown';
-  const alignDesc = p.alignmentDescription || '';
-
+  const alignment = p.alignment || 'Unaligned';
+  const abbr = alignment.split(' ').map(w => w[0]).join('').toUpperCase();
   const dndAlignments = {
     'Lawful Good': 'Lawful Good characters act with compassion and honor, following the rules and obeying authority when doing so leads to the greater good.',
     'Neutral Good': 'Neutral Good characters do the best they can to help others according to their needs, without bias for or against order.',
@@ -363,385 +227,216 @@ function getAlignmentOverlayContent() {
     'Chaotic Neutral': 'Chaotic Neutral characters follow their whims. They are individualists first and last.',
     'Lawful Evil': 'Lawful Evil characters methodically take what they want within the limits of a code of tradition or loyalty.',
     'Neutral Evil': 'Neutral Evil characters do whatever they can get away with, without compassion or qualms.',
-    'Chaotic Evil': 'Chaotic Evil characters act with arbitrary violence, spurred by greed, hatred, or bloodlust.',
+    'Chaotic Evil': 'Chaotic Evil characters act with arbitrary violence, spurred by greed, hatred, or bloodlust.'
   };
-  const dndDef = dndAlignments[alignment] || (alignment + " alignment reflects this character's moral and ethical outlook.");
-
+  const dndDef = dndAlignments[alignment] || (alignment + " reflects this character's moral and ethical outlook.");
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">⚖️</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${alignment}</h2>
-        <div class="overlay-subtitle">Alignment</div>
-      </div>
+    <div class="ov-head">
+      <span class="ov-title">${alignment}</span>
+      <span class="ov-sub">Alignment</span>
+      <span class="ov-badge">${abbr}</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Definition</div>
-      <div class="dnd-definition">
-        <p>${dndDef}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${dndDef}</div>
+        ${p.alignmentDescription ? `<div class="ov-evidence-title">What This Means</div><div class="ov-blurb">${p.alignmentDescription}</div>` : ''}
       </div>
-    </div>
-    
-    ${alignDesc ? `
-      <div class="overlay-section">
-        <div class="cv-meaning">
-          <div class="cv-meaning-title">What This Means</div>
-          <div class="cv-meaning-desc">${alignDesc}</div>
-        </div>
-      </div>
-    ` : ''}
-  `;
+    </div>`;
 }
 
-// Generate Combat Stat overlay content
+
+// Generate Combat Stat overlay content — owner page keeps the prototype's
+// blurb-only band+body per stat; generated sheets derive value/sub/blurb
+// from coreStats with guarded fallbacks.
 function getCombatStatOverlayContent(statKey) {
-  const desc = combatStatDescriptions[statKey];
-  const stats = characterData.coreStats;
-  
   if (statKey === 'heroic-inspiration') return getHeroicInspirationOverlayContent();
-  
-  let value, title, subtitle, cvTitle, cvDesc;
-  
+
+  const stats = characterData.coreStats || {};
+  let value, title, sub, blurb;
+
   if (window.__appDataSource === 'default') {
-    // Original Buster Franken hardcoded subtitles and cv-meaning
+    const desc = combatStatDescriptions[statKey];
     switch(statKey) {
       case 'proficiency':
-        value = '+' + stats.proficiencyBonus;
+        value = `+${stats.proficiencyBonus}`;
         title = 'Proficiency Bonus';
-        subtitle = 'Level 7';
+        sub = desc.cvMeaning;
         break;
       case 'initiative':
-        value = '+' + stats.initiative;
+        value = `+${stats.initiative}`;
         title = 'Initiative';
-        subtitle = stats.initiativeBreakdown;
+        sub = desc.cvMeaning;
         break;
       case 'ac':
-        value = stats.armorClass;
+        value = `${stats.armorClass}`;
         title = 'Armor Class';
-        subtitle = 'Light Armor';
+        sub = desc.cvMeaning;
         break;
       case 'speed':
-        value = stats.speed;
+        value = `${stats.speed}.`;
         title = 'Speed';
-        subtitle = 'Enhanced by Cunning Action';
+        sub = desc.cvMeaning;
         break;
       case 'hp':
-        value = stats.hitPoints.current + '/' + stats.hitPoints.max;
+        value = `${stats.hitPoints.current}/${stats.hitPoints.max}`;
         title = 'Hit Points';
-        subtitle = stats.hitPoints.meaning;
+        sub = stats.hitPoints.meaning;
         break;
       default:
         return '<p>Stat not found</p>';
     }
-    cvTitle = desc.cvMeaning;
-    cvDesc = desc.cvDescription;
+    blurb = desc.cvDescription;
   } else {
-    // Dynamic content for generated pages
-    var charLevel = (characterData.personal && characterData.personal.level) ? characterData.personal.level : '?';
+    // Generated sheets — every field guarded
+    const charLevel = (characterData.personal && characterData.personal.level != null) ? characterData.personal.level : '?';
     switch(statKey) {
       case 'proficiency':
-        value = '+' + stats.proficiencyBonus;
+        value = stats.proficiencyBonus != null ? `+${stats.proficiencyBonus}` : '—';
         title = 'Proficiency Bonus';
-        subtitle = 'Level ' + charLevel;
+        sub = `Level ${charLevel}`;
+        blurb = 'Reflects overall experience and training level — added to skills, saves, and attacks where proficient.';
         break;
       case 'initiative':
-        value = '+' + stats.initiative;
+        value = stats.initiative != null ? `+${stats.initiative}` : '—';
         title = 'Initiative';
-        subtitle = stats.initiativeBreakdown || 'Initiative modifier';
+        sub = 'Responsiveness';
+        blurb = stats.initiativeBreakdown || 'How quickly this character reacts to new opportunities.';
         break;
       case 'ac':
-        value = stats.armorClass;
+        value = stats.armorClass != null ? `${stats.armorClass}` : '—';
         title = 'Armor Class';
-        subtitle = stats.armorClassExplanation || 'Defense Rating';
+        sub = 'Defense Rating';
+        blurb = stats.armorClassExplanation || 'How hard this character is to hit — professional defenses and resilience.';
         break;
       case 'speed':
-        value = stats.speed;
+        value = stats.speed ? `${stats.speed}.` : '—';
         title = 'Speed';
-        subtitle = stats.speedExplanation || 'Movement speed';
+        sub = 'Execution Velocity';
+        blurb = stats.speedExplanation || 'Pace of movement and adaptability.';
         break;
       case 'hp':
-        value = stats.hitPoints.current + '/' + stats.hitPoints.max;
+        value = stats.hitPoints ? `${stats.hitPoints.current}/${stats.hitPoints.max}` : '—';
         title = 'Hit Points';
-        subtitle = stats.hitPoints.meaning;
+        sub = (stats.hitPoints && stats.hitPoints.meaning) || 'Life Force';
+        blurb = 'Capacity to absorb challenges and keep going.';
         break;
       default:
         return '<p>Stat not found</p>';
     }
-    cvTitle = 'Professional Context';
-    cvDesc = subtitle || '';
   }
-  
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${desc.icon}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${title}</h2>
-        <div class="overlay-subtitle">${subtitle}</div>
-      </div>
-      <div class="overlay-modifier">${value}</div>
+    <div class="ov-head">
+      <span class="ov-title">${title}</span>
+      <span class="ov-sub">${sub}</span>
+      <span class="ov-badge">${value}</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Definition</div>
-      <div class="dnd-definition">
-        <p>${desc.dndDefinition}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${blurb || ''}</div>
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${cvTitle}</div>
-        <div class="cv-meaning-desc">${cvDesc}</div>
-      </div>
-    </div>
-    
-    ${desc.breakdown ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Calculation</div>
-        <div class="calculation">
-          <div class="calc-row">
-            <span class="calc-label">Breakdown</span>
-            <span class="calc-value">${desc.breakdown}</span>
-          </div>
-        </div>
-      </div>
-    ` : ''}
-    
-    ${statKey === 'initiative' ? `
-      <button class="overlay-roll-btn" onclick="rollFromOverlay('Initiative', ${stats.initiative})">
-        <span class="dice-emoji">🎲</span>
-        Roll Initiative
-      </button>
-    ` : ''}
-  `;
+    </div>`;
 }
 
-// Generate Saving Throw overlay content
+
+// Generate Saving Throw overlay content — band + blurb + Calculation +
+// roll button; generated sheets prefer the ability's own cvMeaning/
+// cvDescription (branch behavior), all lookups guarded.
 function getSavingThrowOverlayContent(saveKey) {
-  const ability = characterData.abilities[saveKey];
-  const desc = savingThrowDescriptions[saveKey] || {};
-  const proficient = ability.saveProficient;
-  const profBonus = characterData.coreStats.proficiencyBonus;
-  const total = proficient ? ability.modifier + profBonus : ability.modifier;
+  const ability = (characterData.abilities || {})[saveKey];
+  if (!ability) return '<p>Save not found</p>';
+  const isGenerated = window.__appDataSource !== 'default';
+  const desc = (typeof savingThrowDescriptions !== 'undefined' && savingThrowDescriptions[saveKey]) || {};
+  const proficient = !!ability.saveProficient;
+  const profBonus = (characterData.coreStats && characterData.coreStats.proficiencyBonus != null) ? characterData.coreStats.proficiencyBonus : 0;
+  const mod = ability.modifier != null ? ability.modifier : 0;
+  const total = proficient ? mod + profBonus : mod;
+  const abbr = ability.abbr || saveKey.toUpperCase();
+  const cvMeaning = (isGenerated && ability.cvMeaning) ? ability.cvMeaning : (desc.cvMeaning || '');
+  const blurb = (isGenerated ? (ability.cvDescription || '') : '') || desc.cvDescription || 'A saving throw represents the ability to resist or avoid certain effects.';
 
-  // Use dynamic data from characterData.abilities for the CV meaning
-  const cvMeaning = ability.cvMeaning || desc.cvMeaning || 'Professional Resilience';
-  const cvDesc = ability.cvDescription || desc.cvDescription || '';
-  
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${desc.icon || '🎯'}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${ability.name} Saving Throw</h2>
-        <div class="overlay-subtitle">${proficient ? 'Proficient' : 'Not Proficient'}</div>
-      </div>
-      <div class="overlay-modifier rollable" data-mod="${total}" data-save="${saveKey}">
-        ${total >= 0 ? '+' : ''}${total}
-      </div>
+    <div class="ov-head">
+      <span class="ov-title">${ability.name || abbr} Saving Throw</span>
+      <span class="ov-sub">${proficient ? 'Proficient' : 'Not Proficient'}${cvMeaning ? ' · ' + cvMeaning : ''}</span>
+      <span class="ov-badge rollable" data-mod="${total}" data-save="${saveKey}">${total >= 0 ? '+' : ''}${total}</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Definition</div>
-      <div class="dnd-definition">
-        <p>${desc.dndDefinition || 'A saving throw represents your ability to resist or avoid certain effects.'}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${blurb}</div>
+        <div class="ov-evidence-title">Calculation</div>
+        <div class="ov-evidence-row">◆ ${abbr} Modifier — ${mod >= 0 ? '+' : ''}${mod}</div>
+        ${proficient ? `<div class="ov-evidence-row">◆ Proficiency Bonus — +${profBonus}</div>` : ''}
+        <div class="ov-evidence-row">◆ Total — ${total >= 0 ? '+' : ''}${total}</div>
+        <button class="ov-roll-btn" onclick="rollFromOverlay('${abbr} Save', ${total})">✦ Roll ${abbr} Save</button>
       </div>
-    </div>
-    
-    ${cvDesc ? `
-      <div class="overlay-section">
-        <div class="cv-meaning">
-          <div class="cv-meaning-title">${cvMeaning}</div>
-          <div class="cv-meaning-desc">${cvDesc}</div>
-        </div>
-      </div>
-    ` : ''}
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Calculation</div>
-      <div class="calculation">
-        <div class="calc-row">
-          <span class="calc-label">${ability.abbr} Modifier</span>
-          <span class="calc-value">${ability.modifier >= 0 ? '+' : ''}${ability.modifier}</span>
-        </div>
-        ${proficient ? `
-          <div class="calc-row">
-            <span class="calc-label">Proficiency Bonus</span>
-            <span class="calc-value">+${profBonus}</span>
-          </div>
-        ` : ''}
-        <div class="calc-row total">
-          <span class="calc-label">Total</span>
-          <span class="calc-value">${total >= 0 ? '+' : ''}${total}</span>
-        </div>
-      </div>
-    </div>
-    
-    <button class="overlay-roll-btn" onclick="rollFromOverlay('${ability.abbr} Save', ${total})">
-      <span class="dice-emoji">🎲</span>
-      Roll ${ability.abbr} Save
-    </button>
-  `;
+    </div>`;
 }
 
-// Generate Spell overlay content
+
+// Generate Spell overlay content — badge shows the spell's level label so
+// the header band always has something to push the close-x flush right.
+// Generated sheets skip the owner's spellDescriptions and fall back to the
+// spell's own description/dndEquivalent fields, guarded.
 function getSpellOverlayContent(spellName) {
-  // Find spell in data
-  const allSpells = [
-    ...characterData.spells.cantrips,
-    ...(characterData.spells.level1 || []),
-    ...(characterData.spells.level2 || []),
-    ...(characterData.spells.level3 || [])
+  const sp = (typeof characterData !== 'undefined' && characterData.spells) || {};
+  const levels = [
+    { list: sp.cantrips, label: 'Cantrip' },
+    { list: sp.level1, label: 'Level 1' },
+    { list: sp.level2, label: 'Level 2' },
+    { list: sp.level3, label: 'Level 3' }
   ];
-  const spell = allSpells.find(s => s.name === spellName);
-  const desc = spellDescriptions[spellName] || {};
-  
+  let spell, levelLabel;
+  for (const lvl of levels) {
+    const found = (lvl.list || []).find(s => s.name === spellName);
+    if (found) { spell = found; levelLabel = lvl.label; break; }
+  }
   if (!spell) return '<p>Spell not found</p>';
-  
+
+  const desc = (window.__appDataSource === 'default' && typeof spellDescriptions !== 'undefined' && spellDescriptions[spellName]) || {};
+  const sub = [spell.castTime, spell.range].filter(Boolean).join(' · ') || levelLabel;
+  const blurb = desc.cvDescription || spell.description || spell.cvMeaning || '';
+  const dndEq = desc.dndEquivalent || spell.dndEquivalent;
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${desc.icon || '✨'}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${spell.name}</h2>
-        <div class="overlay-subtitle">${spell.castTime} • ${spell.range}</div>
-      </div>
+    <div class="ov-head">
+      <span class="ov-title">${spell.name}</span>
+      <span class="ov-sub">${sub}</span>
+      <span class="ov-badge">${levelLabel}</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Description</div>
-      <div class="dnd-definition">
-        <p>${spell.description}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${blurb}</div>
+        <div class="ov-evidence-title">Spell Details</div>
+        ${dndEq ? `<div class="ov-evidence-row">◆ D&D Equivalent — ${dndEq}</div>` : ''}
+        ${spell.castTime ? `<div class="ov-evidence-row">◆ Cast Time — ${spell.castTime}</div>` : ''}
+        ${spell.range ? `<div class="ov-evidence-row">◆ Range — ${spell.range}</div>` : ''}
+        ${spell.slots ? `<div class="ov-evidence-row">◆ Slots — ${spell.slots}</div>` : ''}
       </div>
-    </div>
-    
-    ${desc.dndEquivalent ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">D&D Equivalent</div>
-        <div class="overlay-section-content">${desc.dndEquivalent}</div>
-      </div>
-    ` : ''}
-    
-    <div class="overlay-section">
-      <div class="cv-meaning">
-        <div class="cv-meaning-title">${desc.cvMeaning || 'Professional Application'}</div>
-        <div class="cv-meaning-desc">${desc.cvDescription || spell.description}</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Spell Details</div>
-      <div class="calculation">
-        <div class="calc-row">
-          <span class="calc-label">Cast Time</span>
-          <span class="calc-value">${spell.castTime}</span>
-        </div>
-        <div class="calc-row">
-          <span class="calc-label">Range</span>
-          <span class="calc-value">${spell.range}</span>
-        </div>
-        ${spell.slots ? `
-          <div class="calc-row">
-            <span class="calc-label">Slots</span>
-            <span class="calc-value">${spell.slots}</span>
-          </div>
-        ` : ''}
-      </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// Generate Action overlay content
-// Helper: treat null, undefined, empty string, and "/" as absent
+
+// Helper (branch): treat null, undefined, empty string, "/", "N/A" and
+// "none" as absent — generated sheets use "/" as a placeholder value.
 function val(v) {
   if (v == null) return '';
   const s = String(v).trim();
   return (s === '' || s === '/' || s === 'N/A' || s === 'null' || s === 'none') ? '' : s;
 }
 
+// Generate Action overlay content — badge + roll button only for
+// attack-type actions; every data row is val()-guarded so generated
+// placeholder values ("/") never render.
 function getActionOverlayContent(actionName) {
-  const action = characterData.actions.find(a => a.name === actionName);
-  
+  const action = (characterData.actions || []).find(a => a.name === actionName);
   if (!action) return '<p>Action not found</p>';
-  
-  const icon = action.type === 'Attack' ? '⚔️' : 
-               action.type === 'Bonus Action' ? '⚡' : 
-               action.type === 'Reaction' ? '🔄' : '🎬';
 
-  if (window.__appDataSource === 'default') {
-    // Original: use actionDescriptions lookup for Professional Application
-    const desc = actionDescriptions[actionName] || {};
-    return `
-      <div class="overlay-header">
-        <span class="overlay-icon">${desc.icon || icon}</span>
-        <div class="overlay-title-block">
-          <h2 class="overlay-title">${action.name}</h2>
-          <div class="overlay-subtitle">${action.type}${action.uses ? ' • ' + action.uses : ''}</div>
-        </div>
-        ${action.attackBonus !== undefined ? `
-          <div class="overlay-modifier rollable" data-mod="${action.attackBonus}">
-            +${action.attackBonus}
-          </div>
-        ` : ''}
-      </div>
-      
-      <div class="overlay-section">
-        <div class="overlay-section-title">Description</div>
-        <div class="dnd-definition">
-          <p>${action.description}</p>
-        </div>
-      </div>
-      
-      <div class="overlay-section">
-        <div class="cv-meaning">
-          <div class="cv-meaning-title">${desc.cvMeaning || 'Professional Application'}</div>
-          <div class="cv-meaning-desc">${desc.cvDescription || action.description}</div>
-        </div>
-      </div>
-      
-      ${action.attackBonus !== undefined ? `
-        <div class="overlay-section">
-          <div class="overlay-section-title">Attack Details</div>
-          <div class="calculation">
-            <div class="calc-row">
-              <span class="calc-label">Attack Bonus</span>
-              <span class="calc-value">+${action.attackBonus}</span>
-            </div>
-            <div class="calc-row">
-              <span class="calc-label">Damage</span>
-              <span class="calc-value">${action.damage} ${action.damageType}</span>
-            </div>
-            ${action.range ? `
-              <div class="calc-row">
-                <span class="calc-label">Range</span>
-                <span class="calc-value">${action.range}</span>
-              </div>
-            ` : ''}
-          </div>
-        </div>
-        
-        <button class="overlay-roll-btn" onclick="rollFromOverlay('${action.name}', ${action.attackBonus})">
-          <span class="dice-emoji">🎲</span>
-          Roll to Hit
-        </button>
-      ` : ''}
-      
-      ${action.effect ? `
-        <div class="overlay-section">
-          <div class="overlay-section-title">Effect</div>
-          <div class="overlay-section-content">${action.effect}</div>
-        </div>
-      ` : ''}
-      
-      ${action.recharge ? `
-        <div class="overlay-section">
-          <div class="overlay-section-title">Recharge</div>
-          <div class="overlay-section-content">${action.recharge}</div>
-        </div>
-      ` : ''}
-    `;
-  }
-
-  // Dynamic content for generated pages — use val() to filter placeholders
+  const desc = (window.__appDataSource === 'default' && typeof actionDescriptions !== 'undefined' && actionDescriptions[actionName]) || {};
   const hasAttack = action.attackBonus != null;
   const damage = val(action.damage);
   const damageType = val(action.damageType);
@@ -749,248 +444,209 @@ function getActionOverlayContent(actionName) {
   const effect = val(action.effect);
   const recharge = val(action.recharge);
   const uses = val(action.uses);
-  
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">${icon}</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">${action.name}</h2>
-        <div class="overlay-subtitle">${action.type}${uses ? ' • ' + uses : ''}</div>
-      </div>
-      ${hasAttack ? `
-        <div class="overlay-modifier rollable" data-mod="${action.attackBonus}">
-          +${action.attackBonus}
-        </div>
-      ` : ''}
+    <div class="ov-head">
+      <span class="ov-title">${action.name}</span>
+      <span class="ov-sub">${action.type || 'Action'}${uses ? ' · ' + uses : ''}</span>
+      ${hasAttack ? `<span class="ov-badge rollable" data-mod="${action.attackBonus}">+${action.attackBonus}</span>` : ''}
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Description</div>
-      <div class="dnd-definition">
-        <p>${action.description}</p>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${desc.cvDescription || val(action.description) || effect || ''}</div>
+        ${hasAttack ? `
+          <div class="ov-evidence-title">Attack Details</div>
+          <div class="ov-evidence-row">◆ Attack Bonus — +${action.attackBonus}</div>
+          ${damage ? `<div class="ov-evidence-row">◆ Damage — ${damage}${damageType ? ' ' + damageType : ''}</div>` : ''}
+          ${range ? `<div class="ov-evidence-row">◆ Range — ${range}</div>` : ''}
+        ` : ''}
+        ${(effect || recharge) ? `
+          <div class="ov-evidence-title">Details</div>
+          ${effect ? `<div class="ov-evidence-row">◆ Effect — ${effect}</div>` : ''}
+          ${recharge ? `<div class="ov-evidence-row">◆ Recharge — ${recharge}</div>` : ''}
+        ` : ''}
+        ${hasAttack ? `<button class="ov-roll-btn" onclick="rollFromOverlay('${action.name}', ${action.attackBonus})">✦ Roll to Hit</button>` : ''}
       </div>
-    </div>
-    
-    ${hasAttack ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Attack Details</div>
-        <div class="calculation">
-          <div class="calc-row">
-            <span class="calc-label">Attack Bonus</span>
-            <span class="calc-value">+${action.attackBonus}</span>
-          </div>
-          ${damage ? `
-            <div class="calc-row">
-              <span class="calc-label">Damage</span>
-              <span class="calc-value">${damage}${damageType ? ' ' + damageType : ''}</span>
-            </div>
-          ` : ''}
-          ${range ? `
-            <div class="calc-row">
-              <span class="calc-label">Range</span>
-              <span class="calc-value">${range}</span>
-            </div>
-          ` : ''}
-        </div>
-      </div>
-      
-      <button class="overlay-roll-btn" onclick="rollFromOverlay('${action.name}', ${action.attackBonus})">
-        <span class="dice-emoji">🎲</span>
-        Roll to Hit
-      </button>
-    ` : ''}
-    
-    ${effect ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Effect</div>
-        <div class="overlay-section-content">${effect}</div>
-      </div>
-    ` : ''}
-    
-    ${recharge ? `
-      <div class="overlay-section">
-        <div class="overlay-section-title">Recharge</div>
-        <div class="overlay-section-content">${recharge}</div>
-      </div>
-    ` : ''}
-  `;
+    </div>`;
 }
 
-// Generate Defenses overlay content
+
+// Generate Defenses overlay content — band + Key Evidence rows,
+// "Name — description" (description guarded for generated sheets).
 function getDefensesOverlayContent() {
-  const defenses = characterData.defenses;
-  
+  const defenses = characterData.defenses || [];
+
   return `
-    <div class="overlay-header">
-      <span class="overlay-icon">🛡️</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">Defenses</h2>
-        <div class="overlay-subtitle">Protective Traits</div>
+    <div class="ov-head">
+      <span class="ov-title">Defenses</span>
+      <span class="ov-sub">Damage Resistances</span>
+      <span class="ov-badge">❖</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+    </div>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-evidence-title">Key Evidence</div>
+        ${defenses.length ? defenses.map(d => `<div class="ov-evidence-row">◆ ${d.name || ''}${d.description ? ' — ' + d.description : ''}</div>`).join('') : '<div class="ov-evidence-row">◆ No specific defenses listed</div>'}
       </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Active Defenses</div>
-      ${defenses.map(d => {
-        return `
-          <div class="defense-item">
-            <div class="defense-header">
-              <span class="defense-icon">🛡️</span>
-              <span class="defense-name">${d.name}</span>
-            </div>
-            <div class="defense-desc">${d.description}</div>
-          </div>
-        `;
-      }).join('')}
-    </div>
-  `;
+    </div>`;
 }
 
-// Generate Heroic Inspiration overlay content — dynamic
+
+// Generate Heroic Inspiration overlay content — owner page keeps the full
+// personal essay verbatim; generated sheets derive it from background
+// story, ideals and interests (branch behavior), guarded.
 function getHeroicInspirationOverlayContent() {
-  const _p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-  const _bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
-  const _extras = (typeof characterData !== 'undefined' && characterData.extras) ? characterData.extras : {};
-  const _bgStory = (_bg.characteristics && _bg.characteristics.backgroundStory) ? _bg.characteristics.backgroundStory : '';
-  const _ideals = (_bg.ideals && _bg.ideals.length) ? _bg.ideals : [];
-  const _interests = (_extras.interests && _extras.interests.length) ? _extras.interests : [];
-
-  const idealsHtml = _ideals.map(function(i) { return '<p><strong>' + i.name + ':</strong> ' + i.description + '</p>'; }).join('');
-  const interestsHtml = _interests.length ? '<p><strong>Interests:</strong> ' + _interests.join(', ') + '</p>' : '';
-
-  return `
-    <div class="overlay-header">
-      <span class="overlay-icon">&#10022;</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">Heroic Inspiration</h2>
-        <div class="overlay-subtitle">What drives this character</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">D&D Definition</div>
-      <div class="dnd-definition">
-        <p>Your DM can reward you with Inspiration when you do something especially clever, creative, or in character—like solving a puzzle in an unexpected way, or staying true to your ideals in a tough spot. When you have Inspiration, you can spend it to give yourself advantage on one attack roll, saving throw, or ability check.</p>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Background</div>
-      <p class="heroic-inspiration-background">${_bgStory || 'A unique character with an inspiring background.'}</p>
-    </div>
-    
-    ${idealsHtml || interestsHtml ? '<div class="overlay-section overlay-section-inspiration"><div class="cv-meaning cv-meaning-inspiration"><h3 class="cv-meaning-title">What inspires ' + (_p.name || 'this character') + '</h3><div class="cv-meaning-desc">' + idealsHtml + interestsHtml + '</div></div></div>' : ''}
-  `;
-}
-
-// Generate Conditions overlay content
-function getConditionsOverlayContent() {
-  const conditions = characterData.conditions;
-  
-  return `
-    <div class="overlay-header">
-      <span class="overlay-icon">✨</span>
-      <div class="overlay-title-block">
-        <h2 class="overlay-title">Conditions</h2>
-        <div class="overlay-subtitle">Active Effects</div>
-      </div>
-    </div>
-    
-    <div class="overlay-section">
-      <div class="overlay-section-title">Active Conditions</div>
-      ${conditions.map(c => {
-        const desc = conditionDescriptions[c.name.toLowerCase().replace(/\s+/g, '-')] || {};
-        return `
-          <div class="condition-item ${c.active ? 'active' : ''}">
-            <div class="condition-header">
-              <span class="condition-icon">${desc.icon || '✨'}</span>
-              <span class="condition-name">${c.name}</span>
-              ${c.active ? '<span class="condition-active-badge">Active</span>' : ''}
-            </div>
-            <div class="condition-desc">${c.description}</div>
-            ${desc.cvDescription ? `<div class="condition-cv">${desc.cvDescription}</div>` : ''}
-          </div>
-        `;
-      }).join('')}
-    </div>
-  `;
-}
-
-// Generate Campaign Status overlay content
-function getCampaignStatusOverlayContent() {
   if (window.__appDataSource === 'default') {
     return `
-      <div class="overlay-header">
-        <h2>🎯 Current Campaign: Energy Hardtech Exploration</h2>
+      <div class="ov-head">
+        <span class="ov-title">Heroic Inspiration</span>
+        <span class="ov-sub">What inspires this character</span>
+        <span class="ov-badge">✦</span>
+        <span class="ov-close-x" onclick="closeOverlay()">✕</span>
       </div>
-      <div class="overlay-body">
-        <div class="overlay-section">
-          <h3>What I'm Looking For</h3>
-          <p>I'm currently exploring new startup opportunities and open to exciting ventures in:</p>
-          <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
-            <li><strong>Energy & Hardtech:</strong> Particularly interested in energy solutions, hardtech innovations, and deep tech applications</li>
-            <li><strong>Product & Growth Roles:</strong> Open to joining as a Product Owner or in a Growth role at an exciting startup</li>
-            <li><strong>Deep/Hardtech Ideas:</strong> Open to any compelling deep tech or hardtech concepts that solve real problems</li>
-          </ul>
+      <div class="ov-body">
+        <div class="ov-main">
+          <div class="ov-blurb">Technology should serve humanity, not the other way around. The mission: change humanity's mindset toward truly sustainable development.</div>
+          <div class="ov-evidence-title">Background</div>
+          <div class="ov-evidence-row">◆ Entertainer turned Folk Hero — from stage and performance into building communities, platforms, and ventures for a better world.</div>
+          <div class="ov-evidence-title">What Inspires Me</div>
+          <div class="ov-blurb">I get that same “advantage” when I’m around the cutting edge of any field—tech, art, philosophy, or economic theory—or when I’m in conversation with people who want to change the world for the better and we’re actually vibing. Good craftsmanship does it too, whether it’s great food or anything someone makes with care. So does someone rebelling with a cause, or discussing and realizing visions of a better world. I’m inspired when humans organize and come together in a beautiful way: in culture, in a city building something, or in rebellion. And simply when something good is being done.</div>
+          <div class="ov-blurb">When I have inspiration from any of that, I bring it into the next pitch, the next conversation, or the next build.</div>
         </div>
-        
-        <div class="overlay-section">
-          <h3>My Background</h3>
-          <p>With my experience building FruitPunch AI from scratch, raising €1M, and growing a community of 4500+ engineers, I bring:</p>
-          <ul style="margin: var(--spacing-md) 0; padding-left: var(--spacing-lg);">
-            <li>Product management expertise (100+ user interviews, experience design, A/B experiments)</li>
-            <li>Growth and community building (4500+ members, 80+ partners)</li>
-            <li>Fundraising and partnerships (€1M raised, Stanford, ESA, Greenpeace partnerships)</li>
-            <li>Platform building and decision-making experience</li>
-          </ul>
-        </div>
-        
-        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-          <h3 style="margin-top: 0;">Get In Touch</h3>
-          <p>Interested in discussing opportunities? Let's connect!</p>
-          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-            <a href="mailto:busterfranken@gmail.com?subject=Energy Hardtech Opportunity" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-              📧 Email Me
-            </a>
-            <a href="https://linkedin.com/in/buster-franken" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
-              💼 LinkedIn
-            </a>
-          </div>
-        </div>
-      </div>
-    `;
+      </div>`;
   }
 
-  // Dynamic content for generated pages
+  // Generated sheets
   const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
-  const contactLinks = [];
-  if (p.email) contactLinks.push('<a href="mailto:' + p.email + '" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--primary-red); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">📧 Email</a>');
-  if (p.linkedin) contactLinks.push('<a href="' + p.linkedin + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--accent-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💼 LinkedIn</a>');
-  if (p.github) contactLinks.push('<a href="' + p.github + '" target="_blank" class="contact-option-btn" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--text-secondary); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">💻 GitHub</a>');
+  const bg = (typeof characterData !== 'undefined' && characterData.background) ? characterData.background : {};
+  const extras = (typeof characterData !== 'undefined' && characterData.extras) ? characterData.extras : {};
+  const bgStory = (bg.characteristics && bg.characteristics.backgroundStory) ? bg.characteristics.backgroundStory : '';
+  const ideals = (bg.ideals && bg.ideals.length) ? bg.ideals : [];
+  const interests = (extras.interests && extras.interests.length) ? extras.interests : [];
 
   return `
-    <div class="overlay-header">
-      <h2>🎯 ${p.currentCampaign ? 'Current Campaign: ' + p.currentCampaign : 'Current Status'}</h2>
+    <div class="ov-head">
+      <span class="ov-title">Heroic Inspiration</span>
+      <span class="ov-sub">What drives ${p.name || 'this character'}</span>
+      <span class="ov-badge">✦</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
     </div>
-    <div class="overlay-body">
-      <div class="overlay-section">
-        <h3>About ${p.name || 'This Character'}</h3>
-        <p>${p.summary || 'No summary available.'}</p>
-        ${p.currentStatus ? '<p><strong>Status:</strong> ' + p.currentStatus + '</p>' : ''}
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-blurb">${bgStory || 'A unique character with an inspiring background.'}</div>
+        ${ideals.length ? `
+          <div class="ov-evidence-title">Ideals</div>
+          ${ideals.map(i => `<div class="ov-evidence-row">◆ ${i.name || ''}${i.description ? ' — ' + i.description : ''}</div>`).join('')}
+        ` : ''}
+        ${interests.length ? `
+          <div class="ov-evidence-title">Interests</div>
+          <div class="ov-blurb">${interests.join(', ')}</div>
+        ` : ''}
       </div>
-      
-      ${contactLinks.length ? `
-        <div class="overlay-section" style="background: var(--light-bg); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
-          <h3 style="margin-top: 0;">Get In Touch</h3>
-          <p>Interested in connecting? Let's start a new quest together!</p>
-          <div class="contact-options" style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-md);">
-            ${contactLinks.join('')}
-          </div>
-        </div>
-      ` : ''}
-    </div>
-  `;
+    </div>`;
 }
+
+
+// Generate Conditions overlay content — band + Key Evidence rows, same
+// "Name — description" pattern as Defenses, guarded.
+function getConditionsOverlayContent() {
+  const conditions = characterData.conditions || [];
+
+  return `
+    <div class="ov-head">
+      <span class="ov-title">Conditions</span>
+      <span class="ov-sub">Active Effects</span>
+      <span class="ov-badge">✦</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+    </div>
+    <div class="ov-body">
+      <div class="ov-main">
+        <div class="ov-evidence-title">Key Evidence</div>
+        ${conditions.length ? conditions.map(c => `<div class="ov-evidence-row">◆ ${c.name || ''}${c.active ? ' (Active)' : ''}${c.description ? ' — ' + c.description : ''}</div>`).join('') : '<div class="ov-evidence-row">◆ No active conditions</div>'}
+      </div>
+    </div>`;
+}
+
+
+// Generate Campaign Status overlay content — owner page keeps the redesign's
+// isIndexPage branching verbatim; generated sheets build an About/Status/
+// contact card from characterData.personal (branch behavior), restyled to
+// the band+body pattern with .ov-roll-btn/.ov-outline-btn CTAs.
+function getCampaignStatusOverlayContent() {
+  if (window.__appDataSource === 'default') {
+    const p = characterData.personal;
+    const campaignStatusEl = document.querySelector('.campaign-status .campaign-name');
+    const campaignName = campaignStatusEl ? campaignStatusEl.textContent.trim() : '';
+
+    const isIndexPage = window.location.pathname.endsWith('index.html') ||
+                        window.location.pathname.endsWith('/') ||
+                        !window.location.pathname.includes('.html');
+
+    if (isIndexPage || campaignName === p.currentCampaignName || campaignName.includes('Energy')) {
+      return `
+        <div class="ov-head">
+          <span class="ov-title">Current Campaign</span>
+          <span class="ov-sub">${p.currentCampaignName}</span>
+          <span class="ov-badge">✦</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+        </div>
+        <div class="ov-body">
+          <div class="ov-main">
+            <div class="ov-blurb">${p.currentCampaign}</div>
+            <div class="ov-evidence-title">What I'm Looking For</div>
+            <div class="ov-evidence-row">◆ Energy & Hardtech — energy solutions, hardtech innovations, and deep tech applications</div>
+            <div class="ov-evidence-row">◆ Product & Growth roles — Product Owner or Growth role at an exciting startup</div>
+            <div class="ov-evidence-row">◆ Deep/Hardtech ideas — any compelling concept that solves real problems</div>
+            <div class="ov-evidence-title">Background</div>
+            <div class="ov-evidence-row">◆ €45M crowdsourced in AI engineering work for impact organizations</div>
+            <div class="ov-evidence-row">◆ 4500+ engineers, 80+ partners, €1M raised</div>
+            <div class="ov-evidence-row">◆ 500+ user & customer interviews; product & growth experience</div>
+            <a class="ov-roll-btn" href="mailto:${p.email}?subject=Energy Hardtech Opportunity">✉ Email Me</a>
+            <a class="ov-outline-btn" href="${p.linkedin}" target="_blank">❖ LinkedIn</a>
+          </div>
+        </div>`;
+    } else {
+      return `
+        <div class="ov-head">
+          <span class="ov-title">Get In Touch</span>
+          <span class="ov-sub">Let's Connect</span>
+          <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+        </div>
+        <div class="ov-body">
+          <div class="ov-main">
+            <div class="ov-blurb">Interested in connecting or discussing opportunities? I'm always open to interesting conversations and new adventures!</div>
+            <a class="ov-roll-btn" href="mailto:${p.email}">✉ Email Me</a>
+            <a class="ov-outline-btn" href="${p.linkedin}" target="_blank">❖ LinkedIn</a>
+          </div>
+        </div>`;
+    }
+  }
+
+  // Generated sheets
+  const p = (typeof characterData !== 'undefined' && characterData.personal) ? characterData.personal : {};
+  const contactLinks = [];
+  if (p.email) contactLinks.push(`<a class="ov-roll-btn" href="mailto:${p.email}">✉ Email</a>`);
+  if (p.linkedin) contactLinks.push(`<a class="ov-outline-btn" href="${p.linkedin}" target="_blank">❖ LinkedIn</a>`);
+  if (p.github) contactLinks.push(`<a class="ov-outline-btn" href="${p.github}" target="_blank">❖ GitHub</a>`);
+
+  return `
+    <div class="ov-head">
+      <span class="ov-title">${p.currentCampaign ? 'Current Campaign' : 'Current Status'}</span>
+      <span class="ov-sub">${p.currentCampaignName || p.currentCampaign || p.currentStatus || p.name || 'Adventurer'}</span>
+      <span class="ov-badge">✦</span>
+      <span class="ov-close-x" onclick="closeOverlay()">✕</span>
+    </div>
+    <div class="ov-body">
+      <div class="ov-main">
+        ${p.summary ? `<div class="ov-blurb">${p.summary}</div>` : ''}
+        ${p.currentStatus ? `<div class="ov-evidence-row">✦ <strong>Status:</strong> ${p.currentStatus}</div>` : ''}
+        ${p.currentCampaign && p.currentCampaign !== (p.currentCampaignName || '') ? `<div class="ov-evidence-row">◆ ${p.currentCampaign}</div>` : ''}
+        ${contactLinks.length ? `<div class="ov-evidence-title">Get In Touch</div>${contactLinks.join('')}` : ''}
+      </div>
+    </div>`;
+}
+
 
 // Roll from overlay button
 function rollFromOverlay(name, modifier) {
@@ -1002,11 +658,11 @@ function rollFromOverlay(name, modifier) {
 
 // Export
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { 
-    openOverlay, 
-    closeOverlay, 
-    getAbilityOverlayContent, 
-    getSkillOverlayContent, 
+  module.exports = {
+    openOverlay,
+    closeOverlay,
+    getAbilityOverlayContent,
+    getSkillOverlayContent,
     getClassOverlayContent,
     getAlignmentOverlayContent,
     getCombatStatOverlayContent,
