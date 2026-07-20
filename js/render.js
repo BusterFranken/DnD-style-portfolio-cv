@@ -432,11 +432,11 @@ function renderClassicCV() {
       <div class="classic-skills-grid">
         <div class="classic-skill-category">
           <div class="classic-skill-category-title">Core Competencies</div>
-          <div class="classic-skill-list">Sales & Partnership Building, Community Building, Fundraising, Operations, Presenting/Marketing, Product Management</div>
+          <div class="classic-skill-list">Sales & Partnership Building, Community Building, Fundraising, Operations, Presenting/Marketing, Product Management, Product Engineering</div>
         </div>
         <div class="classic-skill-category">
           <div class="classic-skill-category-title">Technical</div>
-          <div class="classic-skill-list">AI/ML, Data Science, Python, Web Development, User Research, A/B Testing</div>
+          <div class="classic-skill-list">AI/ML, Agentic AI development, TypeScript/React/Next, Swift, Python, Data Science, User Research</div>
         </div>
       </div>
     </section>
@@ -467,6 +467,19 @@ function renderClassicCV() {
 
 function renderClassicExperience() {
   const experiences = [
+    {
+      title: 'Independent Product Engineer',
+      company: 'Self-employed',
+      dates: '2026 - Present',
+      location: 'Amsterdam, The Netherlands',
+      description: 'Building and shipping AI-native products solo by directing AI coding agents — 15+ projects in six months across web, native (Swift) and CLI.',
+      achievements: [
+        'Shipped 15+ products in six months — AI-native web apps, native macOS/iOS (Swift) and CLI tools',
+        'Built two production WhatsApp agents, incl. a paid-client shift-filler (ranked outreach, contract verification, human escalation)',
+        'Live products include mpoftheweek.com (EU lobbying-transparency tracker) and tarotread.help (AI tarot readings)',
+        'Full-stack across TypeScript, React/Next, Supabase, Swift and Python; directs AI coding agents to build, test and ship'
+      ]
+    },
     {
       title: 'VP of Partnerships',
       company: 'Zindi',

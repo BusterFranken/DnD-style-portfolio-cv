@@ -94,6 +94,8 @@
 .milestone { font: 500 12.5px var(--font-body); color: var(--ink); padding: 3px 10px; }
 .milestone-icon { color: var(--oxblood); }
 .milestone-name { font-weight: 600; }
+.milestone-name a { color: var(--oxblood); text-decoration: none; border-bottom: 1px solid var(--gold); }
+.milestone-name a:hover { color: var(--red-hover); }
 .milestone--notable { background: var(--parchment); border-left: 3px solid var(--gold-bright); padding: 5px 10px; }
 .milestone--notable .milestone-icon { color: var(--gold); }
 

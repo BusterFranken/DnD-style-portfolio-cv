@@ -8,7 +8,7 @@ const characterData = {
   // ==========================================
   personal: {
     name: "Buster Franken",
-    title: "Founder & AI Executive",
+    title: "Founder · Product Engineer",
     species: "Human",
     alignment: "Chaotic Good",
     alignmentDescription: "Doing the right thing, but not following rules. Always does exactly what they think is the right thing to do, regardless of conventions or expectations. Will challenge authority when it conflicts with doing good.",
@@ -23,7 +23,7 @@ const characterData = {
     currentStatus: "Open to Adventures.",
     currentCampaignName: "Energy Hardtech Exploration",
     currentCampaign: "Exploring new adventures in energy hardtech — open to other impact-focused ventures. Party applications welcome via Short Rest.",
-    summary: "With my past startup FruitPunch AI we crowdsourced €45M in AI engineering for impact organizations. Through our platform >4500 AI engineers built AI solutions for: Stanford, ESA, Greenpeace, WWF, Philips, NXP, Huawei, etc.",
+    summary: "With my past startup FruitPunch AI we crowdsourced €45M in AI engineering for impact organizations. Through our platform >4500 AI engineers built AI solutions for: Stanford, ESA, Greenpeace, WWF, Philips, NXP, Huawei, etc. Since the 2025 exit, I've gone hands-on — shipping 15+ AI-native products in six months by directing AI coding agents.",
     avatar: "assets/images/buster.jpg"
   },
 
@@ -78,22 +78,24 @@ const characterData = {
       }
     },
     {
-      id: "growth-hacker",
-      name: "Growth Hacker",
+      id: "product-engineer",
+      name: "Product Engineer",
       level: 2,
       isPrimary: false,
-      primaryAbility: "CHA/INT",
-      description: "Specialists in rapid scaling and market penetration. They find unconventional paths to growth through experimentation.",
-      dndStyle: "CHA/INT hybrid. Specializes in deals, market infiltration, and running experiments to figure out what works.",
+      primaryAbility: "INT/CHA",
+      description: "Hands-on builders who turn ideas into shipped software. Prototype, ship, and iterate fast — increasingly by directing AI agents to build alongside them.",
+      dndStyle: "INT/CHA hybrid. Specializes in rapid prototyping, full-stack shipping, and directing AI agents to build production software solo.",
       features: [
-        { level: 1, name: "Market Infiltration", desc: "Can identify and exploit growth opportunities others miss" },
-        { level: 2, name: "Deal Closer", desc: "Expertise in high-stakes negotiations" }
+        { level: 1, name: "Rapid Prototyping", desc: "Turn an idea into a working, deployed prototype in days, not quarters" },
+        { level: 2, name: "Subclass: Agent Wrangler", desc: "Direct AI coding agents to build, test and ship alongside you" }
       ],
       evidence: [
-        "€45M in AI engineering crowdsourced for impact organizations",
-        "Closed deals with Stanford, ESA, NXP, Huawei, Philips",
-        "Raised €1M VC funding from Thomas Wolf (Hugging Face), LUMO Labs",
-        "Ran dozens of experiments to validate what engagement models work"
+        "Shipped 15+ products in six months — AI-native web apps, native macOS/iOS (Swift), and CLI tools",
+        "Built agentic software — two production WhatsApp agents (a paid-client shift-filler; a personal read-only assistant), a voice interrogation game with out-of-model state, a Claude Code plan-conflict CLI",
+        "Full-stack across TypeScript, React/Next, Vite, Supabase and Python",
+        "Directs AI coding agents to build, test and ship production software",
+        "Ran dozens of experiments to validate what works — data over opinions",
+        "€45M in AI engineering crowdsourced for impact through experiment-driven growth (FruitPunch)"
       ],
       vouch: {
         text: "Galvanizing AI engineers to apply their skills towards global challenges and the greater good.",
@@ -193,12 +195,13 @@ const characterData = {
       saveProficient: false,
       dndMeaning: "Measures mental acuity, accuracy of recall, and reasoning ability.",
       cvMeaning: "Technical Knowledge",
-      cvDescription: "AI/ML expertise, neuroscience background, data science skills.",
+      cvDescription: "AI/ML expertise, neuroscience background, data science skills, and hands-on product engineering.",
       evidence: [
         "BSc Mechanical Engineering & Neuroscience (TU/e)",
         "60 ECTS in Data Science courses",
         "10/10 Brain-Computer Interfacing research",
-        "Built the AI platform used by 4500+ engineers"
+        "Built the AI platform used by 4500+ engineers",
+        "Ships production software solo — 15+ projects in six months"
       ]
     },
     wis: {
@@ -295,7 +298,7 @@ const characterData = {
     { name: "Stealth", ability: "dex", proficient: false, expertise: false, modifier: 4, cvMeaning: "Stealth Mode Building", evidence: ["Building in stealth before launch", "Working behind scenes", "Quiet product development"] },
     
     // INT skills
-    { name: "Arcana", ability: "int", proficient: true, expertise: false, modifier: 5, cvMeaning: "AI/ML Technical Knowledge", evidence: ["Built AI platform", "BSc + Data Science courses", "BCI research 10/10", "Technical architecture decisions"] },
+    { name: "Arcana", ability: "int", proficient: true, expertise: false, modifier: 5, cvMeaning: "AI/ML & Product Engineering", evidence: ["Built AI platform", "BSc + Data Science courses", "BCI research 10/10", "Technical architecture decisions", "Shipped 15+ full-stack & AI apps in six months (React/Next, Swift, Python)"] },
     { name: "History", ability: "int", proficient: false, expertise: false, modifier: 2, cvMeaning: "Teaching & Past Lessons", evidence: ["Taught physics & chemistry", "Learning from past mistakes", "Iterating based on experience"] },
     { name: "Investigation", ability: "int", proficient: true, expertise: false, modifier: 5, cvMeaning: "User Research & Data Analysis", evidence: ["500+ user and customer interviews conducted", "Data-driven product decisions", "Market research", "A/B testing and experiments"], vouch: { text: "Buster has the strong ability to translate high-level ideas into testable experiments. Using the data and analysis gathered to build a plan grounded in truth.", author: "Dorian Groen" } },
     { name: "Nature", ability: "int", proficient: false, expertise: false, modifier: 2, cvMeaning: "Ecosystem Understanding", evidence: ["Understanding startup ecosystems", "AI for nature projects (Wildlife, Coral Reefs, Forests)"] },
@@ -321,7 +324,7 @@ const characterData = {
   proficiencies: {
     armor: ["Light Armor (Startup Environments)"],
     weapons: ["Pitch Decks", "Google Sheets", "AI Models", "Presentation Tools", "User Interview Scripts"],
-    tools: ["Thieves' Tools (Startup Hacks)", "Python", "Web Development", "Business Operations", "Product Analytics"],
+    tools: ["Thieves' Tools (Startup Hacks)", "Python", "TypeScript / React / Next.js", "Swift", "Supabase", "Claude Code (agentic dev)", "Web Development", "Business Operations", "Product Analytics"],
     languages: [
       { name: "Common", native: "English", proficiency: "Native" },
       { name: "Dwarvish", native: "Dutch", proficiency: "Native" },
@@ -393,6 +396,13 @@ const characterData = {
       uses: "at will",
       effect: "test both — the data crowns the winner"
     },
+    {
+      name: "Ship a Prototype",
+      type: "Action",
+      description: "Turn a raw idea into a working, deployed prototype — see it live before committing.",
+      uses: "at will",
+      effect: "idea → shipped product in days"
+    },
     // Bonus Actions
     {
       name: "Dash",
@@ -423,6 +433,13 @@ const characterData = {
       uses: "at will",
       effect: "reposition the party without losing momentum"
     },
+    {
+      name: "Summon Agent",
+      type: "Bonus Action",
+      description: "Direct an AI coding agent to build, test or refactor alongside you.",
+      uses: "at will",
+      effect: "an AI agent builds alongside you"
+    },
     // Reactions
     {
       name: "Sneak Attack (Startup Edition)",
@@ -447,7 +464,8 @@ const characterData = {
     ],
     level1: [
       { name: "Charm Person", slots: 4, castTime: "1 action", range: "30 ft", description: "Win someone over in a meeting. They regard you as a friendly acquaintance for 1 hour.", dndEquivalent: "Charm Person", cvMeaning: "win the meeting; friendly acquaintance for 1 hour" },
-      { name: "Comprehend Languages", slots: 4, castTime: "1 action", range: "Self", description: "Understand technical jargon in any domain - AI, finance, legal, academic.", dndEquivalent: "Comprehend Languages", cvMeaning: "jargon in any domain — AI, finance, legal, academic" }
+      { name: "Comprehend Languages", slots: 4, castTime: "1 action", range: "Self", description: "Understand technical jargon in any domain - AI, finance, legal, academic.", dndEquivalent: "Comprehend Languages", cvMeaning: "jargon in any domain — AI, finance, legal, academic" },
+      { name: "Find Familiar", slots: 4, castTime: "1 action", range: "10 ft", description: "Summon an AI agent familiar that builds, tests and ships alongside you.", dndEquivalent: "Find Familiar", cvMeaning: "agentic development — directing AI coding agents" }
     ],
     level2: [
       { name: "Detect Thoughts", slots: 3, castTime: "1 action", range: "Self", description: "Read what stakeholders really want beyond their words. Essential for negotiations.", dndEquivalent: "Detect Thoughts", cvMeaning: "read what stakeholders really want beyond their words" },
@@ -456,6 +474,7 @@ const characterData = {
     level3: [
       { name: "Sending", slots: 2, castTime: "1 action", range: "Unlimited", description: "Communicate with anyone, anywhere. Perfect for cold outreach that actually gets responses.", dndEquivalent: "Sending", cvMeaning: "cold outreach that actually gets responses; unlimited range" },
       { name: "Tongues", slots: 2, castTime: "1 action", range: "Touch", description: "Speak any professional language fluently - startup, corporate, academic, government.", dndEquivalent: "Tongues", cvMeaning: "speak startup, corporate, academic and government fluently" },
+      { name: "Fabricate", slots: 2, castTime: "1 action", range: "Workspace", description: "Convert raw materials — an idea and a weekend — into finished, deployed software.", dndEquivalent: "Fabricate", cvMeaning: "idea → shipped product; 15+ builds in six months" },
       // featured: OPTIONAL additive flag — this is the prototype's one highlighted spell
       // (oxblood badge + name); renderSpells() checks it to add a guarded modifier class.
       { name: "Recruit", slots: 2, castTime: "1 action", range: "60 ft", description: "Recruit characters up to 7 levels higher to your party at will. Can convince senior leaders to join your cause.", dndEquivalent: "Hypnotic Pattern", cvMeaning: "recruit characters up to 7 levels higher to your party", featured: true }
@@ -490,7 +509,9 @@ const characterData = {
       { name: "Cunning Action", source: "Founder", description: "Dash, Disengage or Hide as a bonus action; pivot quickly" },
       { name: "Alertness", source: "feat", description: "+4 initiative, can't be surprised; always aware of opportunities and threats" },
       { name: "Product Sense", source: "Experience", description: "what users need vs. what they say; built from 500+ interviews" },
-      { name: "Experiment-Driven", source: "Growth Hacker", description: "systematic experiments to validate hypotheses; data over opinions" },
+      { name: "Experiment-Driven", source: "Product Engineer", description: "systematic experiments to validate hypotheses; data over opinions" },
+      { name: "Ship Velocity", source: "Product Engineer", description: "idea to shipped product in days; 15+ builds in six months across web, native and CLI" },
+      { name: "Agent Wrangler", source: "Product Engineer", description: "directs AI coding agents to build, test and ship production software" },
       { name: "Platform Architect", source: "Founder", description: "designed the platform that let 4500+ engineers create €45M in impact" }
     ],
     backgroundFeature: {
@@ -628,6 +649,63 @@ const characterData = {
 // CAMPAIGNS DATA (Work History)
 // ==========================================
 const campaignsData = [
+  {
+    id: "the-forge",
+    name: "The Forge",
+    dates: "2026 - Present",
+    duration: "Ongoing",
+    summary: "After the FruitPunch exit, went heads-down building — 15+ products in six months, from AI-native apps and agentic tools to native and web. Learning to ship production software solo by directing AI agents.",
+    outcome: "Ongoing",
+    party: "Solo, with AI agents",
+    partners: ["Claude Code", "Next.js", "Supabase", "Swift", "TypeScript", "Vercel"],
+    adventures: [
+      {
+        id: "agentic-systems",
+        name: "Agentic Systems",
+        dates: "2026",
+        summary: "Software that runs itself: agents that message, decide, and know when to escalate to a human.",
+        encounters: [
+          { name: "GastroExclusive", description: "WhatsApp agent that auto-fills hospitality shifts — ranked wave outreach, contract-sign verification, human escalation. A real paid-client build.", notable: true, link: "https://github.com/BusterFranken/GastroExclusive" },
+          { name: "jdog", description: "Self-hosted, read-only WhatsApp assistant tracking replies owed, to-dos and who you're waiting on; dual-number safety model, voice control.", notable: true, link: "https://github.com/BusterFranken/jdog" },
+          { name: "file-tracker", description: "CLI that groups Claude Code plans by file overlap so they can run in parallel safely.", link: "https://github.com/BusterFranken/file-tracker" }
+        ]
+      },
+      {
+        id: "ai-apps",
+        name: "AI Apps",
+        dates: "2026",
+        summary: "Consumer-facing products with a model at the core.",
+        encounters: [
+          { name: "casefile", description: "Voice-first interrogation game — cross-examine an AI witness whose willingness is scored by an engine outside the LLM.", notable: true, link: "https://github.com/BusterFranken/casefile" },
+          { name: "tarot-card-reader", description: "Live AI tarot app: GPT readings across a full 78-card past/present/future spread.", link: "https://tarotread.help" },
+          { name: "pawnshop", description: "AI jewelry-appraisal marketplace: photo → instant valuation → pawn-shop booking. A nod to the family origin.", link: "https://github.com/BusterFranken/pawnshop" }
+        ]
+      },
+      {
+        id: "full-stack-native",
+        name: "Full-Stack & Native",
+        dates: "2026",
+        summary: "Shipping across the stack — web to Swift.",
+        encounters: [
+          { name: "Weemoed", description: "Duolingo-style trainer for naming emotions precisely (NL/EN); React + Supabase, tested end-to-end against live infra.", link: "https://github.com/BusterFranken/Weemoed" },
+          { name: "ClaudeUsageBar", description: "macOS menu-bar app showing live Claude usage, reverse-engineered from rate-limit headers. Swift 6.", link: "https://github.com/BusterFranken/ClaudeUsageBar" },
+          { name: "Workout", description: "iOS workout tracker with snapshot-based logging. SwiftUI + SwiftData.", link: "https://github.com/BusterFranken/Workout" }
+        ]
+      },
+      {
+        id: "civic-experiments",
+        name: "Civic & Experiments",
+        dates: "2026",
+        summary: "Public-interest tech and playable side-quests.",
+        encounters: [
+          { name: "mpoftheweek", description: "Live civic site tracking how transparently MEPs disclose lobbyist meetings, from official EU data; refreshes weekly.", notable: true, link: "https://mpoftheweek.com" },
+          { name: "hush", description: "Darkly funny redaction game where redacted lines physically sag under their weight. Playable in-browser.", link: "https://busterfranken.github.io/hush/" },
+          { name: "kafka-form", description: "Kafkaesque falling-words form game. Playable in-browser.", link: "https://busterfranken.github.io/kafka-form/" },
+          { name: "CRPG", description: "Browser D&D-style isometric CRPG with D20 dialogue checks and turn-based combat — a wink at this very sheet.", link: "https://github.com/BusterFranken/CRPG" }
+        ]
+      }
+    ]
+  },
   {
     id: "fruitpunch-saga",
     name: "The FruitPunch Saga",

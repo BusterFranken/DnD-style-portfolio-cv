@@ -441,7 +441,7 @@ function getCampaignStatusOverlayContent() {
           <div class="ov-blurb">${p.currentCampaign}</div>
           <div class="ov-evidence-title">What I'm Looking For</div>
           <div class="ov-evidence-row">◆ Energy & Hardtech — energy solutions, hardtech innovations, and deep tech applications</div>
-          <div class="ov-evidence-row">◆ Product & Growth roles — Product Owner or Growth role at an exciting startup</div>
+          <div class="ov-evidence-row">◆ Product & building roles — Product Engineer, Product Owner, or founding-team role at an exciting startup</div>
           <div class="ov-evidence-row">◆ Deep/Hardtech ideas — any compelling concept that solves real problems</div>
           <div class="ov-evidence-title">Background</div>
           <div class="ov-evidence-row">◆ €45M crowdsourced in AI engineering work for impact organizations</div>
