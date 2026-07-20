@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Output standalone for Amplify deployment
-  output: 'standalone',
+  // (Removed `output: 'standalone'` — that was for Amplify self-hosting; Vercel
+  //  manages Next.js output natively.)
 
-  // Externalize native/wasm modules that don't work with webpack bundling
+  // Externalize native/wasm modules that don't play well with webpack bundling.
   experimental: {
     serverComponentsExternalPackages: ['sql.js', 'pdf-parse', 'pdfjs-dist'],
   },
@@ -12,8 +12,6 @@ const nextConfig = {
     if (isServer) {
       config.externals = config.externals || [];
       config.externals.push({
-        '@aws-sdk/client-dynamodb': 'commonjs @aws-sdk/client-dynamodb',
-        '@aws-sdk/lib-dynamodb': 'commonjs @aws-sdk/lib-dynamodb',
         'sql.js': 'commonjs sql.js',
         'pdf-parse': 'commonjs pdf-parse',
         'pdfjs-dist': 'commonjs pdfjs-dist',
