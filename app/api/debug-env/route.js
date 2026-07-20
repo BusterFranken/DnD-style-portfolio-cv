@@ -10,6 +10,9 @@ export async function GET() {
     openAIKeyPrefix: key.slice(0, 8),
     // Whitespace in a pasted key is a common failure — flag it.
     openAIKeyHasWhitespace: /\s/.test(key),
+    // Length after stripping all whitespace (what the client now actually uses).
+    openAIKeyStrippedLength: key.replace(/\s+/g, '').length,
+    keyFixVersion: 'strip-all-ws',
     // LLM endpoint/model overrides (non-secret): these decide where requests go.
     llmBaseUrl: process.env.LLM_BASE_URL || 'not set (default OpenAI)',
     llmModel: process.env.LLM_MODEL || 'not set (default gpt-4o-mini)',
